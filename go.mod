@@ -1,4 +1,4 @@
-module kratos_common
+module github.com/hw10000/kratos_common
 
 go 1.23.6
 
