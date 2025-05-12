@@ -1,4 +1,4 @@
-package pkg
+package Common_pkg
 
 import (
 	"fmt"

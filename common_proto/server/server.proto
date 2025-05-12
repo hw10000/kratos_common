@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package api.server.v1;
+
+option go_package = "asset_management_server/api/server/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.server.v1";
+
+service Address {
+	rpc CreateAddress(CreateAddressRequest) returns (CreateAddressReply);
+	rpc CreateAddressBatch(CreateAddressBatchRequest) returns (CreateAddressBatchReply);
+	rpc StoreSecret (StoreSecretRequest) returns (StoreSecretReply);
+	rpc DecodeSecret (DecodeSecretRequest) returns (DecodeSecretReply);
+    rpc StoreSecretBatch (StoreSecretBatchRequest) returns (StoreSecretBatchReply);
+    rpc DecodeSecretBatch (DecodeSecretBatchRequest) returns (DecodeSecretBatchReply);
+	rpc SignTx (SignTxRequest) returns (SignTxReply);
+	rpc SignTxBatch (SignTxBatchRequest) returns (SignTxBatchReply);
+}
+
+message CreateAddressRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+}
+
+message CreateAddressReply {
+	string address = 1; // 地址
+	string storage_id = 2; // 存储ID
+}
+
+
+message StoreSecretRequest {
+	string chain = 1;
+	oneof secret {
+		string private_key = 2;
+		MnemonicSecret mnemonic = 3;
+	}
+}
+
+message MnemonicSecret {
+	string mnemonic = 1;
+	uint32 path_index = 2;
+}
+
+message StoreSecretReply {
+	string storage_id = 1;
+}
+
+message DecodeSecretRequest {
+	string storage_id = 1;
+}
+
+message DecodeSecretReply {
+	oneof secret {
+		string private_key = 1;
+		MnemonicSecret mnemonic = 2;
+	}
+	string address = 3;
+}
+
+message StoreSecretBatchRequest {
+	repeated StoreSecretRequest secrets = 1;
+}
+
+message StoreSecretBatchReply {
+	repeated StoreSecretReply storages = 1;
+}
+
+message DecodeSecretBatchRequest {
+	repeated string storage_ids = 1;
+}
+
+message DecodeSecretBatchReply {
+	repeated DecodeSecretReply storages = 1;
+}
+
+message SignTxRequest {
+	string storage_id = 1;
+	string raw_tx = 2;
+}
+
+message SignTxReply {
+	string signed_tx = 1;
+}
+
+message SignTxBatchRequest {
+	string storage_id = 1;
+	repeated string raw_txs = 2;
+}
+
+message SignTxBatchReply {
+	repeated string signed_txs = 1;
+}
+
+message CreateAddressBatchRequest {
+	repeated CreateAddressRequest requests = 1;
+}
+
+message CreateAddressBatchReply {
+	repeated CreateAddressReply replies = 1;
+}

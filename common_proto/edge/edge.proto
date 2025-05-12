@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package api.edge.v1;
+
+option go_package = "asset_management_edge/api/edge/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.edge.v1";
+
+service Edge {
+  // 检查地址是否在黑名单中
+  rpc CheckBlacklistAddress(CheckBlacklistAddressRequest) returns (CheckBlacklistAddressResponse) {}
+}
+
+
+// 黑名单地址检查请求
+message CheckBlacklistAddressRequest {
+  string chain = 1; // 链名称
+  string address = 2; // 待检查的地址
+}
+
+// 黑名单地址检查响应
+message CheckBlacklistAddressResponse {
+  bool is_blacklisted = 1; // 是否在黑名单中
+}
