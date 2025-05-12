@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package api.chain.v1;
+
+option go_package = "block/api/chain/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.chain.v1";
+
+service Chain {
+	rpc CreateChain (CreateChainRequest) returns (CreateChainReply);
+	rpc UpdateChain (UpdateChainRequest) returns (UpdateChainReply);
+	rpc DeleteChain (DeleteChainRequest) returns (DeleteChainReply);
+	rpc GetChain (GetChainRequest) returns (GetChainReply);
+	rpc ListChain (ListChainRequest) returns (ListChainReply);
+}
+
+message CreateChainRequest {
+	string name = 1;
+	string symbol = 2;
+}
+message CreateChainReply {}
+
+message UpdateChainRequest {}
+message UpdateChainReply {}
+
+message DeleteChainRequest {}
+message DeleteChainReply {}
+
+message GetChainRequest {}
+message GetChainReply {}
+
+message ListChainRequest {}
+message ListChainReply {
+	repeated ChainItem chains = 1;
+}
+message ChainItem {
+	int64 id = 1;
+	string name = 2;
+	string symbol = 3;
+}

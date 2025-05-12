@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package api.network_config.v1;
+
+option go_package = "block/api/network_config/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.network_config.v1";
+
+service NetworkConfig {
+	rpc CreateNetworkConfig (CreateNetworkConfigRequest) returns (CreateNetworkConfigReply);
+	rpc UpdateNetworkConfig (UpdateNetworkConfigRequest) returns (UpdateNetworkConfigReply);
+	rpc DeleteNetworkConfig (DeleteNetworkConfigRequest) returns (DeleteNetworkConfigReply);
+	rpc GetNetworkConfig (GetNetworkConfigRequest) returns (GetNetworkConfigReply);
+	rpc ListNetworkConfig (ListNetworkConfigRequest) returns (ListNetworkConfigReply);
+	rpc ListNetworkConfigByNetwork (ListNetworkConfigByNetworkRequest) returns (ListNetworkConfigByNetworkReply);
+	rpc ListNetworkConfigByNetworkAndChain (ListNetworkConfigByNetworkAndChainRequest) returns (ListNetworkConfigByNetworkAndChainReply);
+}
+
+message CreateNetworkConfigRequest {}
+message CreateNetworkConfigReply {}
+
+message UpdateNetworkConfigRequest {}
+message UpdateNetworkConfigReply {}
+
+message DeleteNetworkConfigRequest {}
+message DeleteNetworkConfigReply {}
+
+message GetNetworkConfigRequest {}
+message GetNetworkConfigReply {}
+
+message ListNetworkConfigRequest {}
+message ListNetworkConfigReply {
+	repeated NetworkConfigItem network_configs = 1;
+}
+
+message ListNetworkConfigByNetworkRequest {
+	int64 network_id = 1;
+}
+message ListNetworkConfigByNetworkReply {
+	repeated NetworkConfigItem network_configs = 1;
+}
+message NetworkConfigItem {
+	int64 id = 1;
+	string name = 2;
+	string symbol = 3;
+	int64 chain_id = 4;
+	int64 network_id = 5;
+}
+
+message ListNetworkConfigByNetworkAndChainRequest {
+	int64 network_id = 1;
+	int64 chain_id = 2;
+}
+message ListNetworkConfigByNetworkAndChainReply {
+	repeated NetworkConfigItem network_configs = 1;
+}
+

@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package api.network.v1;
+
+option go_package = "block/api/network/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.network.v1";
+
+service Network {
+	rpc CreateNetwork (CreateNetworkRequest) returns (CreateNetworkReply);
+	rpc UpdateNetwork (UpdateNetworkRequest) returns (UpdateNetworkReply);
+	rpc DeleteNetwork (DeleteNetworkRequest) returns (DeleteNetworkReply);
+	rpc GetNetwork (GetNetworkRequest) returns (GetNetworkReply);
+	rpc ListNetwork (ListNetworkRequest) returns (ListNetworkReply);
+	rpc ListNetworksByChain (ListNetworksByChainRequest) returns (ListNetworksByChainReply);
+}
+
+message CreateNetworkRequest {}
+message CreateNetworkReply {}
+
+message UpdateNetworkRequest {}
+message UpdateNetworkReply {}
+
+message DeleteNetworkRequest {}
+message DeleteNetworkReply {}
+
+message GetNetworkRequest {}
+message GetNetworkReply {}
+
+message ListNetworkRequest {
+}
+message ListNetworkReply {
+	repeated NetworkItem networks = 1;
+}
+
+message NetworkItem {
+	int64 id = 1;
+	string name = 2;
+	string symbol = 3;
+}
+message ListNetworksByChainRequest {
+	int64 chain_id = 1;
+}
+message ListNetworksByChainReply {
+	repeated NetworkItem networks = 1;
+}

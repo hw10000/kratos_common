@@ -1,0 +1,299 @@
+syntax = "proto3";
+
+package api.block.v1;
+
+option go_package = "block/api/block/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.block.v1";
+
+service Block {
+	//获取浏览器URL
+	rpc GetExplorerURL (GetExplorerURLRequest) returns (GetExplorerURLReply);
+	//验证地址
+	rpc ValidateAddress (ValidateAddressRequest) returns (ValidateAddressReply);
+
+	//代币模块
+	rpc GetTokenBalance (GetTokenBalanceRequest) returns (GetTokenBalanceReply);
+	rpc GetTokenBalanceBatch (GetTokenBalanceBatchRequest) returns (GetTokenBalanceBatchReply);
+	rpc GetTokenInfo (GetTokenInfoRequest) returns (GetTokenInfoReply);
+	rpc GetTokenInfoBatch (GetTokenInfoBatchRequest) returns (GetTokenInfoBatchReply);
+	rpc GetTokenPrice (GetTokenPriceRequest) returns (GetTokenPriceReply);
+	rpc GetTokenPriceBatch (GetTokenPriceBatchRequest) returns (GetTokenPriceBatchReply);
+
+	//交易模块
+
+	//闪兑 返回RawTx交易数组 EVM包含Approve操作
+	rpc Swap (SwapRequest) returns (SwapReply);
+	//转账 返回RawTx交易
+	rpc Transfer (TransferRequest) returns (TransferReply);
+	//授权 返回RawTx交易 EVM
+	rpc Approve (ApproveRequest)returns(ApproveReply);
+
+	//广播交易上链
+	rpc SendTransaction(SendTransactionRequest)returns(SendTransactionReply);
+	rpc CallBundle(CallBundleRequest) returns (CallBundleReply);
+	rpc SendPrivateTransaction(SendPrivateTransactionRequest)returns (SendPrivateTransactionReply);
+
+	rpc CreateAddress(CreateAddressRequest) returns (CreateAddressReply);
+
+	//获取交易信息
+	rpc GetTransactionByHash(GetTransactionByHashRequest) returns (GetTransactionByHashReply);
+}
+
+message NetworkConfigItem {
+	string key = 1; //配置键
+	string value = 2; //配置值
+}
+message NetworkItem {
+	string name = 1; //网络名称
+	string symbol = 2; //网络符号
+	int32 type = 3; //网络类型
+	repeated NetworkConfigItem configs = 5; //网络配置列表
+}
+
+message MetadataItem {
+	string name = 1; //链名称
+	string symbol = 2; //链符号
+	repeated NetworkItem networks = 3; //网络列表
+}
+
+
+message GetTokenBalanceRequest {
+	string address = 1; // 地址
+	string chain = 2; // 链名称
+	string network = 3; // 网络名称
+	string contract_address = 4; // 合约地址
+}
+
+message GetTokenBalanceReply {
+	 string balance = 1; // 代币余额
+	 uint32 decimals = 2; // 代币小数位
+	 string parse_balance = 3; // 解析后的余额
+}
+
+message GetTokenBalanceBatchRequest {
+	repeated GetTokenBalanceRequest balance_items = 1; // 批量请求
+}
+message GetTokenBalanceBatchReply {
+	map<string, GetTokenBalanceReply> balance_result = 1; // 地址到余额信息的映射
+}
+
+message GetTokenInfoRequest {
+	string contract_address = 1; // 合约地址
+	string chain = 2; // 链名称
+	string network = 3; // 网络名称
+}
+message GetTokenInfoReply {
+	string token_name = 1; // 代币名称
+	string token_symbol = 2; // 代币符号
+	uint32 token_decimals = 3; // 代币小数位
+	string token_total_supply = 4; // 代币总供应量
+	string parse_token_total_supply = 5; // 解析后的代币总供应量
+}
+
+message GetTokenInfoBatchRequest {
+	repeated GetTokenInfoRequest info_items = 1; // 批量请求
+}
+message GetTokenInfoBatchReply {
+	map<string, GetTokenInfoReply> info_result = 1; // 合约地址到代币信息的映射
+}
+
+
+message SendTransactionRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	repeated string signed_transaction = 3; // 交易，字符串
+}
+message SendTransactionReply {
+	repeated string transaction_hash = 1; // 交易哈希 如果成功则有hash，且msg返回success
+}
+
+message GetTransactionStatusRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string transaction_hash = 3; // 交易哈希
+}
+message GetTransactionStatusReply {
+	bool success = 1; // 是否成功
+	string error = 2; // 错误信息
+}
+
+
+message GetExplorerURLRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string url_type  = 3;//URL类型
+	string data = 4; // 数据
+}
+message GetExplorerURLReply {
+	string url = 1; // 浏览器URL
+}
+
+message ValidateAddressRequest {
+	string address = 1; // 地址
+	string chain = 2; // 链名称
+	string network = 3; // 网络名称
+}
+message ValidateAddressReply {
+	bool valid = 1; // 是否有效
+}
+
+
+message SubscribeTransactionRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+}
+
+message SubscribeTransactionReply {
+	repeated SubscribeTransactionItem transactions = 1; // 交易列表
+}
+
+message SubscribeTransactionItem {
+	optional int64 block_number = 1; // 区块号
+	optional int64 block_time = 2; // 区块时间 
+	optional string from_address = 3; // 发起地址
+	optional string to_address = 4; // 接收地址
+	optional string value = 5; // 金额
+	optional string hash = 6; // 交易哈希
+	optional string symbol = 7; // 代币符号
+	optional bool status = 8; // 交易状态
+	optional string chain = 9; // 链名称
+	optional string network = 10; // 网络名称
+	optional string contract_address = 11; // 合约地址
+	optional bool is_native = 12; // 是否为原生代币
+}
+
+
+
+message GetTokenPriceRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string contract_address = 3; // 合约地址
+}
+message GetTokenPriceReply {
+	string native_token_price = 1; // 原生币价格
+	uint32 native_token_decimals = 2; // 原生币精度
+	string native_token_parse_price = 3; // 原生币解析价格
+
+	string usd_token_price = 4; // 美元价格
+	uint32 usd_token_decimals = 5; // 美元精度
+	string usd_token_parse_price = 6; // 美元解析价格
+}
+
+message GetTokenPriceBatchRequest {
+	repeated GetTokenPriceRequest price_items = 1; // 批量请求
+}
+message GetTokenPriceBatchReply {
+	map<string, GetTokenPriceReply> price_result = 1; // 合约地址到价格信息的映射
+}
+
+message SwapRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string user_address = 3; // 用户地址
+	string from_token_address = 4; // 发送代币地址
+	string to_token_address = 5; // 接收代币地址
+	string amount = 6; // 金额
+	double slippage = 7; // 滑点
+	optional SwapFeeItem before_fee = 8; // from token 前置手续费 
+	optional SwapFeeItem after_fee = 9; // to token 后置手续费
+	optional uint64 nonce = 10; // 第一笔Nonce
+}
+
+message SwapFeeItem {
+	string recipient = 1; // 接收地址
+	string amount = 2; // 手续费
+}
+
+message SwapReply {
+	repeated string raw_transaction = 1; // 交易
+}
+
+message TransferRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string amount = 3; // 数量
+    string token_address = 4; // 代币地址
+	string user_address = 5; // 用户地址
+    string to_address = 6; // 目标地址
+	optional uint64 nonce = 7; // Nonce
+}
+message TransferReply {
+	string raw_transaction = 1; // 交易
+	optional TRONResourceDetail tron_resource_detail = 2; // TRON 资源详情
+}
+message TRONResourceDetail {
+string energy = 1; // 当前交易的能量数
+	string bandwidth = 2; // 当前交易的带宽数
+	string user_energy = 3; // 当前用户能量数
+	string user_bandwidth = 4; // 当前用户带宽数
+}
+
+message ApproveRequest{
+	string chain = 1;
+	string network = 2;
+	string owner =3;
+	string spender = 4;
+	string amount = 5;
+	string contract_address = 6;
+	uint64 nonce = 7;
+}
+
+message ApproveReply{
+	string raw_transaction = 1; // 交易
+}
+
+message CallBundleRequest {
+	string chain = 1;                        // 指定的链
+	string network =2; // 网络名称
+	repeated string txs = 3;                 // 交易列表
+}
+
+message CallBundleReply {
+  repeated string tx_hashes = 1; // 交易哈希列表
+  map<string, string> errors = 2; // key: 交易哈希, value: 交易执行结果
+}
+
+message SendPrivateTransactionRequest {
+  repeated string raw_txs = 1; // 多笔原始交易数据
+  string chain = 2;            // 指定的链
+  string network = 3; // 网络名称
+}
+
+message SendPrivateTransactionReply {
+  repeated string hashes = 1;     // 成功的交易哈希列表
+}
+
+message CreateAddressRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+}
+
+message CreateAddressReply {
+	string address = 1; // 地址
+	string private_key = 2; // 私钥
+}
+
+message GetTransactionByHashRequest{
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string transaction_hash = 3; // 交易哈希
+}
+
+message GetTransactionByHashReply{
+	string transaction_hash = 1; // 交易哈希
+	string from_address = 2; // 发起地址
+	repeated string to_address = 3; // 接收地址
+	TransactionStatus status = 4; // 状态
+	string block_number = 5; // 区块号
+	string block_time = 6; // 区块时间
+	string raw_transaction = 7; // 原始交易
+	string error = 8; // 错误信息
+}
+
+enum TransactionStatus {
+	TRANSACTION_STATUS_PENDING = 0; // 待处理
+	TRANSACTION_STATUS_SUCCESS = 1; // 成功
+	TRANSACTION_STATUS_FAILED = 2; // 失败
+	TRANSACTION_STATUS_NOT_FOUND = 3; // 未找到
+}
