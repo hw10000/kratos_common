@@ -38,6 +38,9 @@ service Block {
 
 	//获取交易信息
 	rpc GetTransactionByHash(GetTransactionByHashRequest) returns (GetTransactionByHashReply);
+
+	//获取流动性
+	rpc GetLiquidity(GetLiquidityRequest) returns (GetLiquidityReply);
 }
 
 message NetworkConfigItem {
@@ -296,4 +299,17 @@ enum TransactionStatus {
 	TRANSACTION_STATUS_SUCCESS = 1; // 成功
 	TRANSACTION_STATUS_FAILED = 2; // 失败
 	TRANSACTION_STATUS_NOT_FOUND = 3; // 未找到
+}
+
+message GetLiquidityRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string token_address = 3; // 代币地址
+}
+
+message GetLiquidityReply {
+	string liquidity_label = 1; // 流动性标签
+	string liquidity_address = 2; // 流动性地址
+	string liquidity_type = 3; // 流动性类型
+	string liquidity_market_cap = 4; // 流动性市值
 }
