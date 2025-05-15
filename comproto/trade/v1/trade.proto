@@ -1,0 +1,319 @@
+syntax = "proto3";
+
+package api.trade.v1;
+
+
+option go_package = "corn_trade_backend_rpc/api/trade/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.trade.v1";
+
+service Trade {
+	rpc GetTokenInfo (GetTokenInfoRequest) returns (GetTokenInfoReply);
+    rpc GetTokenPrice (GetTokenPriceRequest) returns (GetTokenPriceReply);
+    rpc GetTokenMarketCap (GetTokenMarketCapRequest) returns (GetTokenMarketCapReply);
+    rpc GetTokenLiquidity (GetTokenLiquidityRequest) returns (GetTokenLiquidityReply);
+    rpc GetTokenTradeInfo (GetTokenTradeInfoRequest) returns (GetTokenTradeInfoReply);
+    rpc TradeTokenRawTx (TradeTokenRawTxRequest) returns (TradeTokenRawTxReply);
+    rpc GetNativeBalance (GetNativeBalanceRequest) returns (GetNativeBalanceReply);
+    rpc GetContractTokenBalance (GetContractTokenBalanceRequest) returns (GetContractTokenBalanceReply);
+    rpc GetAddressNetworkType (GetAddressNetworkTypeRequest) returns (GetAddressNetworkTypeReply);
+    rpc IsContract (IsContractRequest) returns (IsContractReply);
+    // 构建代币转账交易 代币地址为空时走主网币
+    rpc BuildTokenTransfer (BuildTokenTransferRequest) returns (BuildTokenTransferReply);
+    rpc SecurityCheck (SecurityCheckRequest) returns (SecurityCheckReply);
+    rpc GetNativeTokenPrice (GetNativeTokenPriceRequest) returns (GetNativeTokenPriceReply);
+    rpc SendRawTx (SendRawTxRequest) returns (SendRawTxReply);
+    rpc SendRawTxByPrivate (SendRawTxByPrivateRequest) returns (SendRawTxByPrivateReply);
+    // 交易状态
+    rpc GetTransactionStatus (GetTransactionStatusRequest) returns (GetTransactionStatusReply);
+
+    rpc CreateAddress(CreateAddressRequest) returns (CreateAddressReply);
+    rpc StoreSecret (StoreSecretRequest) returns (StoreSecretReply);
+    rpc DecodeSecret (DecodeSecretRequest) returns (DecodeSecretReply);
+    rpc StoreSecretBatch (StoreSecretBatchRequest) returns (StoreSecretBatchReply);
+    rpc DecodeSecretBatch (DecodeSecretBatchRequest) returns (DecodeSecretBatchReply);
+    rpc SignTx (SignTxRequest) returns (SignTxReply);
+    rpc SignTxBatch (SignTxBatchRequest) returns (SignTxBatchReply);
+}
+
+message GetTokenInfoRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // 代币地址
+}
+
+message GetTokenInfoReply {
+    string token_address = 1; // 代币地址
+    string token_name = 2; // 代币名称
+    string token_symbol = 3; // 代币符号
+    uint32 token_decimals = 4; // 代币小数位数
+    string token_total_supply = 5; // 代币总供应量
+}
+
+message GetTokenPriceRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // 代币地址
+}
+
+message GetTokenPriceReply {
+    string price = 1; // USDT价格
+}
+
+message GetTokenMarketCapRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // 代币地址
+}
+
+message GetTokenMarketCapReply {
+    double market_cap = 1; // 市值
+}
+
+message GetTokenLiquidityRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // 代币地址
+}
+
+message GetTokenLiquidityReply {
+    repeated LiquidityPool liquidity_pools = 1; // 流动性池
+}
+
+
+message LiquidityPool {
+    string pair_label = 1; // 流动性
+    string pair_address = 2; // 流动性地址
+    double liquidity = 3; // 流动性
+}
+
+message GetTokenTradeInfoRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // 代币地址
+}
+
+message GetTokenTradeInfoReply {
+    string token_address = 1; // 代币地址
+    string token_name = 2; // 代币名称
+    string token_symbol = 3; // 代币符号
+    uint32 token_decimals = 4; // 代币小数位数
+    string token_total_supply = 5; // 代币总供应量
+    string price = 6; // USDT价格
+    double market_cap = 7; // 市值
+    double liquidity = 8; // 流动性
+    string explorer_url = 9; // 浏览器URL
+}
+
+message TradeTokenRawTxRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // to_token_address
+    string from_address = 3; // 用户的地址
+    double amount = 4; // 数量 买入是数量 卖出是百分比
+    int32 direction = 5; // 方向 1: 买入 2: 卖出
+    double slippage = 6; // 滑点 1-100
+    string token_in_symbol = 7; // 交易币种 买入是USDT 卖出是代币
+    double fee_percent = 8; // 手续费比例
+}
+
+message TradeTokenRawTxReply {
+    repeated string raw_txs = 1; // 交易哈希
+    string fee_amount = 2;// 金额
+    uint32 fee_decimals = 3; // 精度
+}
+
+
+
+message GetNativeBalanceRequest {
+    string chain_name = 1; // 链名称
+    string address = 2; // 地址
+}
+
+message GetNativeBalanceReply { 
+    double balance = 1; // 余额
+}
+
+message GetContractTokenBalanceRequest {
+    string chain_name = 1; // 链名称
+    string address = 2; // 地址
+    string contract_address = 3; // 合约地址
+}   
+
+message GetContractTokenBalanceReply {
+    double balance = 1; // 余额
+}
+
+message GetAddressNetworkTypeRequest {
+    string address = 1; // 地址
+}
+
+message GetAddressNetworkTypeReply {
+    NetworkType network_type = 1; // 网络类型
+}
+
+enum NetworkType {
+    NETWORK_TYPE_UNSPECIFIED = 0; // 未指定
+    NETWORK_TYPE_EVM = 1; // EVM
+    NETWORK_TYPE_SOL = 2; // SOL
+}
+
+message GetTokenTradeQuoteRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // 代币地址
+}
+
+message GetTokenTradeQuoteReply {
+    string quote = 1; // 计价币种
+    uint32 decimals = 2; // 精度
+}
+
+message IsContractRequest {
+    string chain_name = 1; // 链名称
+    string address = 2; // 地址
+}
+
+message IsContractReply {
+    bool is_contract = 1; // 是否为合约
+}
+
+message BuildTokenTransferRequest {
+    string chain_name = 1; // 链名称
+    string user_address = 2; // 用户地址
+    double amount = 3; // 数量
+    string token_address = 4; // 代币地址
+    string to_address = 5; // 目标地址
+}
+
+message BuildTokenTransferReply {
+     string raws_tx = 1;
+}
+
+message SecurityCheckRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // 代币地址
+}
+
+message SecurityCheckReply {
+    double buy_tax = 1; // 买入税 EVM 0-100%
+    double sell_tax = 2; // 卖出税 EVM 0-100%
+    double burn_liquidity_percent = 3; // 销毁流动性百分比 0-100%
+    bool renounce_blacklist_authority = 4; // 放弃黑名单权限 SOL
+    bool renounce_mint_authority = 5; // 放弃铸币权限 SOL
+    bool burn_liquidity = 6; // 销毁流动性 SOL
+    bool open_source = 7; // 开源 EVM
+    bool renounce_ownership = 8; // 放弃所有权 EVM
+}
+
+message GetNativeTokenPriceRequest {
+    string chain_name = 1; // 链名称：SOL, ETH, BSC, BASE等
+}
+
+message GetNativeTokenPriceReply {
+    string price = 1; // 美元价格，字符串格式
+}
+
+message SendRawTxRequest {
+    string chain_name = 1; // 链名称
+    repeated string raw_txs = 2; // 一签名交易数据
+}
+
+message SendRawTxReply {
+    repeated string tx_hashes = 1; // 交易哈希
+}
+
+message SendRawTxByPrivateRequest {
+    string chain_name = 1; // 链名称
+    repeated string raw_txs = 2; // 一签名交易数据
+}
+
+message SendRawTxByPrivateReply {
+    repeated string tx_hashes = 1; // 交易哈希
+}
+
+// 交易状态
+message GetTransactionStatusRequest {
+	string chain_name = 1; // 链名称
+	string transaction_hash = 2; // 交易哈希
+}
+message GetTransactionStatusReply {
+    string transaction_hash = 1; // 交易哈希
+    string from_address = 2; // 发起地址
+    repeated string to_address = 3; // 接收地址
+    int32 status = 4; // 状态
+    string block_number = 5; // 区块号
+    string block_time = 6; // 区块时间
+    string raw_transaction = 7; // 原始交易
+    string error = 8; // 错误信息
+}
+
+message CreateAddressRequest {
+    string chain = 1; // 链名称
+    string network = 2; // 网络名称
+}
+
+message CreateAddressReply {
+    string address = 1; // 地址
+    string storage_id = 2; // 存储ID
+}
+
+
+message StoreSecretReply {
+    string storage_id = 1;
+}
+
+message DecodeSecretRequest {
+    string storage_id = 1;
+}
+
+message DecodeSecretReply {
+    oneof secret {
+        string private_key = 1;
+        MnemonicSecret mnemonic = 2;
+    }
+    string address = 3;
+}
+
+message StoreSecretBatchRequest {
+    repeated StoreSecretRequest secrets = 1;
+}
+
+message StoreSecretBatchReply {
+    repeated StoreSecretReply storages = 1;
+}
+
+message DecodeSecretBatchRequest {
+    repeated string storage_ids = 1;
+}
+
+message DecodeSecretBatchReply {
+    repeated DecodeSecretReply storages = 1;
+}
+
+message SignTxRequest {
+    string storage_id = 1;
+    string raw_tx = 2;
+}
+
+message SignTxReply {
+    string signed_tx = 1;
+}
+
+message SignTxBatchRequest {
+    string storage_id = 1;
+    repeated string raw_txs = 2;
+}
+
+message SignTxBatchReply {
+    repeated string signed_txs = 1;
+}
+
+
+message StoreSecretRequest {
+    string chain = 1;
+    oneof secret {
+        string private_key = 2;
+        MnemonicSecret mnemonic = 3;
+    }
+}
+
+message MnemonicSecret {
+    string mnemonic = 1;
+    uint32 path_index = 2;
+}
+
+
