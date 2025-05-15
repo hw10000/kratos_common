@@ -35,6 +35,7 @@ const (
 	Block_SendPrivateTransaction_FullMethodName = "/api.block.v1.Block/SendPrivateTransaction"
 	Block_CreateAddress_FullMethodName          = "/api.block.v1.Block/CreateAddress"
 	Block_GetTransactionByHash_FullMethodName   = "/api.block.v1.Block/GetTransactionByHash"
+	Block_GetLiquidity_FullMethodName           = "/api.block.v1.Block/GetLiquidity"
 )
 
 // BlockClient is the client API for Block service.
@@ -65,6 +66,8 @@ type BlockClient interface {
 	CreateAddress(ctx context.Context, in *CreateAddressRequest, opts ...grpc.CallOption) (*CreateAddressReply, error)
 	// 获取交易信息
 	GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionByHashReply, error)
+	// 获取流动性
+	GetLiquidity(ctx context.Context, in *GetLiquidityRequest, opts ...grpc.CallOption) (*GetLiquidityReply, error)
 }
 
 type blockClient struct {
@@ -235,6 +238,16 @@ func (c *blockClient) GetTransactionByHash(ctx context.Context, in *GetTransacti
 	return out, nil
 }
 
+func (c *blockClient) GetLiquidity(ctx context.Context, in *GetLiquidityRequest, opts ...grpc.CallOption) (*GetLiquidityReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetLiquidityReply)
+	err := c.cc.Invoke(ctx, Block_GetLiquidity_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockServer is the server API for Block service.
 // All implementations must embed UnimplementedBlockServer
 // for forward compatibility.
@@ -263,6 +276,8 @@ type BlockServer interface {
 	CreateAddress(context.Context, *CreateAddressRequest) (*CreateAddressReply, error)
 	// 获取交易信息
 	GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionByHashReply, error)
+	// 获取流动性
+	GetLiquidity(context.Context, *GetLiquidityRequest) (*GetLiquidityReply, error)
 	mustEmbedUnimplementedBlockServer()
 }
 
@@ -320,6 +335,9 @@ func (UnimplementedBlockServer) CreateAddress(context.Context, *CreateAddressReq
 }
 func (UnimplementedBlockServer) GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionByHashReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionByHash not implemented")
+}
+func (UnimplementedBlockServer) GetLiquidity(context.Context, *GetLiquidityRequest) (*GetLiquidityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLiquidity not implemented")
 }
 func (UnimplementedBlockServer) mustEmbedUnimplementedBlockServer() {}
 func (UnimplementedBlockServer) testEmbeddedByValue()               {}
@@ -630,6 +648,24 @@ func _Block_GetTransactionByHash_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_GetLiquidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLiquidityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).GetLiquidity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_GetLiquidity_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).GetLiquidity(ctx, req.(*GetLiquidityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Block_ServiceDesc is the grpc.ServiceDesc for Block service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -700,6 +736,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTransactionByHash",
 			Handler:    _Block_GetTransactionByHash_Handler,
+		},
+		{
+			MethodName: "GetLiquidity",
+			Handler:    _Block_GetLiquidity_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
