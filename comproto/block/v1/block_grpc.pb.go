@@ -34,6 +34,7 @@ const (
 	Block_CallBundle_FullMethodName             = "/api.block.v1.Block/CallBundle"
 	Block_SendPrivateTransaction_FullMethodName = "/api.block.v1.Block/SendPrivateTransaction"
 	Block_CreateAddress_FullMethodName          = "/api.block.v1.Block/CreateAddress"
+	Block_CreateAddressBatch_FullMethodName     = "/api.block.v1.Block/CreateAddressBatch"
 	Block_GetTransactionByHash_FullMethodName   = "/api.block.v1.Block/GetTransactionByHash"
 	Block_GetLiquidity_FullMethodName           = "/api.block.v1.Block/GetLiquidity"
 )
@@ -64,6 +65,7 @@ type BlockClient interface {
 	CallBundle(ctx context.Context, in *CallBundleRequest, opts ...grpc.CallOption) (*CallBundleReply, error)
 	SendPrivateTransaction(ctx context.Context, in *SendPrivateTransactionRequest, opts ...grpc.CallOption) (*SendPrivateTransactionReply, error)
 	CreateAddress(ctx context.Context, in *CreateAddressRequest, opts ...grpc.CallOption) (*CreateAddressReply, error)
+	CreateAddressBatch(ctx context.Context, in *CreateAddressBatchRequest, opts ...grpc.CallOption) (*CreateAddressBatchReply, error)
 	// 获取交易信息
 	GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionByHashReply, error)
 	// 获取流动性
@@ -228,6 +230,16 @@ func (c *blockClient) CreateAddress(ctx context.Context, in *CreateAddressReques
 	return out, nil
 }
 
+func (c *blockClient) CreateAddressBatch(ctx context.Context, in *CreateAddressBatchRequest, opts ...grpc.CallOption) (*CreateAddressBatchReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAddressBatchReply)
+	err := c.cc.Invoke(ctx, Block_CreateAddressBatch_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *blockClient) GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionByHashReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTransactionByHashReply)
@@ -274,6 +286,7 @@ type BlockServer interface {
 	CallBundle(context.Context, *CallBundleRequest) (*CallBundleReply, error)
 	SendPrivateTransaction(context.Context, *SendPrivateTransactionRequest) (*SendPrivateTransactionReply, error)
 	CreateAddress(context.Context, *CreateAddressRequest) (*CreateAddressReply, error)
+	CreateAddressBatch(context.Context, *CreateAddressBatchRequest) (*CreateAddressBatchReply, error)
 	// 获取交易信息
 	GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionByHashReply, error)
 	// 获取流动性
@@ -332,6 +345,9 @@ func (UnimplementedBlockServer) SendPrivateTransaction(context.Context, *SendPri
 }
 func (UnimplementedBlockServer) CreateAddress(context.Context, *CreateAddressRequest) (*CreateAddressReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAddress not implemented")
+}
+func (UnimplementedBlockServer) CreateAddressBatch(context.Context, *CreateAddressBatchRequest) (*CreateAddressBatchReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAddressBatch not implemented")
 }
 func (UnimplementedBlockServer) GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionByHashReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionByHash not implemented")
@@ -630,6 +646,24 @@ func _Block_CreateAddress_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_CreateAddressBatch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAddressBatchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).CreateAddressBatch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_CreateAddressBatch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).CreateAddressBatch(ctx, req.(*CreateAddressBatchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Block_GetTransactionByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTransactionByHashRequest)
 	if err := dec(in); err != nil {
@@ -732,6 +766,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAddress",
 			Handler:    _Block_CreateAddress_Handler,
+		},
+		{
+			MethodName: "CreateAddressBatch",
+			Handler:    _Block_CreateAddressBatch_Handler,
 		},
 		{
 			MethodName: "GetTransactionByHash",
