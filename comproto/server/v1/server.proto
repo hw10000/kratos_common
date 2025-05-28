@@ -92,7 +92,9 @@ message SignTxBatchReply {
 }
 
 message CreateAddressBatchRequest {
-	repeated CreateAddressRequest requests = 1;
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	uint32 count = 3; // 数量
 }
 
 message CreateAddressBatchReply {
