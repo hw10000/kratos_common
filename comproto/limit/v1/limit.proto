@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api.limit.v1;
+
+
+option go_package = "corn_trade_backend_rpc/api/limit/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.limit.v1";
+
+service Limit {
+    rpc CreateLimitOrder (CreateLimitOrderRequest) returns (CreateLimitOrderReply);
+}
+
+message CreateLimitOrderRequest {
+    string chain_name = 1; // 链名称
+    string user_address = 2; // 用户地址
+    string token_address = 3; // 代币地址
+    double amount = 4; // 数量
+    int32 direction = 5; // 方向 1: 买入 2: 卖出
+    double price = 6; // 价格
+    double gas_price = 7; //gas 价格
+    string symbol = 8; // 交易符号 BNB/USDT
+    string storage_id = 9; // 存储ID
+    double slippage = 10; // 滑点
+    double fee_percent = 11; // 手续费百分比
+}
+
+message CreateLimitOrderReply {
+    string order_id = 1; // 订单ID
+}
