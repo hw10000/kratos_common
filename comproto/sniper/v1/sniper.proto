@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package api.sniper.v1;
+
+
+option go_package = "corn_trade_backend_rpc/api/sniper/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.sniper.v1";
+
+service Sniper {
+    rpc CreateSniperOrder (CreateSniperOrderRequest) returns (CreateSniperOrderReply);
+}
+
+message CreateSniperOrderRequest {
+    string chain_name = 1; // 链名称
+    string token_address = 2; // 代币地址
+    optional double buy_tax = 3; // 买入税率
+    optional double sell_tax = 4; // 卖出税率
+    double gas_price = 5; // gas 价格
+    string storage_id = 6; // 存储ID
+    oneof order_detail {
+        ExactInputOrder exact_input_order = 7; // 固定输入订单
+        ExactOutputOrder exact_output_order = 8; // 固定输出订单
+    }
+}
+
+message ExactInputOrder {
+    double input_amount = 1; // 固定输入金额
+    double min_output_amount = 2; // 最小输出金额
+}
+
+message ExactOutputOrder {
+    double output_amount = 1; // 固定输出代币
+    double max_input_amount = 2; // 最大输入金额
+}
+
+message CreateSniperOrderReply {
+    string order_id = 1; // 订单ID
+}
