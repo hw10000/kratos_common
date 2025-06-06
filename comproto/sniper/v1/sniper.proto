@@ -32,6 +32,7 @@ message ExactInputOrder {
 
 message ExactOutputOrder {
     double output_amount = 1; // 固定输出代币
+    double max_input_amount = 2; // 最大输入金额
 }
 
 message CreateSniperOrderReply {
