@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api.sniper.v1;
 
-
+import "google/protobuf/timestamp.proto";
 option go_package = "corn_trade_backend_rpc/api/sniper/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.sniper.v1";
@@ -22,6 +22,7 @@ message CreateSniperOrderRequest {
         ExactInputOrder exact_input_order = 7; // 固定输入订单
         ExactOutputOrder exact_output_order = 8; // 固定输出订单
     }
+    google.protobuf.Timestamp expire_time = 9; // 过期时间
 }
 
 message ExactInputOrder {
@@ -31,7 +32,6 @@ message ExactInputOrder {
 
 message ExactOutputOrder {
     double output_amount = 1; // 固定输出代币
-    double max_input_amount = 2; // 最大输入金额
 }
 
 message CreateSniperOrderReply {
