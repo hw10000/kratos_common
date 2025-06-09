@@ -75,7 +75,6 @@ message GetSniperOrderReply {
     google.protobuf.Timestamp expired_at = 16; // 过期时间
     optional string result = 17; // 结果
     string user_address = 18; // 用户地址
-    string storage_id_2 = 19; // 存储ID
 }
 
 message GetAllSniperOrdersRequest {
