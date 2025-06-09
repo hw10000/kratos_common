@@ -9,6 +9,9 @@ option java_package = "api.sniper.v1";
 
 service Sniper {
     rpc CreateSniperOrder (CreateSniperOrderRequest) returns (CreateSniperOrderReply);
+    rpc CancelSniperOrder (CancelSniperOrderRequest) returns (CancelSniperOrderReply);
+    rpc GetSniperOrder (GetSniperOrderRequest) returns (GetSniperOrderReply);
+    rpc GetAllSniperOrders (GetAllSniperOrdersRequest) returns (GetAllSniperOrdersReply);
 }
 
 message CreateSniperOrderRequest {
@@ -38,4 +41,47 @@ message ExactOutputOrder {
 
 message CreateSniperOrderReply {
     string order_id = 1; // 订单ID
+}
+
+message CancelSniperOrderRequest {
+    string order_id = 1; // 订单ID
+}
+
+message CancelSniperOrderReply {
+    string order_id = 1; // 订单ID
+}
+
+message GetSniperOrderRequest {
+    string order_id = 1; // 订单ID
+}
+
+
+message GetSniperOrderReply {
+    string order_id = 1; // 订单ID
+    string chain_name = 2; // 链名称
+    string token_address = 3; // 代币地址
+    optional double buy_tax = 4; // 买入税率
+    optional double sell_tax = 5; // 卖出税率
+    double gas_price = 6; // gas 价格
+    string storage_id = 7; // 存储ID
+    int32 order_type = 8; // 订单类型
+    optional double input_amount = 9; // 固定输入金额
+    optional double min_output_amount = 10; // 最小输出金额
+    optional double output_amount = 11; // 固定输出代币
+    optional double max_input_amount = 12; // 最大输入金额
+    int32 status = 13; // 订单状态
+    google.protobuf.Timestamp created_at = 14; // 创建时间
+    google.protobuf.Timestamp updated_at = 15; // 更新时间
+    google.protobuf.Timestamp expired_at = 16; // 过期时间
+    optional string result = 17; // 结果
+    string user_address = 18; // 用户地址
+    string storage_id_2 = 19; // 存储ID
+}
+
+message GetAllSniperOrdersRequest {
+    string user_address = 1; // 用户地址
+}
+
+message GetAllSniperOrdersReply {
+    repeated GetSniperOrderReply orders = 1; // 订单列表
 }

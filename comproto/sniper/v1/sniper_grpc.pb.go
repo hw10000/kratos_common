@@ -19,7 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Sniper_CreateSniperOrder_FullMethodName = "/api.sniper.v1.Sniper/CreateSniperOrder"
+	Sniper_CreateSniperOrder_FullMethodName  = "/api.sniper.v1.Sniper/CreateSniperOrder"
+	Sniper_CancelSniperOrder_FullMethodName  = "/api.sniper.v1.Sniper/CancelSniperOrder"
+	Sniper_GetSniperOrder_FullMethodName     = "/api.sniper.v1.Sniper/GetSniperOrder"
+	Sniper_GetAllSniperOrders_FullMethodName = "/api.sniper.v1.Sniper/GetAllSniperOrders"
 )
 
 // SniperClient is the client API for Sniper service.
@@ -27,6 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SniperClient interface {
 	CreateSniperOrder(ctx context.Context, in *CreateSniperOrderRequest, opts ...grpc.CallOption) (*CreateSniperOrderReply, error)
+	CancelSniperOrder(ctx context.Context, in *CancelSniperOrderRequest, opts ...grpc.CallOption) (*CancelSniperOrderReply, error)
+	GetSniperOrder(ctx context.Context, in *GetSniperOrderRequest, opts ...grpc.CallOption) (*GetSniperOrderReply, error)
+	GetAllSniperOrders(ctx context.Context, in *GetAllSniperOrdersRequest, opts ...grpc.CallOption) (*GetAllSniperOrdersReply, error)
 }
 
 type sniperClient struct {
@@ -47,11 +53,44 @@ func (c *sniperClient) CreateSniperOrder(ctx context.Context, in *CreateSniperOr
 	return out, nil
 }
 
+func (c *sniperClient) CancelSniperOrder(ctx context.Context, in *CancelSniperOrderRequest, opts ...grpc.CallOption) (*CancelSniperOrderReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CancelSniperOrderReply)
+	err := c.cc.Invoke(ctx, Sniper_CancelSniperOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sniperClient) GetSniperOrder(ctx context.Context, in *GetSniperOrderRequest, opts ...grpc.CallOption) (*GetSniperOrderReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSniperOrderReply)
+	err := c.cc.Invoke(ctx, Sniper_GetSniperOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sniperClient) GetAllSniperOrders(ctx context.Context, in *GetAllSniperOrdersRequest, opts ...grpc.CallOption) (*GetAllSniperOrdersReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllSniperOrdersReply)
+	err := c.cc.Invoke(ctx, Sniper_GetAllSniperOrders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SniperServer is the server API for Sniper service.
 // All implementations must embed UnimplementedSniperServer
 // for forward compatibility.
 type SniperServer interface {
 	CreateSniperOrder(context.Context, *CreateSniperOrderRequest) (*CreateSniperOrderReply, error)
+	CancelSniperOrder(context.Context, *CancelSniperOrderRequest) (*CancelSniperOrderReply, error)
+	GetSniperOrder(context.Context, *GetSniperOrderRequest) (*GetSniperOrderReply, error)
+	GetAllSniperOrders(context.Context, *GetAllSniperOrdersRequest) (*GetAllSniperOrdersReply, error)
 	mustEmbedUnimplementedSniperServer()
 }
 
@@ -64,6 +103,15 @@ type UnimplementedSniperServer struct{}
 
 func (UnimplementedSniperServer) CreateSniperOrder(context.Context, *CreateSniperOrderRequest) (*CreateSniperOrderReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSniperOrder not implemented")
+}
+func (UnimplementedSniperServer) CancelSniperOrder(context.Context, *CancelSniperOrderRequest) (*CancelSniperOrderReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelSniperOrder not implemented")
+}
+func (UnimplementedSniperServer) GetSniperOrder(context.Context, *GetSniperOrderRequest) (*GetSniperOrderReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSniperOrder not implemented")
+}
+func (UnimplementedSniperServer) GetAllSniperOrders(context.Context, *GetAllSniperOrdersRequest) (*GetAllSniperOrdersReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllSniperOrders not implemented")
 }
 func (UnimplementedSniperServer) mustEmbedUnimplementedSniperServer() {}
 func (UnimplementedSniperServer) testEmbeddedByValue()                {}
@@ -104,6 +152,60 @@ func _Sniper_CreateSniperOrder_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Sniper_CancelSniperOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelSniperOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SniperServer).CancelSniperOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Sniper_CancelSniperOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SniperServer).CancelSniperOrder(ctx, req.(*CancelSniperOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Sniper_GetSniperOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSniperOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SniperServer).GetSniperOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Sniper_GetSniperOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SniperServer).GetSniperOrder(ctx, req.(*GetSniperOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Sniper_GetAllSniperOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllSniperOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SniperServer).GetAllSniperOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Sniper_GetAllSniperOrders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SniperServer).GetAllSniperOrders(ctx, req.(*GetAllSniperOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Sniper_ServiceDesc is the grpc.ServiceDesc for Sniper service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +216,18 @@ var Sniper_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateSniperOrder",
 			Handler:    _Sniper_CreateSniperOrder_Handler,
+		},
+		{
+			MethodName: "CancelSniperOrder",
+			Handler:    _Sniper_CancelSniperOrder_Handler,
+		},
+		{
+			MethodName: "GetSniperOrder",
+			Handler:    _Sniper_GetSniperOrder_Handler,
+		},
+		{
+			MethodName: "GetAllSniperOrders",
+			Handler:    _Sniper_GetAllSniperOrders_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
