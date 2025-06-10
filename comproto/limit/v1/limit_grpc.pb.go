@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Limit_CreateLimitOrder_FullMethodName = "/api.limit.v1.Limit/CreateLimitOrder"
+	Limit_CancelLimitOrder_FullMethodName = "/api.limit.v1.Limit/CancelLimitOrder"
 )
 
 // LimitClient is the client API for Limit service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LimitClient interface {
 	CreateLimitOrder(ctx context.Context, in *CreateLimitOrderRequest, opts ...grpc.CallOption) (*CreateLimitOrderReply, error)
+	CancelLimitOrder(ctx context.Context, in *CancelLimitOrderRequest, opts ...grpc.CallOption) (*CancelLimitOrderReply, error)
 }
 
 type limitClient struct {
@@ -47,11 +49,22 @@ func (c *limitClient) CreateLimitOrder(ctx context.Context, in *CreateLimitOrder
 	return out, nil
 }
 
+func (c *limitClient) CancelLimitOrder(ctx context.Context, in *CancelLimitOrderRequest, opts ...grpc.CallOption) (*CancelLimitOrderReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CancelLimitOrderReply)
+	err := c.cc.Invoke(ctx, Limit_CancelLimitOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LimitServer is the server API for Limit service.
 // All implementations must embed UnimplementedLimitServer
 // for forward compatibility.
 type LimitServer interface {
 	CreateLimitOrder(context.Context, *CreateLimitOrderRequest) (*CreateLimitOrderReply, error)
+	CancelLimitOrder(context.Context, *CancelLimitOrderRequest) (*CancelLimitOrderReply, error)
 	mustEmbedUnimplementedLimitServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedLimitServer struct{}
 
 func (UnimplementedLimitServer) CreateLimitOrder(context.Context, *CreateLimitOrderRequest) (*CreateLimitOrderReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLimitOrder not implemented")
+}
+func (UnimplementedLimitServer) CancelLimitOrder(context.Context, *CancelLimitOrderRequest) (*CancelLimitOrderReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelLimitOrder not implemented")
 }
 func (UnimplementedLimitServer) mustEmbedUnimplementedLimitServer() {}
 func (UnimplementedLimitServer) testEmbeddedByValue()               {}
@@ -104,6 +120,24 @@ func _Limit_CreateLimitOrder_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Limit_CancelLimitOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelLimitOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LimitServer).CancelLimitOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Limit_CancelLimitOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LimitServer).CancelLimitOrder(ctx, req.(*CancelLimitOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Limit_ServiceDesc is the grpc.ServiceDesc for Limit service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var Limit_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateLimitOrder",
 			Handler:    _Limit_CreateLimitOrder_Handler,
+		},
+		{
+			MethodName: "CancelLimitOrder",
+			Handler:    _Limit_CancelLimitOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

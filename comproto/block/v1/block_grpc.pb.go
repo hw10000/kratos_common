@@ -71,6 +71,7 @@ type BlockClient interface {
 	GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionByHashReply, error)
 	// 获取流动性
 	GetLiquidity(ctx context.Context, in *GetLiquidityRequest, opts ...grpc.CallOption) (*GetLiquidityReply, error)
+	// 获取未使用Nonce EVM
 	GetPendingNonce(ctx context.Context, in *GetPendingNonceRequest, opts ...grpc.CallOption) (*GetPendingNonceReply, error)
 }
 
@@ -303,6 +304,7 @@ type BlockServer interface {
 	GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionByHashReply, error)
 	// 获取流动性
 	GetLiquidity(context.Context, *GetLiquidityRequest) (*GetLiquidityReply, error)
+	// 获取未使用Nonce EVM
 	GetPendingNonce(context.Context, *GetPendingNonceRequest) (*GetPendingNonceReply, error)
 	mustEmbedUnimplementedBlockServer()
 }

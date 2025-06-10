@@ -9,6 +9,7 @@ option java_package = "api.limit.v1";
 
 service Limit {
     rpc CreateLimitOrder (CreateLimitOrderRequest) returns (CreateLimitOrderReply);
+    rpc CancelLimitOrder (CancelLimitOrderRequest) returns (CancelLimitOrderReply);
 }
 
 message CreateLimitOrderRequest {
@@ -27,4 +28,11 @@ message CreateLimitOrderRequest {
 
 message CreateLimitOrderReply {
     string order_id = 1; // 订单ID
+}
+
+message CancelLimitOrderRequest {
+    string order_id = 1; // 订单ID
+}
+
+message CancelLimitOrderReply {
 }
