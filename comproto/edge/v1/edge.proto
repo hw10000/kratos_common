@@ -9,6 +9,14 @@ option java_package = "api.edge.v1";
 service Edge {
   // 检查地址是否在黑名单中
   rpc CheckBlacklistAddress(CheckBlacklistAddressRequest) returns (CheckBlacklistAddressResponse) {}
+  // 获取支持的链列表
+    rpc GetSupportedChains(GetSupportedChainsRequest) returns (GetSupportedChainsReply) {}
+    // 根据链去获取支持的代币
+    rpc GetTokenByChain(GetTokenByChainRequest) returns (GetTokenByChainReply) {}
+    // 询价
+    rpc GetQuote(GetQuoteRequest) returns (GetQuoteReply) {}
+    // 跨链闪兑
+    rpc Swap(SwapRequest) returns (SwapReply) {}
 }
 
 
@@ -21,4 +29,95 @@ message CheckBlacklistAddressRequest {
 // 黑名单地址检查响应
 message CheckBlacklistAddressResponse {
   bool is_blacklisted = 1; // 是否在黑名单中
+}
+
+
+// 请求消息
+message GetSupportedChainsRequest {
+}
+
+// 响应消息
+message GetSupportedChainsReply {
+    repeated Chain chains = 1;
+}
+
+message Chain {
+    string chain = 1;
+    string contractAddress = 2;
+}
+
+// 请求消息
+message GetTokenByChainRequest {
+    string chain = 1;
+}
+
+// 响应消息
+message GetTokenByChainReply {
+    repeated Token tokens = 1;
+}
+
+message Token {
+    string chain = 1;
+    string symbol = 2;
+    string name = 3;
+    string address = 4;
+    uint32 decimals = 5;
+    string logoURI = 6;
+    int32 isCrossEnable = 7;
+    uint32 withdrawGas = 8;
+}
+
+// 请求消息
+message GetQuoteRequest {
+    string fromTokenAddress = 1;
+    string toTokenAddress = 2;
+    string fromTokenAmount = 3;
+    string fromTokenChain = 4;
+    string toTokenChain = 5;
+    string userAddr = 6;
+}
+
+// 响应消息
+message GetQuoteReply {
+    string amountOutMin = 1;
+    string chainFee = 2;
+    string contractAddress = 3;
+    string depositMin = 4;
+    string depositMax = 5;
+    string dex = 6;
+    float fee = 7;
+    string feeToken = 8;
+    string fromTokenAmount = 9;
+    int32 fromTokenDecimal = 10;
+    string toTokenAmount = 11;
+    int32 toTokenDecimal = 12;
+    repeated string path = 13;
+    string logoUrl = 14;
+    int64 estimatedTime = 15;
+}
+
+// 请求消息
+message SwapRequest {
+    string chain = 1;
+    string fromTokenAddress = 2;
+    string amountOutMin = 3;
+    string toAddress = 4;
+    string toTokenChain = 5;
+    string fromTokenAmount = 6;
+    string fromTokenChain = 7;
+    string toTokenAddress = 8;
+    string fromAddress = 9;
+    string fromCoinCode = 10;
+    string toCoinCode = 11;
+    string sourceType = 12;
+    string slippage = 13;
+    string fee = 14;
+    string feeReceivingAddress = 15;
+    string fromBridgersContractAddress = 16;
+}
+
+// 响应消息
+message SwapReply {
+    string txHash = 1;
+    string orderId = 2;
 }

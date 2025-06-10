@@ -20,6 +20,10 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Edge_CheckBlacklistAddress_FullMethodName = "/api.edge.v1.Edge/CheckBlacklistAddress"
+	Edge_GetSupportedChains_FullMethodName    = "/api.edge.v1.Edge/GetSupportedChains"
+	Edge_GetTokenByChain_FullMethodName       = "/api.edge.v1.Edge/GetTokenByChain"
+	Edge_GetQuote_FullMethodName              = "/api.edge.v1.Edge/GetQuote"
+	Edge_Swap_FullMethodName                  = "/api.edge.v1.Edge/Swap"
 )
 
 // EdgeClient is the client API for Edge service.
@@ -28,6 +32,14 @@ const (
 type EdgeClient interface {
 	// 检查地址是否在黑名单中
 	CheckBlacklistAddress(ctx context.Context, in *CheckBlacklistAddressRequest, opts ...grpc.CallOption) (*CheckBlacklistAddressResponse, error)
+	// 获取支持的链列表
+	GetSupportedChains(ctx context.Context, in *GetSupportedChainsRequest, opts ...grpc.CallOption) (*GetSupportedChainsReply, error)
+	// 根据链去获取支持的代币
+	GetTokenByChain(ctx context.Context, in *GetTokenByChainRequest, opts ...grpc.CallOption) (*GetTokenByChainReply, error)
+	// 询价
+	GetQuote(ctx context.Context, in *GetQuoteRequest, opts ...grpc.CallOption) (*GetQuoteReply, error)
+	// 跨链闪兑
+	Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*SwapReply, error)
 }
 
 type edgeClient struct {
@@ -48,12 +60,60 @@ func (c *edgeClient) CheckBlacklistAddress(ctx context.Context, in *CheckBlackli
 	return out, nil
 }
 
+func (c *edgeClient) GetSupportedChains(ctx context.Context, in *GetSupportedChainsRequest, opts ...grpc.CallOption) (*GetSupportedChainsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSupportedChainsReply)
+	err := c.cc.Invoke(ctx, Edge_GetSupportedChains_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *edgeClient) GetTokenByChain(ctx context.Context, in *GetTokenByChainRequest, opts ...grpc.CallOption) (*GetTokenByChainReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTokenByChainReply)
+	err := c.cc.Invoke(ctx, Edge_GetTokenByChain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *edgeClient) GetQuote(ctx context.Context, in *GetQuoteRequest, opts ...grpc.CallOption) (*GetQuoteReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetQuoteReply)
+	err := c.cc.Invoke(ctx, Edge_GetQuote_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *edgeClient) Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*SwapReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SwapReply)
+	err := c.cc.Invoke(ctx, Edge_Swap_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EdgeServer is the server API for Edge service.
 // All implementations must embed UnimplementedEdgeServer
 // for forward compatibility.
 type EdgeServer interface {
 	// 检查地址是否在黑名单中
 	CheckBlacklistAddress(context.Context, *CheckBlacklistAddressRequest) (*CheckBlacklistAddressResponse, error)
+	// 获取支持的链列表
+	GetSupportedChains(context.Context, *GetSupportedChainsRequest) (*GetSupportedChainsReply, error)
+	// 根据链去获取支持的代币
+	GetTokenByChain(context.Context, *GetTokenByChainRequest) (*GetTokenByChainReply, error)
+	// 询价
+	GetQuote(context.Context, *GetQuoteRequest) (*GetQuoteReply, error)
+	// 跨链闪兑
+	Swap(context.Context, *SwapRequest) (*SwapReply, error)
 	mustEmbedUnimplementedEdgeServer()
 }
 
@@ -66,6 +126,18 @@ type UnimplementedEdgeServer struct{}
 
 func (UnimplementedEdgeServer) CheckBlacklistAddress(context.Context, *CheckBlacklistAddressRequest) (*CheckBlacklistAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckBlacklistAddress not implemented")
+}
+func (UnimplementedEdgeServer) GetSupportedChains(context.Context, *GetSupportedChainsRequest) (*GetSupportedChainsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSupportedChains not implemented")
+}
+func (UnimplementedEdgeServer) GetTokenByChain(context.Context, *GetTokenByChainRequest) (*GetTokenByChainReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTokenByChain not implemented")
+}
+func (UnimplementedEdgeServer) GetQuote(context.Context, *GetQuoteRequest) (*GetQuoteReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetQuote not implemented")
+}
+func (UnimplementedEdgeServer) Swap(context.Context, *SwapRequest) (*SwapReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Swap not implemented")
 }
 func (UnimplementedEdgeServer) mustEmbedUnimplementedEdgeServer() {}
 func (UnimplementedEdgeServer) testEmbeddedByValue()              {}
@@ -106,6 +178,78 @@ func _Edge_CheckBlacklistAddress_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Edge_GetSupportedChains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSupportedChainsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).GetSupportedChains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_GetSupportedChains_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).GetSupportedChains(ctx, req.(*GetSupportedChainsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Edge_GetTokenByChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTokenByChainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).GetTokenByChain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_GetTokenByChain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).GetTokenByChain(ctx, req.(*GetTokenByChainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Edge_GetQuote_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetQuoteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).GetQuote(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_GetQuote_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).GetQuote(ctx, req.(*GetQuoteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Edge_Swap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SwapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).Swap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_Swap_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).Swap(ctx, req.(*SwapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Edge_ServiceDesc is the grpc.ServiceDesc for Edge service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -116,6 +260,22 @@ var Edge_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckBlacklistAddress",
 			Handler:    _Edge_CheckBlacklistAddress_Handler,
+		},
+		{
+			MethodName: "GetSupportedChains",
+			Handler:    _Edge_GetSupportedChains_Handler,
+		},
+		{
+			MethodName: "GetTokenByChain",
+			Handler:    _Edge_GetTokenByChain_Handler,
+		},
+		{
+			MethodName: "GetQuote",
+			Handler:    _Edge_GetQuote_Handler,
+		},
+		{
+			MethodName: "Swap",
+			Handler:    _Edge_Swap_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
