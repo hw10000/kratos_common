@@ -42,6 +42,9 @@ service Block {
 
 	//获取流动性
 	rpc GetLiquidity(GetLiquidityRequest) returns (GetLiquidityReply);
+
+	//获取未使用Nonce EVM
+	rpc GetPendingNonce(GetPendingNonceRequest) returns (GetPendingNonceReply);
 }
 
 message NetworkConfigItem {
@@ -325,4 +328,15 @@ message GetLiquidityReply {
 	string liquidity_address = 2; // 流动性地址
 	string liquidity_type = 3; // 流动性类型
 	string liquidity_market_cap = 4; // 流动性市值
+}
+
+
+message GetPendingNonceRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string address = 3; // 地址
+}
+
+message GetPendingNonceReply {
+	uint64 nonce = 1; // 非零
 }

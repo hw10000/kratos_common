@@ -37,6 +37,7 @@ const (
 	Block_CreateAddressBatch_FullMethodName     = "/api.block.v1.Block/CreateAddressBatch"
 	Block_GetTransactionByHash_FullMethodName   = "/api.block.v1.Block/GetTransactionByHash"
 	Block_GetLiquidity_FullMethodName           = "/api.block.v1.Block/GetLiquidity"
+	Block_GetPendingNonce_FullMethodName        = "/api.block.v1.Block/GetPendingNonce"
 )
 
 // BlockClient is the client API for Block service.
@@ -70,6 +71,7 @@ type BlockClient interface {
 	GetTransactionByHash(ctx context.Context, in *GetTransactionByHashRequest, opts ...grpc.CallOption) (*GetTransactionByHashReply, error)
 	// 获取流动性
 	GetLiquidity(ctx context.Context, in *GetLiquidityRequest, opts ...grpc.CallOption) (*GetLiquidityReply, error)
+	GetPendingNonce(ctx context.Context, in *GetPendingNonceRequest, opts ...grpc.CallOption) (*GetPendingNonceReply, error)
 }
 
 type blockClient struct {
@@ -260,6 +262,16 @@ func (c *blockClient) GetLiquidity(ctx context.Context, in *GetLiquidityRequest,
 	return out, nil
 }
 
+func (c *blockClient) GetPendingNonce(ctx context.Context, in *GetPendingNonceRequest, opts ...grpc.CallOption) (*GetPendingNonceReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPendingNonceReply)
+	err := c.cc.Invoke(ctx, Block_GetPendingNonce_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockServer is the server API for Block service.
 // All implementations must embed UnimplementedBlockServer
 // for forward compatibility.
@@ -291,6 +303,7 @@ type BlockServer interface {
 	GetTransactionByHash(context.Context, *GetTransactionByHashRequest) (*GetTransactionByHashReply, error)
 	// 获取流动性
 	GetLiquidity(context.Context, *GetLiquidityRequest) (*GetLiquidityReply, error)
+	GetPendingNonce(context.Context, *GetPendingNonceRequest) (*GetPendingNonceReply, error)
 	mustEmbedUnimplementedBlockServer()
 }
 
@@ -354,6 +367,9 @@ func (UnimplementedBlockServer) GetTransactionByHash(context.Context, *GetTransa
 }
 func (UnimplementedBlockServer) GetLiquidity(context.Context, *GetLiquidityRequest) (*GetLiquidityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLiquidity not implemented")
+}
+func (UnimplementedBlockServer) GetPendingNonce(context.Context, *GetPendingNonceRequest) (*GetPendingNonceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPendingNonce not implemented")
 }
 func (UnimplementedBlockServer) mustEmbedUnimplementedBlockServer() {}
 func (UnimplementedBlockServer) testEmbeddedByValue()               {}
@@ -700,6 +716,24 @@ func _Block_GetLiquidity_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_GetPendingNonce_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPendingNonceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).GetPendingNonce(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_GetPendingNonce_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).GetPendingNonce(ctx, req.(*GetPendingNonceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Block_ServiceDesc is the grpc.ServiceDesc for Block service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -778,6 +812,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLiquidity",
 			Handler:    _Block_GetLiquidity_Handler,
+		},
+		{
+			MethodName: "GetPendingNonce",
+			Handler:    _Block_GetPendingNonce_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
