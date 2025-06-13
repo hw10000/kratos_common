@@ -17,6 +17,8 @@ service Edge {
     rpc GetQuote(GetQuoteRequest) returns (GetQuoteReply) {}
     // 跨链闪兑
     rpc Swap(SwapRequest) returns (SwapReply) {}
+    // 订单详情
+    rpc getTransDataById(OrderRequest) returns (OrderReply) {}
 }
 
 
@@ -74,7 +76,6 @@ message GetQuoteRequest {
     string fromTokenAmount = 3;
     string fromTokenChain = 4;
     string toTokenChain = 5;
-    string userAddr = 6;
 }
 
 // 响应消息
@@ -106,7 +107,7 @@ message SwapRequest {
     string fromTokenAmount = 6;
     string fromTokenChain = 7;
     string toTokenAddress = 8;
-    string fromAddress = 9;
+    string storageId = 9;
     string fromCoinCode = 10;
     string toCoinCode = 11;
     string sourceType = 12;
@@ -118,6 +119,43 @@ message SwapRequest {
 
 // 响应消息
 message SwapReply {
-    string txHash = 1;
-    string orderId = 2;
+    string swapHash = 1;  // 跨链hash
+    string frrHash = 2;  // 内扣手续费hash
+    string orderId = 3;  // 订单号
+}
+
+
+// 请求消息
+message OrderRequest {
+    string orderId = 1;  // 订单号
+}
+
+// 响应消息
+message OrderReply {
+    string id = 1;                                    // 订单ID
+    string orderId = 2;                              // 订单号
+    string fromTokenAddress = 3;                      // 出售币种的合约地址
+    string toTokenAddress = 4;                        // 目标币种的合约地址
+    string fromTokenAmount = 5;                       // 出售币种数量
+    string toTokenAmount = 6;                         // 目标币种预计得到数量
+    string fromAddress = 7;                           // 用户出售币种的地址
+    string slippage = 8;                             // 滑点
+    string fromChain = 9;                            // 出售币种的链
+    string toChain = 10;                             // 目标币种的链
+    string hash = 11;                                // 存币hash
+    string depositHashExplore = 12;                   // 存币区块浏览器地址
+    string dexName = 13;                             // DEX名称
+    string status = 14;                              // 订单状态
+    string createTime = 15;                          // 订单创建时间
+    string source = 16;                              // 渠道
+    string toAddress = 17;                           // 目标地址
+    string toHash = 18;                              // 发币hash
+    string receiveHashExplore = 19;                   // 发币区块浏览器地址
+    string equipmentNo = 20;                         // 设备号
+    string refundCoinAmt = 21;                       // 退币数量
+    string refundHash = 22;                          // 退币hash
+    string refundHashExplore = 23;                    // 退币区块浏览器地址
+    string refundReason = 24;                        // 退币原因（1-流动性不足、2-误差超过阈值、3-原币维护、4-黑名单、5-目标币维护、6-兑换数量不在范围内、7-存币超时、8-与风险地址交互）
+    string fromCoinCode = 25;                        // 出售币种
+    string toCoinCode = 26;                          // 目标币种
 }
