@@ -254,6 +254,7 @@ message CreateAddressReply {
 
 message StoreSecretReply {
     string storage_id = 1;
+	string address = 2;
 }
 
 message DecodeSecretRequest {
