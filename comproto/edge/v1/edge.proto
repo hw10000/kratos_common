@@ -44,8 +44,8 @@ message GetSupportedChainsReply {
 }
 
 message Chain {
-    string chain = 1;
-    string contractAddress = 2;
+    string chain = 1; //链名
+    string contractAddress = 2; //bridgers合约地址
 }
 
 // 请求消息
@@ -58,12 +58,13 @@ message GetTokenByChainReply {
     repeated Token tokens = 1;
 }
 
+
 message Token {
-    string chain = 1;
-    string symbol = 2;
-    string name = 3;
-    string address = 4;
-    uint32 decimals = 5;
+    string chain = 1; //链名
+    string symbol = 2; // 币种编码
+    string name = 3; //币种名称
+    string address = 4; //币种合约地址
+    uint32 decimals = 5; //精度
     string logoURI = 6;
     int32 isCrossEnable = 7;
     uint32 withdrawGas = 8;
@@ -71,26 +72,28 @@ message Token {
 
 // 请求消息
 message GetQuoteRequest {
-    string fromTokenAddress = 1;
-    string toTokenAddress = 2;
-    string fromTokenAmount = 3;
-    string fromTokenChain = 4;
-    string toTokenChain = 5;
+    string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
+    string toTokenAddress = 2;    //获得币种合约地址（可通过获取币种列表中的address字段获得）
+    string fromTokenAmount = 3;   //出售币种数量(带精度)
+    string fromTokenChain = 4;    //出售币种链（可通过获取币种列表中的chain字段获得,详细支持链的情况可查看【基本说明】）
+    string toTokenChain = 5;     //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
 }
+
 
 // 响应消息
 message GetQuoteReply {
-    string amountOutMin = 1;
-    string chainFee = 2;
-    string contractAddress = 3;
-    string depositMin = 4;
-    string depositMax = 5;
+    string amountOutMin = 1; // 发币数量 带精度
+    string chainFee = 2;  // 链上矿工费
+    string contractAddress = 3;   // bridgers合约地址
+    string depositMin = 4;  //兑换范围最小值 若用户兑换值小于该值，将不能兑换得到目标币
+    string depositMax = 5;   //兑换范围最大值 若用户兑换的值大于该值，将只能得到该值兑换所能得到的目标币种数量
+   "dex":"Bridgers1",
     string dex = 6;
-    float fee = 7;
+    float fee = 7;  // 手续费比例
     string feeToken = 8;
     string fromTokenAmount = 9;
     int32 fromTokenDecimal = 10;
-    string toTokenAmount = 11;
+    string toTokenAmount = 11;  // 发币数量 不带精度 
     int32 toTokenDecimal = 12;
     repeated string path = 13;
     string logoUrl = 14;
@@ -99,22 +102,22 @@ message GetQuoteReply {
 
 // 请求消息
 message SwapRequest {
-    string chain = 1;
-    string fromTokenAddress = 2;
-    string amountOutMin = 3;
-    string toAddress = 4;
-    string toTokenChain = 5;
-    string fromTokenAmount = 6;
-    string fromTokenChain = 7;
-    string toTokenAddress = 8;
-    string storageId = 9;
-    string fromCoinCode = 10;
-    string toCoinCode = 11;
-    string sourceType = 12;
-    string slippage = 13;
-    string fee = 14;
-    string feeReceivingAddress = 15;
-    string fromBridgersContractAddress = 16;
+    string chain = 1;   // 出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+    string fromTokenAddress = 2;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
+    string amountOutMin = 3;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
+    string toAddress = 4;   //接受地址
+    string toTokenChain = 5;  //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+    string fromTokenAmount = 6;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
+    string fromTokenChain = 7;   //出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+    string toTokenAddress = 8;  //获得币种合约地址（可通过获取币种列表中的address字段获得）
+    string storageId = 9;     // 
+    string fromCoinCode = 10;  //出售代币名称（可通过获取币种列表中的symbol字段获得）
+    string toCoinCode = 11;   //获得代币名称（可通过获取币种列表中的symbol字段获得）
+    string sourceType = 12;  //设备类型（H5/IOS/Android 该字段为选填，如通过直接通过API调用，可为空)
+    string slippage = 13;   //滑点，例如：0.1（代表10%）
+    string fee = 14;   //内扣手续费，例如：0.1（代表10%）
+    string feeReceivingAddress = 15;  //内扣手续费接收地址
+    string fromBridgersContractAddress = 16;  //出售币种bridgers合约地址
 }
 
 // 响应消息
