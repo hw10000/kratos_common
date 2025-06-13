@@ -111,7 +111,7 @@ message SwapRequest {
     string storageId = 8;     // 
     string fromCoinCode = 9;  //出售代币名称（可通过获取币种列表中的symbol字段获得）
     string toCoinCode = 10;   //获得代币名称（可通过获取币种列表中的symbol字段获得）
-    string sourceType = 11;  //设备类型（H5/IOS/Android 该字段为选填，如通过直接通过API调用，可为空)
+    string orderCallbackUrl = 11;  //订单回调地址
     string slippage = 12;   //滑点，例如：0.1（代表10%）
     string fee = 13;   //内扣手续费，例如：0.1（代表10%）
     string feeReceivingAddress = 14;  //内扣手续费接收地址

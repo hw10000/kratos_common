@@ -690,7 +690,7 @@ type SwapRequest struct {
 	StorageId                   string                 `protobuf:"bytes,8,opt,name=storageId,proto3" json:"storageId,omitempty"`                                      //
 	FromCoinCode                string                 `protobuf:"bytes,9,opt,name=fromCoinCode,proto3" json:"fromCoinCode,omitempty"`                                //出售代币名称（可通过获取币种列表中的symbol字段获得）
 	ToCoinCode                  string                 `protobuf:"bytes,10,opt,name=toCoinCode,proto3" json:"toCoinCode,omitempty"`                                   //获得代币名称（可通过获取币种列表中的symbol字段获得）
-	SourceType                  string                 `protobuf:"bytes,11,opt,name=sourceType,proto3" json:"sourceType,omitempty"`                                   //设备类型（H5/IOS/Android 该字段为选填，如通过直接通过API调用，可为空)
+	OrderCallbackUrl            string                 `protobuf:"bytes,11,opt,name=orderCallbackUrl,proto3" json:"orderCallbackUrl,omitempty"`                       //订单回调地址
 	Slippage                    string                 `protobuf:"bytes,12,opt,name=slippage,proto3" json:"slippage,omitempty"`                                       //滑点，例如：0.1（代表10%）
 	Fee                         string                 `protobuf:"bytes,13,opt,name=fee,proto3" json:"fee,omitempty"`                                                 //内扣手续费，例如：0.1（代表10%）
 	FeeReceivingAddress         string                 `protobuf:"bytes,14,opt,name=feeReceivingAddress,proto3" json:"feeReceivingAddress,omitempty"`                 //内扣手续费接收地址
@@ -799,9 +799,9 @@ func (x *SwapRequest) GetToCoinCode() string {
 	return ""
 }
 
-func (x *SwapRequest) GetSourceType() string {
+func (x *SwapRequest) GetOrderCallbackUrl() string {
 	if x != nil {
-		return x.SourceType
+		return x.OrderCallbackUrl
 	}
 	return ""
 }
@@ -1240,7 +1240,7 @@ const file_comproto_edge_v1_edge_proto_rawDesc = "" +
 	"\x0etoTokenDecimal\x18\f \x01(\x05R\x0etoTokenDecimal\x12\x12\n" +
 	"\x04path\x18\r \x03(\tR\x04path\x12\x18\n" +
 	"\alogoUrl\x18\x0e \x01(\tR\alogoUrl\x12$\n" +
-	"\restimatedTime\x18\x0f \x01(\x03R\restimatedTime\"\xbd\x04\n" +
+	"\restimatedTime\x18\x0f \x01(\x03R\restimatedTime\"\xc9\x04\n" +
 	"\vSwapRequest\x12*\n" +
 	"\x10fromTokenAddress\x18\x01 \x01(\tR\x10fromTokenAddress\x12\"\n" +
 	"\famountOutMin\x18\x02 \x01(\tR\famountOutMin\x12\x1c\n" +
@@ -1254,10 +1254,8 @@ const file_comproto_edge_v1_edge_proto_rawDesc = "" +
 	"\n" +
 	"toCoinCode\x18\n" +
 	" \x01(\tR\n" +
-	"toCoinCode\x12\x1e\n" +
-	"\n" +
-	"sourceType\x18\v \x01(\tR\n" +
-	"sourceType\x12\x1a\n" +
+	"toCoinCode\x12*\n" +
+	"\x10orderCallbackUrl\x18\v \x01(\tR\x10orderCallbackUrl\x12\x1a\n" +
 	"\bslippage\x18\f \x01(\tR\bslippage\x12\x10\n" +
 	"\x03fee\x18\r \x01(\tR\x03fee\x120\n" +
 	"\x13feeReceivingAddress\x18\x0e \x01(\tR\x13feeReceivingAddress\x12@\n" +
