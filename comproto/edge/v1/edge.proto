@@ -87,8 +87,7 @@ message GetQuoteReply {
     string contractAddress = 3;   // bridgers合约地址
     string depositMin = 4;  //兑换范围最小值 若用户兑换值小于该值，将不能兑换得到目标币
     string depositMax = 5;   //兑换范围最大值 若用户兑换的值大于该值，将只能得到该值兑换所能得到的目标币种数量
-   "dex":"Bridgers1",
-    string dex = 6;
+    string dex = 6;  // DEX名称
     float fee = 7;  // 手续费比例
     string feeToken = 8;
     string fromTokenAmount = 9;
@@ -102,28 +101,27 @@ message GetQuoteReply {
 
 // 请求消息
 message SwapRequest {
-    string chain = 1;   // 出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
-    string fromTokenAddress = 2;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
-    string amountOutMin = 3;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
-    string toAddress = 4;   //接受地址
-    string toTokenChain = 5;  //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
-    string fromTokenAmount = 6;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
-    string fromTokenChain = 7;   //出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
-    string toTokenAddress = 8;  //获得币种合约地址（可通过获取币种列表中的address字段获得）
-    string storageId = 9;     // 
-    string fromCoinCode = 10;  //出售代币名称（可通过获取币种列表中的symbol字段获得）
-    string toCoinCode = 11;   //获得代币名称（可通过获取币种列表中的symbol字段获得）
-    string sourceType = 12;  //设备类型（H5/IOS/Android 该字段为选填，如通过直接通过API调用，可为空)
-    string slippage = 13;   //滑点，例如：0.1（代表10%）
-    string fee = 14;   //内扣手续费，例如：0.1（代表10%）
-    string feeReceivingAddress = 15;  //内扣手续费接收地址
-    string fromBridgersContractAddress = 16;  //出售币种bridgers合约地址
+    string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
+    string amountOutMin = 2;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
+    string toAddress = 3;   //接受地址
+    string toTokenChain = 4;  //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+    string fromTokenAmount = 5;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
+    string fromTokenChain = 6;   //出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+    string toTokenAddress = 7;  //获得币种合约地址（可通过获取币种列表中的address字段获得）
+    string storageId = 8;     // 
+    string fromCoinCode = 9;  //出售代币名称（可通过获取币种列表中的symbol字段获得）
+    string toCoinCode = 10;   //获得代币名称（可通过获取币种列表中的symbol字段获得）
+    string sourceType = 11;  //设备类型（H5/IOS/Android 该字段为选填，如通过直接通过API调用，可为空)
+    string slippage = 12;   //滑点，例如：0.1（代表10%）
+    string fee = 13;   //内扣手续费，例如：0.1（代表10%）
+    string feeReceivingAddress = 14;  //内扣手续费接收地址
+    string fromBridgersContractAddress = 15;  //出售币种bridgers合约地址
 }
 
 // 响应消息
 message SwapReply {
     string swapHash = 1;  // 跨链hash
-    string frrHash = 2;  // 内扣手续费hash
+    string feeHash = 2;  // 内扣手续费hash
     string orderId = 3;  // 订单号
 }
 

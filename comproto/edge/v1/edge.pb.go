@@ -203,8 +203,8 @@ func (x *GetSupportedChainsReply) GetChains() []*Chain {
 
 type Chain struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Chain           string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
-	ContractAddress string                 `protobuf:"bytes,2,opt,name=contractAddress,proto3" json:"contractAddress,omitempty"`
+	Chain           string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`                     //链名
+	ContractAddress string                 `protobuf:"bytes,2,opt,name=contractAddress,proto3" json:"contractAddress,omitempty"` //bridgers合约地址
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -345,11 +345,11 @@ func (x *GetTokenByChainReply) GetTokens() []*Token {
 
 type Token struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chain         string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
-	Symbol        string                 `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Address       string                 `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
-	Decimals      uint32                 `protobuf:"varint,5,opt,name=decimals,proto3" json:"decimals,omitempty"`
+	Chain         string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`        //链名
+	Symbol        string                 `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`      // 币种编码
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`          //币种名称
+	Address       string                 `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`    //币种合约地址
+	Decimals      uint32                 `protobuf:"varint,5,opt,name=decimals,proto3" json:"decimals,omitempty"` //精度
 	LogoURI       string                 `protobuf:"bytes,6,opt,name=logoURI,proto3" json:"logoURI,omitempty"`
 	IsCrossEnable int32                  `protobuf:"varint,7,opt,name=isCrossEnable,proto3" json:"isCrossEnable,omitempty"`
 	WithdrawGas   uint32                 `protobuf:"varint,8,opt,name=withdrawGas,proto3" json:"withdrawGas,omitempty"`
@@ -446,11 +446,11 @@ func (x *Token) GetWithdrawGas() uint32 {
 // 请求消息
 type GetQuoteRequest struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	FromTokenAddress string                 `protobuf:"bytes,1,opt,name=fromTokenAddress,proto3" json:"fromTokenAddress,omitempty"`
-	ToTokenAddress   string                 `protobuf:"bytes,2,opt,name=toTokenAddress,proto3" json:"toTokenAddress,omitempty"`
-	FromTokenAmount  string                 `protobuf:"bytes,3,opt,name=fromTokenAmount,proto3" json:"fromTokenAmount,omitempty"`
-	FromTokenChain   string                 `protobuf:"bytes,4,opt,name=fromTokenChain,proto3" json:"fromTokenChain,omitempty"`
-	ToTokenChain     string                 `protobuf:"bytes,5,opt,name=toTokenChain,proto3" json:"toTokenChain,omitempty"`
+	FromTokenAddress string                 `protobuf:"bytes,1,opt,name=fromTokenAddress,proto3" json:"fromTokenAddress,omitempty"` //出售币种合约地址（可通过获取币种列表中的address字段获得）
+	ToTokenAddress   string                 `protobuf:"bytes,2,opt,name=toTokenAddress,proto3" json:"toTokenAddress,omitempty"`     //获得币种合约地址（可通过获取币种列表中的address字段获得）
+	FromTokenAmount  string                 `protobuf:"bytes,3,opt,name=fromTokenAmount,proto3" json:"fromTokenAmount,omitempty"`   //出售币种数量(带精度)
+	FromTokenChain   string                 `protobuf:"bytes,4,opt,name=fromTokenChain,proto3" json:"fromTokenChain,omitempty"`     //出售币种链（可通过获取币种列表中的chain字段获得,详细支持链的情况可查看【基本说明】）
+	ToTokenChain     string                 `protobuf:"bytes,5,opt,name=toTokenChain,proto3" json:"toTokenChain,omitempty"`         //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -523,17 +523,17 @@ func (x *GetQuoteRequest) GetToTokenChain() string {
 // 响应消息
 type GetQuoteReply struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	AmountOutMin     string                 `protobuf:"bytes,1,opt,name=amountOutMin,proto3" json:"amountOutMin,omitempty"`
-	ChainFee         string                 `protobuf:"bytes,2,opt,name=chainFee,proto3" json:"chainFee,omitempty"`
-	ContractAddress  string                 `protobuf:"bytes,3,opt,name=contractAddress,proto3" json:"contractAddress,omitempty"`
-	DepositMin       string                 `protobuf:"bytes,4,opt,name=depositMin,proto3" json:"depositMin,omitempty"`
-	DepositMax       string                 `protobuf:"bytes,5,opt,name=depositMax,proto3" json:"depositMax,omitempty"`
-	Dex              string                 `protobuf:"bytes,6,opt,name=dex,proto3" json:"dex,omitempty"`
-	Fee              float32                `protobuf:"fixed32,7,opt,name=fee,proto3" json:"fee,omitempty"`
+	AmountOutMin     string                 `protobuf:"bytes,1,opt,name=amountOutMin,proto3" json:"amountOutMin,omitempty"`       // 发币数量 带精度
+	ChainFee         string                 `protobuf:"bytes,2,opt,name=chainFee,proto3" json:"chainFee,omitempty"`               // 链上矿工费
+	ContractAddress  string                 `protobuf:"bytes,3,opt,name=contractAddress,proto3" json:"contractAddress,omitempty"` // bridgers合约地址
+	DepositMin       string                 `protobuf:"bytes,4,opt,name=depositMin,proto3" json:"depositMin,omitempty"`           //兑换范围最小值 若用户兑换值小于该值，将不能兑换得到目标币
+	DepositMax       string                 `protobuf:"bytes,5,opt,name=depositMax,proto3" json:"depositMax,omitempty"`           //兑换范围最大值 若用户兑换的值大于该值，将只能得到该值兑换所能得到的目标币种数量
+	Dex              string                 `protobuf:"bytes,6,opt,name=dex,proto3" json:"dex,omitempty"`                         // DEX名称
+	Fee              float32                `protobuf:"fixed32,7,opt,name=fee,proto3" json:"fee,omitempty"`                       // 手续费比例
 	FeeToken         string                 `protobuf:"bytes,8,opt,name=feeToken,proto3" json:"feeToken,omitempty"`
 	FromTokenAmount  string                 `protobuf:"bytes,9,opt,name=fromTokenAmount,proto3" json:"fromTokenAmount,omitempty"`
 	FromTokenDecimal int32                  `protobuf:"varint,10,opt,name=fromTokenDecimal,proto3" json:"fromTokenDecimal,omitempty"`
-	ToTokenAmount    string                 `protobuf:"bytes,11,opt,name=toTokenAmount,proto3" json:"toTokenAmount,omitempty"`
+	ToTokenAmount    string                 `protobuf:"bytes,11,opt,name=toTokenAmount,proto3" json:"toTokenAmount,omitempty"` // 发币数量 不带精度
 	ToTokenDecimal   int32                  `protobuf:"varint,12,opt,name=toTokenDecimal,proto3" json:"toTokenDecimal,omitempty"`
 	Path             []string               `protobuf:"bytes,13,rep,name=path,proto3" json:"path,omitempty"`
 	LogoUrl          string                 `protobuf:"bytes,14,opt,name=logoUrl,proto3" json:"logoUrl,omitempty"`
@@ -680,22 +680,21 @@ func (x *GetQuoteReply) GetEstimatedTime() int64 {
 // 请求消息
 type SwapRequest struct {
 	state                       protoimpl.MessageState `protogen:"open.v1"`
-	Chain                       string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
-	FromTokenAddress            string                 `protobuf:"bytes,2,opt,name=fromTokenAddress,proto3" json:"fromTokenAddress,omitempty"`
-	AmountOutMin                string                 `protobuf:"bytes,3,opt,name=amountOutMin,proto3" json:"amountOutMin,omitempty"`
-	ToAddress                   string                 `protobuf:"bytes,4,opt,name=toAddress,proto3" json:"toAddress,omitempty"`
-	ToTokenChain                string                 `protobuf:"bytes,5,opt,name=toTokenChain,proto3" json:"toTokenChain,omitempty"`
-	FromTokenAmount             string                 `protobuf:"bytes,6,opt,name=fromTokenAmount,proto3" json:"fromTokenAmount,omitempty"`
-	FromTokenChain              string                 `protobuf:"bytes,7,opt,name=fromTokenChain,proto3" json:"fromTokenChain,omitempty"`
-	ToTokenAddress              string                 `protobuf:"bytes,8,opt,name=toTokenAddress,proto3" json:"toTokenAddress,omitempty"`
-	StorageId                   string                 `protobuf:"bytes,9,opt,name=storageId,proto3" json:"storageId,omitempty"`
-	FromCoinCode                string                 `protobuf:"bytes,10,opt,name=fromCoinCode,proto3" json:"fromCoinCode,omitempty"`
-	ToCoinCode                  string                 `protobuf:"bytes,11,opt,name=toCoinCode,proto3" json:"toCoinCode,omitempty"`
-	SourceType                  string                 `protobuf:"bytes,12,opt,name=sourceType,proto3" json:"sourceType,omitempty"`
-	Slippage                    string                 `protobuf:"bytes,13,opt,name=slippage,proto3" json:"slippage,omitempty"`
-	Fee                         string                 `protobuf:"bytes,14,opt,name=fee,proto3" json:"fee,omitempty"`
-	FeeReceivingAddress         string                 `protobuf:"bytes,15,opt,name=feeReceivingAddress,proto3" json:"feeReceivingAddress,omitempty"`
-	FromBridgersContractAddress string                 `protobuf:"bytes,16,opt,name=fromBridgersContractAddress,proto3" json:"fromBridgersContractAddress,omitempty"`
+	FromTokenAddress            string                 `protobuf:"bytes,1,opt,name=fromTokenAddress,proto3" json:"fromTokenAddress,omitempty"`                        //出售币种合约地址（可通过获取币种列表中的address字段获得）
+	AmountOutMin                string                 `protobuf:"bytes,2,opt,name=amountOutMin,proto3" json:"amountOutMin,omitempty"`                                //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
+	ToAddress                   string                 `protobuf:"bytes,3,opt,name=toAddress,proto3" json:"toAddress,omitempty"`                                      //接受地址
+	ToTokenChain                string                 `protobuf:"bytes,4,opt,name=toTokenChain,proto3" json:"toTokenChain,omitempty"`                                //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+	FromTokenAmount             string                 `protobuf:"bytes,5,opt,name=fromTokenAmount,proto3" json:"fromTokenAmount,omitempty"`                          //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
+	FromTokenChain              string                 `protobuf:"bytes,6,opt,name=fromTokenChain,proto3" json:"fromTokenChain,omitempty"`                            //出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+	ToTokenAddress              string                 `protobuf:"bytes,7,opt,name=toTokenAddress,proto3" json:"toTokenAddress,omitempty"`                            //获得币种合约地址（可通过获取币种列表中的address字段获得）
+	StorageId                   string                 `protobuf:"bytes,8,opt,name=storageId,proto3" json:"storageId,omitempty"`                                      //
+	FromCoinCode                string                 `protobuf:"bytes,9,opt,name=fromCoinCode,proto3" json:"fromCoinCode,omitempty"`                                //出售代币名称（可通过获取币种列表中的symbol字段获得）
+	ToCoinCode                  string                 `protobuf:"bytes,10,opt,name=toCoinCode,proto3" json:"toCoinCode,omitempty"`                                   //获得代币名称（可通过获取币种列表中的symbol字段获得）
+	SourceType                  string                 `protobuf:"bytes,11,opt,name=sourceType,proto3" json:"sourceType,omitempty"`                                   //设备类型（H5/IOS/Android 该字段为选填，如通过直接通过API调用，可为空)
+	Slippage                    string                 `protobuf:"bytes,12,opt,name=slippage,proto3" json:"slippage,omitempty"`                                       //滑点，例如：0.1（代表10%）
+	Fee                         string                 `protobuf:"bytes,13,opt,name=fee,proto3" json:"fee,omitempty"`                                                 //内扣手续费，例如：0.1（代表10%）
+	FeeReceivingAddress         string                 `protobuf:"bytes,14,opt,name=feeReceivingAddress,proto3" json:"feeReceivingAddress,omitempty"`                 //内扣手续费接收地址
+	FromBridgersContractAddress string                 `protobuf:"bytes,15,opt,name=fromBridgersContractAddress,proto3" json:"fromBridgersContractAddress,omitempty"` //出售币种bridgers合约地址
 	unknownFields               protoimpl.UnknownFields
 	sizeCache                   protoimpl.SizeCache
 }
@@ -728,13 +727,6 @@ func (x *SwapRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SwapRequest.ProtoReflect.Descriptor instead.
 func (*SwapRequest) Descriptor() ([]byte, []int) {
 	return file_comproto_edge_v1_edge_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *SwapRequest) GetChain() string {
-	if x != nil {
-		return x.Chain
-	}
-	return ""
 }
 
 func (x *SwapRequest) GetFromTokenAddress() string {
@@ -846,7 +838,7 @@ func (x *SwapRequest) GetFromBridgersContractAddress() string {
 type SwapReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	SwapHash      string                 `protobuf:"bytes,1,opt,name=swapHash,proto3" json:"swapHash,omitempty"` // 跨链hash
-	FrrHash       string                 `protobuf:"bytes,2,opt,name=frrHash,proto3" json:"frrHash,omitempty"`   // 内扣手续费hash
+	FeeHash       string                 `protobuf:"bytes,2,opt,name=feeHash,proto3" json:"feeHash,omitempty"`   // 内扣手续费hash
 	OrderId       string                 `protobuf:"bytes,3,opt,name=orderId,proto3" json:"orderId,omitempty"`   // 订单号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -889,9 +881,9 @@ func (x *SwapReply) GetSwapHash() string {
 	return ""
 }
 
-func (x *SwapReply) GetFrrHash() string {
+func (x *SwapReply) GetFeeHash() string {
 	if x != nil {
-		return x.FrrHash
+		return x.FeeHash
 	}
 	return ""
 }
@@ -1248,32 +1240,31 @@ const file_comproto_edge_v1_edge_proto_rawDesc = "" +
 	"\x0etoTokenDecimal\x18\f \x01(\x05R\x0etoTokenDecimal\x12\x12\n" +
 	"\x04path\x18\r \x03(\tR\x04path\x12\x18\n" +
 	"\alogoUrl\x18\x0e \x01(\tR\alogoUrl\x12$\n" +
-	"\restimatedTime\x18\x0f \x01(\x03R\restimatedTime\"\xd3\x04\n" +
-	"\vSwapRequest\x12\x14\n" +
-	"\x05chain\x18\x01 \x01(\tR\x05chain\x12*\n" +
-	"\x10fromTokenAddress\x18\x02 \x01(\tR\x10fromTokenAddress\x12\"\n" +
-	"\famountOutMin\x18\x03 \x01(\tR\famountOutMin\x12\x1c\n" +
-	"\ttoAddress\x18\x04 \x01(\tR\ttoAddress\x12\"\n" +
-	"\ftoTokenChain\x18\x05 \x01(\tR\ftoTokenChain\x12(\n" +
-	"\x0ffromTokenAmount\x18\x06 \x01(\tR\x0ffromTokenAmount\x12&\n" +
-	"\x0efromTokenChain\x18\a \x01(\tR\x0efromTokenChain\x12&\n" +
-	"\x0etoTokenAddress\x18\b \x01(\tR\x0etoTokenAddress\x12\x1c\n" +
-	"\tstorageId\x18\t \x01(\tR\tstorageId\x12\"\n" +
-	"\ffromCoinCode\x18\n" +
-	" \x01(\tR\ffromCoinCode\x12\x1e\n" +
+	"\restimatedTime\x18\x0f \x01(\x03R\restimatedTime\"\xbd\x04\n" +
+	"\vSwapRequest\x12*\n" +
+	"\x10fromTokenAddress\x18\x01 \x01(\tR\x10fromTokenAddress\x12\"\n" +
+	"\famountOutMin\x18\x02 \x01(\tR\famountOutMin\x12\x1c\n" +
+	"\ttoAddress\x18\x03 \x01(\tR\ttoAddress\x12\"\n" +
+	"\ftoTokenChain\x18\x04 \x01(\tR\ftoTokenChain\x12(\n" +
+	"\x0ffromTokenAmount\x18\x05 \x01(\tR\x0ffromTokenAmount\x12&\n" +
+	"\x0efromTokenChain\x18\x06 \x01(\tR\x0efromTokenChain\x12&\n" +
+	"\x0etoTokenAddress\x18\a \x01(\tR\x0etoTokenAddress\x12\x1c\n" +
+	"\tstorageId\x18\b \x01(\tR\tstorageId\x12\"\n" +
+	"\ffromCoinCode\x18\t \x01(\tR\ffromCoinCode\x12\x1e\n" +
 	"\n" +
-	"toCoinCode\x18\v \x01(\tR\n" +
+	"toCoinCode\x18\n" +
+	" \x01(\tR\n" +
 	"toCoinCode\x12\x1e\n" +
 	"\n" +
-	"sourceType\x18\f \x01(\tR\n" +
+	"sourceType\x18\v \x01(\tR\n" +
 	"sourceType\x12\x1a\n" +
-	"\bslippage\x18\r \x01(\tR\bslippage\x12\x10\n" +
-	"\x03fee\x18\x0e \x01(\tR\x03fee\x120\n" +
-	"\x13feeReceivingAddress\x18\x0f \x01(\tR\x13feeReceivingAddress\x12@\n" +
-	"\x1bfromBridgersContractAddress\x18\x10 \x01(\tR\x1bfromBridgersContractAddress\"[\n" +
+	"\bslippage\x18\f \x01(\tR\bslippage\x12\x10\n" +
+	"\x03fee\x18\r \x01(\tR\x03fee\x120\n" +
+	"\x13feeReceivingAddress\x18\x0e \x01(\tR\x13feeReceivingAddress\x12@\n" +
+	"\x1bfromBridgersContractAddress\x18\x0f \x01(\tR\x1bfromBridgersContractAddress\"[\n" +
 	"\tSwapReply\x12\x1a\n" +
 	"\bswapHash\x18\x01 \x01(\tR\bswapHash\x12\x18\n" +
-	"\afrrHash\x18\x02 \x01(\tR\afrrHash\x12\x18\n" +
+	"\afeeHash\x18\x02 \x01(\tR\afeeHash\x12\x18\n" +
 	"\aorderId\x18\x03 \x01(\tR\aorderId\"(\n" +
 	"\fOrderRequest\x12\x18\n" +
 	"\aorderId\x18\x01 \x01(\tR\aorderId\"\xe2\x06\n" +
