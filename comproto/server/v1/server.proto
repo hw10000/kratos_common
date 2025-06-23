@@ -111,11 +111,12 @@ message WithdrawalRequest {
  	double amount = 3; // 提现金额 示例：amount=132.56
 	string storage_id = 4; //存储ID
 	string to_address = 5; // 提现地址
-	string memo = 6; // 备注
+	optional string memo = 6; // 备注
 	string token_address = 7; // 代币地址
-	string out_order_no = 8; // 外部订单号
+	optional string out_order_no = 8; // 外部订单号
 }
 
 message WithdrawalReply {
-	string tx_hash = 1; // 交易hash
+	string biz_id = 1; // 交易hash
+	string out_order_no = 2; // 外部订单号
 }
