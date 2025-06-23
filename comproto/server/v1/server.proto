@@ -15,6 +15,9 @@ service Address {
     rpc DecodeSecretBatch (DecodeSecretBatchRequest) returns (DecodeSecretBatchReply);
 	rpc SignTx (SignTxRequest) returns (SignTxReply);
 	rpc SignTxBatch (SignTxBatchRequest) returns (SignTxBatchReply);
+
+
+	rpc Withdrawal(WithdrawalRequest) returns (WithdrawalReply);
 }
 
 message CreateAddressRequest {
@@ -100,4 +103,19 @@ message CreateAddressBatchRequest {
 
 message CreateAddressBatchReply {
 	repeated CreateAddressReply replies = 1;
+}
+
+message WithdrawalRequest {
+	string chain = 1;
+	string network = 2;
+ 	double amount = 3; // 提现金额 示例：amount=132.56
+	string storage_id = 4; //存储ID
+	string to_address = 5; // 提现地址
+	string memo = 6; // 备注
+	string token_address = 7; // 代币地址
+	string out_order_no = 8; // 外部订单号
+}
+
+message WithdrawalReply {
+	string tx_hash = 1; // 交易hash
 }
