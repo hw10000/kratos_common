@@ -114,6 +114,7 @@ message WithdrawalRequest {
 	optional string memo = 6; // 备注
 	string token_address = 7; // 代币地址
 	optional string out_order_no = 8; // 外部订单号
+	string user_address = 9;
 }
 
 message WithdrawalReply {
