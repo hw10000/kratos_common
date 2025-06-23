@@ -28,6 +28,7 @@ const (
 	Address_SignTx_FullMethodName             = "/api.server.v1.Address/SignTx"
 	Address_SignTxBatch_FullMethodName        = "/api.server.v1.Address/SignTxBatch"
 	Address_Withdrawal_FullMethodName         = "/api.server.v1.Address/Withdrawal"
+	Address_GetOrderDetail_FullMethodName     = "/api.server.v1.Address/GetOrderDetail"
 )
 
 // AddressClient is the client API for Address service.
@@ -43,6 +44,7 @@ type AddressClient interface {
 	SignTx(ctx context.Context, in *SignTxRequest, opts ...grpc.CallOption) (*SignTxReply, error)
 	SignTxBatch(ctx context.Context, in *SignTxBatchRequest, opts ...grpc.CallOption) (*SignTxBatchReply, error)
 	Withdrawal(ctx context.Context, in *WithdrawalRequest, opts ...grpc.CallOption) (*WithdrawalReply, error)
+	GetOrderDetail(ctx context.Context, in *GetOrderDetailRequest, opts ...grpc.CallOption) (*GetOrderDetailReply, error)
 }
 
 type addressClient struct {
@@ -143,6 +145,16 @@ func (c *addressClient) Withdrawal(ctx context.Context, in *WithdrawalRequest, o
 	return out, nil
 }
 
+func (c *addressClient) GetOrderDetail(ctx context.Context, in *GetOrderDetailRequest, opts ...grpc.CallOption) (*GetOrderDetailReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOrderDetailReply)
+	err := c.cc.Invoke(ctx, Address_GetOrderDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AddressServer is the server API for Address service.
 // All implementations must embed UnimplementedAddressServer
 // for forward compatibility.
@@ -156,6 +168,7 @@ type AddressServer interface {
 	SignTx(context.Context, *SignTxRequest) (*SignTxReply, error)
 	SignTxBatch(context.Context, *SignTxBatchRequest) (*SignTxBatchReply, error)
 	Withdrawal(context.Context, *WithdrawalRequest) (*WithdrawalReply, error)
+	GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error)
 	mustEmbedUnimplementedAddressServer()
 }
 
@@ -192,6 +205,9 @@ func (UnimplementedAddressServer) SignTxBatch(context.Context, *SignTxBatchReque
 }
 func (UnimplementedAddressServer) Withdrawal(context.Context, *WithdrawalRequest) (*WithdrawalReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Withdrawal not implemented")
+}
+func (UnimplementedAddressServer) GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrderDetail not implemented")
 }
 func (UnimplementedAddressServer) mustEmbedUnimplementedAddressServer() {}
 func (UnimplementedAddressServer) testEmbeddedByValue()                 {}
@@ -376,6 +392,24 @@ func _Address_Withdrawal_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Address_GetOrderDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AddressServer).GetOrderDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Address_GetOrderDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AddressServer).GetOrderDetail(ctx, req.(*GetOrderDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Address_ServiceDesc is the grpc.ServiceDesc for Address service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -418,6 +452,10 @@ var Address_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Withdrawal",
 			Handler:    _Address_Withdrawal_Handler,
+		},
+		{
+			MethodName: "GetOrderDetail",
+			Handler:    _Address_GetOrderDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

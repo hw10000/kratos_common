@@ -18,6 +18,7 @@ service Address {
 
 
 	rpc Withdrawal(WithdrawalRequest) returns (WithdrawalReply);
+	rpc GetOrderDetail(GetOrderDetailRequest) returns (GetOrderDetailReply);
 }
 
 message CreateAddressRequest {
@@ -118,6 +119,37 @@ message WithdrawalRequest {
 }
 
 message WithdrawalReply {
-	string biz_id = 1; // 交易hash
+	string biz_id = 1; 
 	string out_order_no = 2; // 外部订单号
+}
+
+
+message OrderDetail {
+	string id = 1;
+	string created_at = 2;
+	string updated_at = 3;
+	string chain = 4;
+	string network = 5;
+	string token_address = 6;
+	string token_symbol = 7;
+	double amount = 8;
+	string to_address = 9;
+	string from_address = 10;
+	string storage_id = 11;
+	string merchant_id = 12;
+	string out_order_no = 13;
+	optional string tx_hash = 14;
+	int32 status = 15;
+	optional string error_msg = 16;
+	string memo = 17;
+}
+
+
+message GetOrderDetailRequest {
+	optional string biz_id = 1;  //Server服务订单ID
+	optional string out_order_no = 2; // 外部订单号
+}
+
+message GetOrderDetailReply {
+	OrderDetail order_detail = 1;
 }
