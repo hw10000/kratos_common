@@ -123,25 +123,28 @@ message WithdrawalReply {
 	string out_order_no = 2; // 外部订单号
 }
 
+message Withdrawal {
+	string token_address = 1; // 代币地址
+	string token_symbol = 2; // 代币符号
+	double amount = 3; // 金额
+	string to_address = 4; // 目标提现地址
+	string from_address = 5; // 源账户地址
+}
 
 message OrderDetail {
 	string id = 1;
-	string created_at = 2;
-	string updated_at = 3;
-	string chain = 4;
-	string network = 5;
-	string token_address = 6;
-	string token_symbol = 7;
-	double amount = 8;
-	string to_address = 9;
-	string from_address = 10;
-	string storage_id = 11;
-	string merchant_id = 12;
-	string out_order_no = 13;
-	optional string tx_hash = 14;
-	int32 status = 15;
-	optional string error_msg = 16;
-	string memo = 17;
+	string chain = 2; // 链
+	string network = 3; // 网络
+	string created_at = 4;
+	string updated_at = 5;
+	string storage_id = 6;
+	string merchant_id = 7;
+	string out_order_no = 8;
+	optional string tx_hash = 9;
+	int32 status = 10;
+	optional string error_msg = 11;
+	string memo = 12;
+	optional Withdrawal withdrawal = 13; // 提现详情
 }
 
 
