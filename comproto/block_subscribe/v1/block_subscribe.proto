@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package api.block_subscribe.v1;
+
+option go_package = "block/api/block_subscribe/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.block_subscribe.v1";
+
+service Block {
+	rpc GetSupportedMetadata (GetSupportedMetadataRequest) returns (GetSupportedMetadataReply);
+	rpc IsSupportedChainNetwork (IsSupportedChainNetworkRequest) returns (IsSupportedChainNetworkReply);
+	rpc SubscribeTransaction (SubscribeTransactionRequest) returns (stream SubscribeTransactionReply);
+}
+
+
+message MetadataItem {
+	string name = 1; //链名称
+	string symbol = 2; //链符号
+	repeated NetworkItem networks = 3; //网络列表
+}
+message NetworkItem {
+	string name = 1; //网络名称
+	string symbol = 2; //网络符号
+	int32 type = 3; //网络类型
+	repeated TokenItem tokens = 4; //代币列表
+	repeated NetworkConfigItem configs = 5; //网络配置列表
+}
+message TokenItem {
+	string name = 1; //代币名称
+	string symbol = 2; //代币符号
+	string address = 3; //代币地址
+	int32 decimals = 4; //代币小数位
+	int32 type = 5; //代币类型 0 原生代币 1 合约代币
+}
+
+message NetworkConfigItem {
+	string key = 1; //配置键
+	string value = 2; //配置值
+}
+
+message GetSupportedMetadataRequest {
+	bool refresh = 1; //是否刷新
+}
+message GetSupportedMetadataReply {
+	repeated MetadataItem metadata = 1;
+}
+message IsSupportedChainNetworkRequest {
+	string chain = 1; //链名称
+	string network = 2; //网络名称
+}
+message IsSupportedChainNetworkReply {
+	bool supported = 1; //是否支持
+}
+
+
+message SubscribeTransactionRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	repeated string contract_addresses = 3; // 过滤的合约地址
+	repeated string from_addresses = 4; // 过滤的发起地址
+	repeated string to_addresses = 5; // 过滤的接收地址
+	optional bool on_chain_status = 6; // 是否过滤链上状态
+}
+
+message SubscribeTransactionReply {
+	repeated SubscribeTransactionItem transactions = 1; // 交易列表
+}
+
+message SubscribeTransactionItem {
+	optional int64 block_number = 1; // 区块号
+	optional int64 block_time = 2; // 区块时间 
+	optional string from_address = 3; // 发起地址
+	optional string to_address = 4; // 接收地址
+	optional string value = 5; // 金额
+	optional string hash = 6; // 交易哈希
+	optional string chain = 7; // 链名称
+	optional string network = 8; // 网络名称
+	optional string contract_address = 9; // 合约地址
+}
