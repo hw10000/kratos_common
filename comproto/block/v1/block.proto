@@ -45,6 +45,9 @@ service Block {
 
 	//获取未使用Nonce EVM
 	rpc GetPendingNonce(GetPendingNonceRequest) returns (GetPendingNonceReply);
+
+	//获取用户资源信息
+	rpc GetUserResource(GetUserResourceRequest) returns (GetUserResourceReply);
 }
 
 message NetworkConfigItem {
@@ -339,4 +342,15 @@ message GetPendingNonceRequest {
 
 message GetPendingNonceReply {
 	uint64 nonce = 1; // 非零
+}
+
+message GetUserResourceRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string address = 3; // 地址
+}
+
+message GetUserResourceReply {
+	int64 user_bandwidth = 1; // 用户带宽
+	int64 user_energy = 2; // 用户能量
 }

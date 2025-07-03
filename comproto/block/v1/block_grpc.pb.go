@@ -38,6 +38,7 @@ const (
 	Block_GetTransactionByHash_FullMethodName   = "/api.block.v1.Block/GetTransactionByHash"
 	Block_GetLiquidity_FullMethodName           = "/api.block.v1.Block/GetLiquidity"
 	Block_GetPendingNonce_FullMethodName        = "/api.block.v1.Block/GetPendingNonce"
+	Block_GetUserResource_FullMethodName        = "/api.block.v1.Block/GetUserResource"
 )
 
 // BlockClient is the client API for Block service.
@@ -73,6 +74,8 @@ type BlockClient interface {
 	GetLiquidity(ctx context.Context, in *GetLiquidityRequest, opts ...grpc.CallOption) (*GetLiquidityReply, error)
 	// 获取未使用Nonce EVM
 	GetPendingNonce(ctx context.Context, in *GetPendingNonceRequest, opts ...grpc.CallOption) (*GetPendingNonceReply, error)
+	// 获取用户资源信息
+	GetUserResource(ctx context.Context, in *GetUserResourceRequest, opts ...grpc.CallOption) (*GetUserResourceReply, error)
 }
 
 type blockClient struct {
@@ -273,6 +276,16 @@ func (c *blockClient) GetPendingNonce(ctx context.Context, in *GetPendingNonceRe
 	return out, nil
 }
 
+func (c *blockClient) GetUserResource(ctx context.Context, in *GetUserResourceRequest, opts ...grpc.CallOption) (*GetUserResourceReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserResourceReply)
+	err := c.cc.Invoke(ctx, Block_GetUserResource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockServer is the server API for Block service.
 // All implementations must embed UnimplementedBlockServer
 // for forward compatibility.
@@ -306,6 +319,8 @@ type BlockServer interface {
 	GetLiquidity(context.Context, *GetLiquidityRequest) (*GetLiquidityReply, error)
 	// 获取未使用Nonce EVM
 	GetPendingNonce(context.Context, *GetPendingNonceRequest) (*GetPendingNonceReply, error)
+	// 获取用户资源信息
+	GetUserResource(context.Context, *GetUserResourceRequest) (*GetUserResourceReply, error)
 	mustEmbedUnimplementedBlockServer()
 }
 
@@ -372,6 +387,9 @@ func (UnimplementedBlockServer) GetLiquidity(context.Context, *GetLiquidityReque
 }
 func (UnimplementedBlockServer) GetPendingNonce(context.Context, *GetPendingNonceRequest) (*GetPendingNonceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPendingNonce not implemented")
+}
+func (UnimplementedBlockServer) GetUserResource(context.Context, *GetUserResourceRequest) (*GetUserResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserResource not implemented")
 }
 func (UnimplementedBlockServer) mustEmbedUnimplementedBlockServer() {}
 func (UnimplementedBlockServer) testEmbeddedByValue()               {}
@@ -736,6 +754,24 @@ func _Block_GetPendingNonce_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_GetUserResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserResourceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).GetUserResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_GetUserResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).GetUserResource(ctx, req.(*GetUserResourceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Block_ServiceDesc is the grpc.ServiceDesc for Block service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -818,6 +854,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPendingNonce",
 			Handler:    _Block_GetPendingNonce_Handler,
+		},
+		{
+			MethodName: "GetUserResource",
+			Handler:    _Block_GetUserResource_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
