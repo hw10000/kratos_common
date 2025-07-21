@@ -39,6 +39,7 @@ const (
 	Block_GetLiquidity_FullMethodName           = "/api.block.v1.Block/GetLiquidity"
 	Block_GetPendingNonce_FullMethodName        = "/api.block.v1.Block/GetPendingNonce"
 	Block_GetUserResource_FullMethodName        = "/api.block.v1.Block/GetUserResource"
+	Block_GetTransferDetail_FullMethodName      = "/api.block.v1.Block/GetTransferDetail"
 )
 
 // BlockClient is the client API for Block service.
@@ -76,6 +77,7 @@ type BlockClient interface {
 	GetPendingNonce(ctx context.Context, in *GetPendingNonceRequest, opts ...grpc.CallOption) (*GetPendingNonceReply, error)
 	// 获取用户资源信息
 	GetUserResource(ctx context.Context, in *GetUserResourceRequest, opts ...grpc.CallOption) (*GetUserResourceReply, error)
+	GetTransferDetail(ctx context.Context, in *GetTransferDetailRequest, opts ...grpc.CallOption) (*GetTransferDetailReply, error)
 }
 
 type blockClient struct {
@@ -286,6 +288,16 @@ func (c *blockClient) GetUserResource(ctx context.Context, in *GetUserResourceRe
 	return out, nil
 }
 
+func (c *blockClient) GetTransferDetail(ctx context.Context, in *GetTransferDetailRequest, opts ...grpc.CallOption) (*GetTransferDetailReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTransferDetailReply)
+	err := c.cc.Invoke(ctx, Block_GetTransferDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockServer is the server API for Block service.
 // All implementations must embed UnimplementedBlockServer
 // for forward compatibility.
@@ -321,6 +333,7 @@ type BlockServer interface {
 	GetPendingNonce(context.Context, *GetPendingNonceRequest) (*GetPendingNonceReply, error)
 	// 获取用户资源信息
 	GetUserResource(context.Context, *GetUserResourceRequest) (*GetUserResourceReply, error)
+	GetTransferDetail(context.Context, *GetTransferDetailRequest) (*GetTransferDetailReply, error)
 	mustEmbedUnimplementedBlockServer()
 }
 
@@ -390,6 +403,9 @@ func (UnimplementedBlockServer) GetPendingNonce(context.Context, *GetPendingNonc
 }
 func (UnimplementedBlockServer) GetUserResource(context.Context, *GetUserResourceRequest) (*GetUserResourceReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserResource not implemented")
+}
+func (UnimplementedBlockServer) GetTransferDetail(context.Context, *GetTransferDetailRequest) (*GetTransferDetailReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTransferDetail not implemented")
 }
 func (UnimplementedBlockServer) mustEmbedUnimplementedBlockServer() {}
 func (UnimplementedBlockServer) testEmbeddedByValue()               {}
@@ -772,6 +788,24 @@ func _Block_GetUserResource_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_GetTransferDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTransferDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).GetTransferDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_GetTransferDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).GetTransferDetail(ctx, req.(*GetTransferDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Block_ServiceDesc is the grpc.ServiceDesc for Block service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -858,6 +892,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserResource",
 			Handler:    _Block_GetUserResource_Handler,
+		},
+		{
+			MethodName: "GetTransferDetail",
+			Handler:    _Block_GetTransferDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -48,6 +48,9 @@ service Block {
 
 	//获取用户资源信息
 	rpc GetUserResource(GetUserResourceRequest) returns (GetUserResourceReply);
+
+
+	rpc GetTransferDetail(GetTransferDetailRequest) returns (GetTransferDetailReply);
 }
 
 message NetworkConfigItem {
@@ -353,4 +356,20 @@ message GetUserResourceRequest {
 message GetUserResourceReply {
 	int64 user_bandwidth = 1; // 用户带宽
 	int64 user_energy = 2; // 用户能量
+}
+
+message GetTransferDetailRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string transaction_hash = 3; // 交易哈希
+}
+
+message GetTransferDetailReply {
+	int64 block_number = 1; // 区块号
+	int64 block_time = 2; // 区块时间
+	string from_address = 3; // 发送地址
+	string to_address = 4; // 接收地址
+	string value = 5; // 转账金额
+	string hash = 6; // 交易哈希
+	string contract_address = 7; // 合约地址
 }
