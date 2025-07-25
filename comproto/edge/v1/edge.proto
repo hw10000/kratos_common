@@ -45,7 +45,6 @@ message GetSupportedChainsReply {
 
 message Chain {
     string chain = 1; //链名
-    string contractAddress = 2; //bridgers合约地址
 }
 
 // 请求消息
