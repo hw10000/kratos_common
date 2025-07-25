@@ -15,6 +15,9 @@ service Edge {
     rpc GetTokenByChain(GetTokenByChainRequest) returns (GetTokenByChainReply) {}
     // 询价
     rpc GetQuote(GetQuoteRequest) returns (GetQuoteReply) {}
+
+    rpc CreateSwapOrder(CreateSwapOrderRequest) returns (CreateSwapOrderReply) {}
+
     // 跨链闪兑
     rpc Swap(SwapRequest) returns (SwapReply) {}
     // 订单详情
@@ -100,14 +103,11 @@ message SwapRequest {
     string fromTokenAmount = 5;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
     string fromTokenChain = 6;   //出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
     string toTokenAddress = 7;  //获得币种合约地址（可通过获取币种列表中的address字段获得）
-    string storageId = 8;     // 
-    string fromCoinCode = 9;  //出售代币名称（可通过获取币种列表中的symbol字段获得）
-    string toCoinCode = 10;   //获得代币名称（可通过获取币种列表中的symbol字段获得）
-    string orderCallbackUrl = 11;  //订单回调地址
-    string slippage = 12;   //滑点，例如：0.1（代表10%）
-    string fee = 13;   //内扣手续费，例如：0.1（代表10%）
-    string feeReceivingAddress = 14;  //内扣手续费接收地址
-    string fromBridgersContractAddress = 15;  //出售币种bridgers合约地址
+    string fromCoinCode = 8;  //出售代币名称（可通过获取币种列表中的symbol字段获得）
+    string toCoinCode = 9;   //获得代币名称（可通过获取币种列表中的symbol字段获得）
+    string slippage = 10;   //滑点，例如：0.1（代表10%）
+    string feeReceivingAddress = 11;  //内扣手续费接收地址
+    string fromBridgersContractAddress = 12;  //出售币种bridgers合约地址
 }
 
 // 响应消息
@@ -151,4 +151,22 @@ message OrderReply {
     string refundReason = 24;                        // 退币原因（1-流动性不足、2-误差超过阈值、3-原币维护、4-黑名单、5-目标币维护、6-兑换数量不在范围内、7-存币超时、8-与风险地址交互）
     string fromCoinCode = 25;                        // 出售币种
     string toCoinCode = 26;                          // 目标币种
+}
+
+message CreateSwapOrderRequest {
+    string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
+    string toTokenAddress = 2;    //获得币种合约地址（可通过获取币种列表中的address字段获得）
+    string fromTokenAmount = 3;   //出售币种数量(带精度)
+    string fromTokenChain = 4;    //出售币种链（可通过获取币种列表中的chain字段获得,详细支持链的情况可查看【基本说明】）
+    string toTokenChain = 5;     //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+}
+
+message CreateSwapOrderReply {
+    string chain = 1;  // 链
+    string orderId = 2;  // 订单号
+    string qrCode = 3;  // 二维码
+    string amount = 4;  // 金额
+    string address = 5;  // 地址
+    string tokenSymbol = 6;  // 符号
+    string tokenAddress = 7;  // 币种地址
 }

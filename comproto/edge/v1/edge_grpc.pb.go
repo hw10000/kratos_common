@@ -23,6 +23,7 @@ const (
 	Edge_GetSupportedChains_FullMethodName    = "/api.edge.v1.Edge/GetSupportedChains"
 	Edge_GetTokenByChain_FullMethodName       = "/api.edge.v1.Edge/GetTokenByChain"
 	Edge_GetQuote_FullMethodName              = "/api.edge.v1.Edge/GetQuote"
+	Edge_CreateSwapOrder_FullMethodName       = "/api.edge.v1.Edge/CreateSwapOrder"
 	Edge_Swap_FullMethodName                  = "/api.edge.v1.Edge/Swap"
 	Edge_GetTransDataById_FullMethodName      = "/api.edge.v1.Edge/getTransDataById"
 )
@@ -39,6 +40,7 @@ type EdgeClient interface {
 	GetTokenByChain(ctx context.Context, in *GetTokenByChainRequest, opts ...grpc.CallOption) (*GetTokenByChainReply, error)
 	// 询价
 	GetQuote(ctx context.Context, in *GetQuoteRequest, opts ...grpc.CallOption) (*GetQuoteReply, error)
+	CreateSwapOrder(ctx context.Context, in *CreateSwapOrderRequest, opts ...grpc.CallOption) (*CreateSwapOrderReply, error)
 	// 跨链闪兑
 	Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*SwapReply, error)
 	// 订单详情
@@ -93,6 +95,16 @@ func (c *edgeClient) GetQuote(ctx context.Context, in *GetQuoteRequest, opts ...
 	return out, nil
 }
 
+func (c *edgeClient) CreateSwapOrder(ctx context.Context, in *CreateSwapOrderRequest, opts ...grpc.CallOption) (*CreateSwapOrderReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateSwapOrderReply)
+	err := c.cc.Invoke(ctx, Edge_CreateSwapOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *edgeClient) Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*SwapReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SwapReply)
@@ -125,6 +137,7 @@ type EdgeServer interface {
 	GetTokenByChain(context.Context, *GetTokenByChainRequest) (*GetTokenByChainReply, error)
 	// 询价
 	GetQuote(context.Context, *GetQuoteRequest) (*GetQuoteReply, error)
+	CreateSwapOrder(context.Context, *CreateSwapOrderRequest) (*CreateSwapOrderReply, error)
 	// 跨链闪兑
 	Swap(context.Context, *SwapRequest) (*SwapReply, error)
 	// 订单详情
@@ -150,6 +163,9 @@ func (UnimplementedEdgeServer) GetTokenByChain(context.Context, *GetTokenByChain
 }
 func (UnimplementedEdgeServer) GetQuote(context.Context, *GetQuoteRequest) (*GetQuoteReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetQuote not implemented")
+}
+func (UnimplementedEdgeServer) CreateSwapOrder(context.Context, *CreateSwapOrderRequest) (*CreateSwapOrderReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSwapOrder not implemented")
 }
 func (UnimplementedEdgeServer) Swap(context.Context, *SwapRequest) (*SwapReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Swap not implemented")
@@ -250,6 +266,24 @@ func _Edge_GetQuote_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Edge_CreateSwapOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSwapOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).CreateSwapOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_CreateSwapOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).CreateSwapOrder(ctx, req.(*CreateSwapOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Edge_Swap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SwapRequest)
 	if err := dec(in); err != nil {
@@ -308,6 +342,10 @@ var Edge_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetQuote",
 			Handler:    _Edge_GetQuote_Handler,
+		},
+		{
+			MethodName: "CreateSwapOrder",
+			Handler:    _Edge_CreateSwapOrder_Handler,
 		},
 		{
 			MethodName: "Swap",
