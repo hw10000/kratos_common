@@ -60,13 +60,10 @@ message GetTokenByChainReply {
 
 message Token {
     string chain = 1; //链名
-    string symbol = 2; // 币种编码
+    string symbol = 2; // 币种编符号
     string name = 3; //币种名称
     string address = 4; //币种合约地址
     uint32 decimals = 5; //精度
-    string logoURI = 6;
-    int32 isCrossEnable = 7;
-    uint32 withdrawGas = 8;
 }
 
 // 请求消息
