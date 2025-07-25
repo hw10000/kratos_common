@@ -169,4 +169,5 @@ message CreateSwapOrderReply {
     string address = 5;  // 地址
     string tokenSymbol = 6;  // 符号
     string tokenAddress = 7;  // 币种地址
+    string tokenUIAmount = 8;  // 币种数量
 }
