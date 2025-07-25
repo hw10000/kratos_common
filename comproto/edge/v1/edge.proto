@@ -82,21 +82,17 @@ message GetQuoteRequest {
 
 // 响应消息
 message GetQuoteReply {
-    string amountOutMin = 1; // 发币数量 带精度
+    string amountOutMin = 1; // 最小到账数量 带精度
     string chainFee = 2;  // 链上矿工费
     string contractAddress = 3;   // bridgers合约地址
-    string depositMin = 4;  //兑换范围最小值 若用户兑换值小于该值，将不能兑换得到目标币
-    string depositMax = 5;   //兑换范围最大值 若用户兑换的值大于该值，将只能得到该值兑换所能得到的目标币种数量
-    string dex = 6;  // DEX名称
-    float fee = 7;  // 手续费比例
-    string feeToken = 8;
-    string fromTokenAmount = 9;
-    int32 fromTokenDecimal = 10;
-    string toTokenAmount = 11;  // 发币数量 不带精度 
-    int32 toTokenDecimal = 12;
-    repeated string path = 13;
-    string logoUrl = 14;
-    int64 estimatedTime = 15;
+    string depositMin = 4;  //最小存入数量 带精度
+    string depositMax = 5;   //最大存入数量 带精度
+    float fee = 6;  // 手续费比例
+    string feeToken = 7; // 手续费币种
+    string fromTokenAmount = 8; // 出售币种数量 带精度
+    int32 fromTokenDecimal = 9; // 出售币种精度
+    string toTokenAmount = 10;  // 发币数量 不带精度 
+    int32 toTokenDecimal = 11; // 发币精度
 }
 
 // 请求消息
