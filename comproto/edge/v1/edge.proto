@@ -188,4 +188,17 @@ message GetOrderDetailReply {
     string toOnChainHash = 4;  // 目标币种的链上Hash
     string status = 5;  // 订单状态 0:待支付 1:已支付 2:等待上链 3:上链成功 4:异常
     string message = 6;  // 订单状态描述
+
+
+    string receiveAmountIn = 12;  // 接收用户资金的金额
+    string receiveAddress = 13;  // 接收用户资金的地址
+    string receiveStorageId = 14;  // 接收用户资金的storageID
+    string receiveChain = 15;  // 接收用户资金的链
+    string receiveTokenAddress = 16;  // 接收用户资金的币种合约地址
+    string receiveTokenSymbol = 17;  // 接收用户资金的币种符号
+    string receiveTokenDecimals = 18;  // 接收用户资金的币种精度
+
+    string createdAt = 19;   // 创建时间
+    string pendingExpire = 20;  // 待支付订单过期时间
+    string expireTime = 21;  // 订单过期时间
 }
