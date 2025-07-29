@@ -178,6 +178,7 @@ message CreateSwapOrderReply {
 
 message GetOrderDetailRequest {
     string orderId = 1;  // 订单号
+    string receiveOnChainHash = 2;  // 接收用户资金的链上Hash
 }
 
 message GetOrderDetailReply {
