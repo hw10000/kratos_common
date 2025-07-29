@@ -26,6 +26,7 @@ const (
 	Edge_CreateSwapOrder_FullMethodName       = "/api.edge.v1.Edge/CreateSwapOrder"
 	Edge_Swap_FullMethodName                  = "/api.edge.v1.Edge/Swap"
 	Edge_GetTransDataById_FullMethodName      = "/api.edge.v1.Edge/getTransDataById"
+	Edge_GetOrderDetail_FullMethodName        = "/api.edge.v1.Edge/GetOrderDetail"
 )
 
 // EdgeClient is the client API for Edge service.
@@ -45,6 +46,8 @@ type EdgeClient interface {
 	Swap(ctx context.Context, in *SwapRequest, opts ...grpc.CallOption) (*SwapReply, error)
 	// 订单详情
 	GetTransDataById(ctx context.Context, in *OrderRequest, opts ...grpc.CallOption) (*OrderReply, error)
+	// 获取订单详情
+	GetOrderDetail(ctx context.Context, in *GetOrderDetailRequest, opts ...grpc.CallOption) (*GetOrderDetailReply, error)
 }
 
 type edgeClient struct {
@@ -125,6 +128,16 @@ func (c *edgeClient) GetTransDataById(ctx context.Context, in *OrderRequest, opt
 	return out, nil
 }
 
+func (c *edgeClient) GetOrderDetail(ctx context.Context, in *GetOrderDetailRequest, opts ...grpc.CallOption) (*GetOrderDetailReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOrderDetailReply)
+	err := c.cc.Invoke(ctx, Edge_GetOrderDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EdgeServer is the server API for Edge service.
 // All implementations must embed UnimplementedEdgeServer
 // for forward compatibility.
@@ -142,6 +155,8 @@ type EdgeServer interface {
 	Swap(context.Context, *SwapRequest) (*SwapReply, error)
 	// 订单详情
 	GetTransDataById(context.Context, *OrderRequest) (*OrderReply, error)
+	// 获取订单详情
+	GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error)
 	mustEmbedUnimplementedEdgeServer()
 }
 
@@ -172,6 +187,9 @@ func (UnimplementedEdgeServer) Swap(context.Context, *SwapRequest) (*SwapReply, 
 }
 func (UnimplementedEdgeServer) GetTransDataById(context.Context, *OrderRequest) (*OrderReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransDataById not implemented")
+}
+func (UnimplementedEdgeServer) GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrderDetail not implemented")
 }
 func (UnimplementedEdgeServer) mustEmbedUnimplementedEdgeServer() {}
 func (UnimplementedEdgeServer) testEmbeddedByValue()              {}
@@ -320,6 +338,24 @@ func _Edge_GetTransDataById_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Edge_GetOrderDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).GetOrderDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_GetOrderDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).GetOrderDetail(ctx, req.(*GetOrderDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Edge_ServiceDesc is the grpc.ServiceDesc for Edge service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -354,6 +390,10 @@ var Edge_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getTransDataById",
 			Handler:    _Edge_GetTransDataById_Handler,
+		},
+		{
+			MethodName: "GetOrderDetail",
+			Handler:    _Edge_GetOrderDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
