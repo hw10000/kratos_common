@@ -159,6 +159,7 @@ message CreateSwapOrderRequest {
     string fromTokenAmount = 3;   //出售币种数量(带精度)
     string fromTokenChain = 4;    //出售币种链（可通过获取币种列表中的chain字段获得,详细支持链的情况可查看【基本说明】）
     string toTokenChain = 5;     //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+    string toUserAddress = 6;  // 目标用户地址
 }
 
 message CreateSwapOrderReply {
