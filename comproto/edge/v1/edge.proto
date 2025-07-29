@@ -201,4 +201,21 @@ message GetOrderDetailReply {
     string createdAt = 19;   // 创建时间
     string pendingExpire = 20;  // 待支付订单过期时间
     string expireTime = 21;  // 订单过期时间
+
+
+    //Swap信息 
+    string fromTokenAddress = 22;  // 出售币种合约地址
+    string fromTokenAmount = 24;  // 出售币种数量(带精度)
+    string fromTokenChain = 25;  // 出售币种链
+    string fromTokenSymbol = 27;  // 出售币种符号
+    string fromTokenDecimals = 28;  // 出售币种精度
+
+
+    string toTokenAddress = 23;  // 获得币种合约地址
+    string toTokenChain = 26;  // 获得币种链
+    string toTokenSymbol = 29;  // 获得币种符号
+    string toTokenDecimals = 30;  // 获得币种精度
+    string toTokenAmount = 31;  // 获得币种数量(预估最小到账数量)
+
+
 }
