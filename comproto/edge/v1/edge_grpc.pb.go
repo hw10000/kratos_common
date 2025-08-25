@@ -27,6 +27,7 @@ const (
 	Edge_Swap_FullMethodName                  = "/api.edge.v1.Edge/Swap"
 	Edge_GetTransDataById_FullMethodName      = "/api.edge.v1.Edge/getTransDataById"
 	Edge_GetOrderDetail_FullMethodName        = "/api.edge.v1.Edge/GetOrderDetail"
+	Edge_AddressMalicious_FullMethodName      = "/api.edge.v1.Edge/AddressMalicious"
 )
 
 // EdgeClient is the client API for Edge service.
@@ -48,6 +49,8 @@ type EdgeClient interface {
 	GetTransDataById(ctx context.Context, in *OrderRequest, opts ...grpc.CallOption) (*OrderReply, error)
 	// 获取订单详情
 	GetOrderDetail(ctx context.Context, in *GetOrderDetailRequest, opts ...grpc.CallOption) (*GetOrderDetailReply, error)
+	// 验证恶意地址
+	AddressMalicious(ctx context.Context, in *AddressMaliciousRequest, opts ...grpc.CallOption) (*AddressMaliciousReply, error)
 }
 
 type edgeClient struct {
@@ -138,6 +141,16 @@ func (c *edgeClient) GetOrderDetail(ctx context.Context, in *GetOrderDetailReque
 	return out, nil
 }
 
+func (c *edgeClient) AddressMalicious(ctx context.Context, in *AddressMaliciousRequest, opts ...grpc.CallOption) (*AddressMaliciousReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddressMaliciousReply)
+	err := c.cc.Invoke(ctx, Edge_AddressMalicious_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EdgeServer is the server API for Edge service.
 // All implementations must embed UnimplementedEdgeServer
 // for forward compatibility.
@@ -157,6 +170,8 @@ type EdgeServer interface {
 	GetTransDataById(context.Context, *OrderRequest) (*OrderReply, error)
 	// 获取订单详情
 	GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error)
+	// 验证恶意地址
+	AddressMalicious(context.Context, *AddressMaliciousRequest) (*AddressMaliciousReply, error)
 	mustEmbedUnimplementedEdgeServer()
 }
 
@@ -190,6 +205,9 @@ func (UnimplementedEdgeServer) GetTransDataById(context.Context, *OrderRequest) 
 }
 func (UnimplementedEdgeServer) GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrderDetail not implemented")
+}
+func (UnimplementedEdgeServer) AddressMalicious(context.Context, *AddressMaliciousRequest) (*AddressMaliciousReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddressMalicious not implemented")
 }
 func (UnimplementedEdgeServer) mustEmbedUnimplementedEdgeServer() {}
 func (UnimplementedEdgeServer) testEmbeddedByValue()              {}
@@ -356,6 +374,24 @@ func _Edge_GetOrderDetail_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Edge_AddressMalicious_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddressMaliciousRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).AddressMalicious(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_AddressMalicious_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).AddressMalicious(ctx, req.(*AddressMaliciousRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Edge_ServiceDesc is the grpc.ServiceDesc for Edge service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -394,6 +430,10 @@ var Edge_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrderDetail",
 			Handler:    _Edge_GetOrderDetail_Handler,
+		},
+		{
+			MethodName: "AddressMalicious",
+			Handler:    _Edge_AddressMalicious_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

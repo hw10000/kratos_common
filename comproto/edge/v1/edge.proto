@@ -10,21 +10,23 @@ service Edge {
   // 检查地址是否在黑名单中
   rpc CheckBlacklistAddress(CheckBlacklistAddressRequest) returns (CheckBlacklistAddressResponse) {}
   // 获取支持的链列表
-    rpc GetSupportedChains(GetSupportedChainsRequest) returns (GetSupportedChainsReply) {}
-    // 根据链去获取支持的代币
-    rpc GetTokenByChain(GetTokenByChainRequest) returns (GetTokenByChainReply) {}
-    // 询价
-    rpc GetQuote(GetQuoteRequest) returns (GetQuoteReply) {}
+  rpc GetSupportedChains(GetSupportedChainsRequest) returns (GetSupportedChainsReply) {}
+  // 根据链去获取支持的代币
+  rpc GetTokenByChain(GetTokenByChainRequest) returns (GetTokenByChainReply) {}
+  // 询价
+  rpc GetQuote(GetQuoteRequest) returns (GetQuoteReply) {}
 
-    rpc CreateSwapOrder(CreateSwapOrderRequest) returns (CreateSwapOrderReply) {}
+  rpc CreateSwapOrder(CreateSwapOrderRequest) returns (CreateSwapOrderReply) {}
 
-    // 跨链闪兑
-    rpc Swap(SwapRequest) returns (SwapReply) {}
-    // 订单详情
-    rpc getTransDataById(OrderRequest) returns (OrderReply) {}
+  // 跨链闪兑
+  rpc Swap(SwapRequest) returns (SwapReply) {}
+  // 订单详情
+  rpc getTransDataById(OrderRequest) returns (OrderReply) {}
 
-    //获取订单详情
-    rpc GetOrderDetail(GetOrderDetailRequest) returns (GetOrderDetailReply) {}
+  //获取订单详情
+  rpc GetOrderDetail(GetOrderDetailRequest) returns (GetOrderDetailReply) {}
+  //验证恶意地址
+  rpc AddressMalicious (AddressMaliciousRequest) returns (AddressMaliciousReply);
 }
 
 
@@ -46,176 +48,187 @@ message GetSupportedChainsRequest {
 
 // 响应消息
 message GetSupportedChainsReply {
-    repeated Chain chains = 1;
+  repeated Chain chains = 1;
 }
 
 message Chain {
-    string chain = 1; //链名
+  string chain = 1; //链名
 }
 
 // 请求消息
 message GetTokenByChainRequest {
-    string chain = 1;
+  string chain = 1;
 }
 
 // 响应消息
 message GetTokenByChainReply {
-    repeated Token tokens = 1;
+  repeated Token tokens = 1;
 }
 
 
 message Token {
-    string chain = 1; //链名
-    string symbol = 2; // 币种编符号
-    string name = 3; //币种名称
-    string address = 4; //币种合约地址
-    uint32 decimals = 5; //精度
+  string chain = 1; //链名
+  string symbol = 2; // 币种编符号
+  string name = 3; //币种名称
+  string address = 4; //币种合约地址
+  uint32 decimals = 5; //精度
 }
+message AddressMaliciousRequest{
+  string address = 1; // 地址
+  string chain = 2; // 链名称
+  string network = 3; // 网络名称
+}
+message AddressMaliciousReply{
+  bool status = 1;
+  string message = 2;//等级
+  int64 score = 3;//评分
+}
+
 
 // 请求消息
 message GetQuoteRequest {
-    string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
-    string toTokenAddress = 2;    //获得币种合约地址（可通过获取币种列表中的address字段获得）
-    string fromTokenAmount = 3;   //出售币种数量(带精度)
-    string fromTokenChain = 4;    //出售币种链（可通过获取币种列表中的chain字段获得,详细支持链的情况可查看【基本说明】）
-    string toTokenChain = 5;     //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+  string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
+  string toTokenAddress = 2;    //获得币种合约地址（可通过获取币种列表中的address字段获得）
+  string fromTokenAmount = 3;   //出售币种数量(带精度)
+  string fromTokenChain = 4;    //出售币种链（可通过获取币种列表中的chain字段获得,详细支持链的情况可查看【基本说明】）
+  string toTokenChain = 5;     //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
 }
 
 
 // 响应消息
 message GetQuoteReply {
-    string amountOutMin = 1; // 最小到账数量 带精度
-    string chainFee = 2;  // 链上矿工费
-    string contractAddress = 3;   // bridgers合约地址
-    string depositMin = 4;  //最小存入数量 带精度
-    string depositMax = 5;   //最大存入数量 带精度
-    float fee = 6;  // 手续费比例
-    string feeToken = 7; // 手续费币种
-    string fromTokenAmount = 8; // 出售币种数量 带精度
-    int32 fromTokenDecimal = 9; // 出售币种精度
-    string toTokenAmount = 10;  // 发币数量 不带精度 
-    int32 toTokenDecimal = 11; // 发币精度
+  string amountOutMin = 1; // 最小到账数量 带精度
+  string chainFee = 2;  // 链上矿工费
+  string contractAddress = 3;   // bridgers合约地址
+  string depositMin = 4;  //最小存入数量 带精度
+  string depositMax = 5;   //最大存入数量 带精度
+  float fee = 6;  // 手续费比例
+  string feeToken = 7; // 手续费币种
+  string fromTokenAmount = 8; // 出售币种数量 带精度
+  int32 fromTokenDecimal = 9; // 出售币种精度
+  string toTokenAmount = 10;  // 发币数量 不带精度
+  int32 toTokenDecimal = 11; // 发币精度
 }
 
 // 请求消息
 message SwapRequest {
-    string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
-    string amountOutMin = 2;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
-    string toAddress = 3;   //接受地址
-    string toTokenChain = 4;  //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
-    string fromTokenAmount = 5;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
-    string fromTokenChain = 6;   //出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
-    string toTokenAddress = 7;  //获得币种合约地址（可通过获取币种列表中的address字段获得）
-    string fromCoinCode = 8;  //出售代币名称（可通过获取币种列表中的symbol字段获得）
-    string toCoinCode = 9;   //获得代币名称（可通过获取币种列表中的symbol字段获得）
-    string slippage = 10;   //滑点，例如：0.1（代表10%）
-    string feeReceivingAddress = 11;  //内扣手续费接收地址
-    string fromBridgersContractAddress = 12;  //出售币种bridgers合约地址
+  string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
+  string amountOutMin = 2;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
+  string toAddress = 3;   //接受地址
+  string toTokenChain = 4;  //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+  string fromTokenAmount = 5;  //出售币种数量(带精度，可通过询价接口里的fromTokenAmount字段获得)
+  string fromTokenChain = 6;   //出售币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+  string toTokenAddress = 7;  //获得币种合约地址（可通过获取币种列表中的address字段获得）
+  string fromCoinCode = 8;  //出售代币名称（可通过获取币种列表中的symbol字段获得）
+  string toCoinCode = 9;   //获得代币名称（可通过获取币种列表中的symbol字段获得）
+  string slippage = 10;   //滑点，例如：0.1（代表10%）
+  string feeReceivingAddress = 11;  //内扣手续费接收地址
+  string fromBridgersContractAddress = 12;  //出售币种bridgers合约地址
 }
 
 // 响应消息
 message SwapReply {
-    string swapHash = 1;  // 跨链hash
-    string feeHash = 2;  // 内扣手续费hash
-    string orderId = 3;  // 订单号
+  string swapHash = 1;  // 跨链hash
+  string feeHash = 2;  // 内扣手续费hash
+  string orderId = 3;  // 订单号
 }
 
 
 // 请求消息
 message OrderRequest {
-    string orderId = 1;  // 订单号
+  string orderId = 1;  // 订单号
 }
 
 // 响应消息
 message OrderReply {
-    string id = 1;                                    // 订单ID
-    string orderId = 2;                              // 订单号
-    string fromTokenAddress = 3;                      // 出售币种的合约地址
-    string toTokenAddress = 4;                        // 目标币种的合约地址
-    string fromTokenAmount = 5;                       // 出售币种数量
-    string toTokenAmount = 6;                         // 目标币种预计得到数量
-    string fromAddress = 7;                           // 用户出售币种的地址
-    string slippage = 8;                             // 滑点
-    string fromChain = 9;                            // 出售币种的链
-    string toChain = 10;                             // 目标币种的链
-    string hash = 11;                                // 存币hash
-    string depositHashExplore = 12;                   // 存币区块浏览器地址
-    string dexName = 13;                             // DEX名称
-    string status = 14;                              // 订单状态
-    string createTime = 15;                          // 订单创建时间
-    string source = 16;                              // 渠道
-    string toAddress = 17;                           // 目标地址
-    string toHash = 18;                              // 发币hash
-    string receiveHashExplore = 19;                   // 发币区块浏览器地址
-    string equipmentNo = 20;                         // 设备号
-    string refundCoinAmt = 21;                       // 退币数量
-    string refundHash = 22;                          // 退币hash
-    string refundHashExplore = 23;                    // 退币区块浏览器地址
-    string refundReason = 24;                        // 退币原因（1-流动性不足、2-误差超过阈值、3-原币维护、4-黑名单、5-目标币维护、6-兑换数量不在范围内、7-存币超时、8-与风险地址交互）
-    string fromCoinCode = 25;                        // 出售币种
-    string toCoinCode = 26;                          // 目标币种
+  string id = 1;                                    // 订单ID
+  string orderId = 2;                              // 订单号
+  string fromTokenAddress = 3;                      // 出售币种的合约地址
+  string toTokenAddress = 4;                        // 目标币种的合约地址
+  string fromTokenAmount = 5;                       // 出售币种数量
+  string toTokenAmount = 6;                         // 目标币种预计得到数量
+  string fromAddress = 7;                           // 用户出售币种的地址
+  string slippage = 8;                             // 滑点
+  string fromChain = 9;                            // 出售币种的链
+  string toChain = 10;                             // 目标币种的链
+  string hash = 11;                                // 存币hash
+  string depositHashExplore = 12;                   // 存币区块浏览器地址
+  string dexName = 13;                             // DEX名称
+  string status = 14;                              // 订单状态
+  string createTime = 15;                          // 订单创建时间
+  string source = 16;                              // 渠道
+  string toAddress = 17;                           // 目标地址
+  string toHash = 18;                              // 发币hash
+  string receiveHashExplore = 19;                   // 发币区块浏览器地址
+  string equipmentNo = 20;                         // 设备号
+  string refundCoinAmt = 21;                       // 退币数量
+  string refundHash = 22;                          // 退币hash
+  string refundHashExplore = 23;                    // 退币区块浏览器地址
+  string refundReason = 24;                        // 退币原因（1-流动性不足、2-误差超过阈值、3-原币维护、4-黑名单、5-目标币维护、6-兑换数量不在范围内、7-存币超时、8-与风险地址交互）
+  string fromCoinCode = 25;                        // 出售币种
+  string toCoinCode = 26;                          // 目标币种
 }
 
 message CreateSwapOrderRequest {
-    string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
-    string toTokenAddress = 2;    //获得币种合约地址（可通过获取币种列表中的address字段获得）
-    string fromTokenAmount = 3;   //出售币种数量(带精度)
-    string fromTokenChain = 4;    //出售币种链（可通过获取币种列表中的chain字段获得,详细支持链的情况可查看【基本说明】）
-    string toTokenChain = 5;     //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
-    string toUserAddress = 6;  // 目标用户地址
+  string fromTokenAddress = 1;  //出售币种合约地址（可通过获取币种列表中的address字段获得）
+  string toTokenAddress = 2;    //获得币种合约地址（可通过获取币种列表中的address字段获得）
+  string fromTokenAmount = 3;   //出售币种数量(带精度)
+  string fromTokenChain = 4;    //出售币种链（可通过获取币种列表中的chain字段获得,详细支持链的情况可查看【基本说明】）
+  string toTokenChain = 5;     //获得币种链（可通过获取币种列表中的chain字段获得，详细支持链的情况可查看【基本说明】）
+  string toUserAddress = 6;  // 目标用户地址
 }
 
 message CreateSwapOrderReply {
-    string chain = 1;  // 链
-    string orderId = 2;  // 订单号
-    string qrCode = 3;  // 二维码
-    string amount = 4;  // 金额
-    string address = 5;  // 地址
-    string tokenSymbol = 6;  // 符号
-    string tokenAddress = 7;  // 币种地址
-    string tokenUIAmount = 8;  // 币种数量
+  string chain = 1;  // 链
+  string orderId = 2;  // 订单号
+  string qrCode = 3;  // 二维码
+  string amount = 4;  // 金额
+  string address = 5;  // 地址
+  string tokenSymbol = 6;  // 符号
+  string tokenAddress = 7;  // 币种地址
+  string tokenUIAmount = 8;  // 币种数量
 }
 
 message GetOrderDetailRequest {
-    string orderId = 1;  // 订单号
-    string receiveOnChainHash = 2;  // 接收用户资金的链上Hash
+  string orderId = 1;  // 订单号
+  string receiveOnChainHash = 2;  // 接收用户资金的链上Hash
 }
 
 message GetOrderDetailReply {
-    string orderId = 1;  // 订单号
-    string receiveOnChainHash = 2;  // 接收用户资金的链上Hash
-    string fromOnChainHash = 3;  // 出售币种的链上Hash
-    string toOnChainHash = 4;  // 目标币种的链上Hash
-    string status = 5;  // 订单状态 0:待支付 1:已支付 2:等待上链 3:上链成功 4:异常
-    string message = 6;  // 订单状态描述
+  string orderId = 1;  // 订单号
+  string receiveOnChainHash = 2;  // 接收用户资金的链上Hash
+  string fromOnChainHash = 3;  // 出售币种的链上Hash
+  string toOnChainHash = 4;  // 目标币种的链上Hash
+  string status = 5;  // 订单状态 0:待支付 1:已支付 2:等待上链 3:上链成功 4:异常
+  string message = 6;  // 订单状态描述
 
 
-    string receiveAmountIn = 12;  // 接收用户资金的金额
-    string receiveAddress = 13;  // 接收用户资金的地址
-    string receiveStorageId = 14;  // 接收用户资金的storageID
-    string receiveChain = 15;  // 接收用户资金的链
-    string receiveTokenAddress = 16;  // 接收用户资金的币种合约地址
-    string receiveTokenSymbol = 17;  // 接收用户资金的币种符号
-    string receiveTokenDecimals = 18;  // 接收用户资金的币种精度
+  string receiveAmountIn = 12;  // 接收用户资金的金额
+  string receiveAddress = 13;  // 接收用户资金的地址
+  string receiveStorageId = 14;  // 接收用户资金的storageID
+  string receiveChain = 15;  // 接收用户资金的链
+  string receiveTokenAddress = 16;  // 接收用户资金的币种合约地址
+  string receiveTokenSymbol = 17;  // 接收用户资金的币种符号
+  string receiveTokenDecimals = 18;  // 接收用户资金的币种精度
 
-    string createdAt = 19;   // 创建时间
-    string pendingExpire = 20;  // 待支付订单过期时间
-    string expireTime = 21;  // 订单过期时间
-
-
-    //Swap信息 
-    string fromTokenAddress = 22;  // 出售币种合约地址
-    string fromTokenAmount = 24;  // 出售币种数量(带精度)
-    string fromTokenChain = 25;  // 出售币种链
-    string fromTokenSymbol = 27;  // 出售币种符号
-    string fromTokenDecimals = 28;  // 出售币种精度
+  string createdAt = 19;   // 创建时间
+  string pendingExpire = 20;  // 待支付订单过期时间
+  string expireTime = 21;  // 订单过期时间
 
 
-    string toTokenAddress = 23;  // 获得币种合约地址
-    string toTokenChain = 26;  // 获得币种链
-    string toTokenSymbol = 29;  // 获得币种符号
-    string toTokenDecimals = 30;  // 获得币种精度
-    string toTokenAmount = 31;  // 获得币种数量(预估最小到账数量)
+  //Swap信息
+  string fromTokenAddress = 22;  // 出售币种合约地址
+  string fromTokenAmount = 24;  // 出售币种数量(带精度)
+  string fromTokenChain = 25;  // 出售币种链
+  string fromTokenSymbol = 27;  // 出售币种符号
+  string fromTokenDecimals = 28;  // 出售币种精度
+
+
+  string toTokenAddress = 23;  // 获得币种合约地址
+  string toTokenChain = 26;  // 获得币种链
+  string toTokenSymbol = 29;  // 获得币种符号
+  string toTokenDecimals = 30;  // 获得币种精度
+  string toTokenAmount = 31;  // 获得币种数量(预估最小到账数量)
 
 
 }
