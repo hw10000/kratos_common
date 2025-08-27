@@ -15,6 +15,7 @@ service Block {
 	//代币模块
 	rpc GetTokenBalance (GetTokenBalanceRequest) returns (GetTokenBalanceReply);
 	rpc GetTokenBalanceBatch (GetTokenBalanceBatchRequest) returns (GetTokenBalanceBatchReply);
+	rpc GetTokenBalanceBatchByItem (GetTokenBalanceBatchByItemRequest) returns (GetTokenBalanceBatchByItemReply);
 	rpc GetTokenInfo (GetTokenInfoRequest) returns (GetTokenInfoReply);
 	rpc GetTokenInfoBatch (GetTokenInfoBatchRequest) returns (GetTokenInfoBatchReply);
 	rpc GetTokenPrice (GetTokenPriceRequest) returns (GetTokenPriceReply);
@@ -372,4 +373,12 @@ message GetTransferDetailReply {
 	string value = 5; // 转账金额
 	string hash = 6; // 交易哈希
 	string contract_address = 7; // 合约地址
+}
+
+
+message GetTokenBalanceBatchByItemRequest {
+	repeated GetTokenBalanceRequest balance_items = 1; // 批量请求
+}
+message GetTokenBalanceBatchByItemReply {
+	repeated GetTokenBalanceReply balance_result = 1; // 地址到余额信息的映射
 }

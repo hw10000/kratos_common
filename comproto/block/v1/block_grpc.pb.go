@@ -19,27 +19,28 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Block_GetExplorerURL_FullMethodName         = "/api.block.v1.Block/GetExplorerURL"
-	Block_ValidateAddress_FullMethodName        = "/api.block.v1.Block/ValidateAddress"
-	Block_GetTokenBalance_FullMethodName        = "/api.block.v1.Block/GetTokenBalance"
-	Block_GetTokenBalanceBatch_FullMethodName   = "/api.block.v1.Block/GetTokenBalanceBatch"
-	Block_GetTokenInfo_FullMethodName           = "/api.block.v1.Block/GetTokenInfo"
-	Block_GetTokenInfoBatch_FullMethodName      = "/api.block.v1.Block/GetTokenInfoBatch"
-	Block_GetTokenPrice_FullMethodName          = "/api.block.v1.Block/GetTokenPrice"
-	Block_GetTokenPriceBatch_FullMethodName     = "/api.block.v1.Block/GetTokenPriceBatch"
-	Block_Swap_FullMethodName                   = "/api.block.v1.Block/Swap"
-	Block_Transfer_FullMethodName               = "/api.block.v1.Block/Transfer"
-	Block_Approve_FullMethodName                = "/api.block.v1.Block/Approve"
-	Block_SendTransaction_FullMethodName        = "/api.block.v1.Block/SendTransaction"
-	Block_CallBundle_FullMethodName             = "/api.block.v1.Block/CallBundle"
-	Block_SendPrivateTransaction_FullMethodName = "/api.block.v1.Block/SendPrivateTransaction"
-	Block_CreateAddress_FullMethodName          = "/api.block.v1.Block/CreateAddress"
-	Block_CreateAddressBatch_FullMethodName     = "/api.block.v1.Block/CreateAddressBatch"
-	Block_GetTransactionByHash_FullMethodName   = "/api.block.v1.Block/GetTransactionByHash"
-	Block_GetLiquidity_FullMethodName           = "/api.block.v1.Block/GetLiquidity"
-	Block_GetPendingNonce_FullMethodName        = "/api.block.v1.Block/GetPendingNonce"
-	Block_GetUserResource_FullMethodName        = "/api.block.v1.Block/GetUserResource"
-	Block_GetTransferDetail_FullMethodName      = "/api.block.v1.Block/GetTransferDetail"
+	Block_GetExplorerURL_FullMethodName             = "/api.block.v1.Block/GetExplorerURL"
+	Block_ValidateAddress_FullMethodName            = "/api.block.v1.Block/ValidateAddress"
+	Block_GetTokenBalance_FullMethodName            = "/api.block.v1.Block/GetTokenBalance"
+	Block_GetTokenBalanceBatch_FullMethodName       = "/api.block.v1.Block/GetTokenBalanceBatch"
+	Block_GetTokenBalanceBatchByItem_FullMethodName = "/api.block.v1.Block/GetTokenBalanceBatchByItem"
+	Block_GetTokenInfo_FullMethodName               = "/api.block.v1.Block/GetTokenInfo"
+	Block_GetTokenInfoBatch_FullMethodName          = "/api.block.v1.Block/GetTokenInfoBatch"
+	Block_GetTokenPrice_FullMethodName              = "/api.block.v1.Block/GetTokenPrice"
+	Block_GetTokenPriceBatch_FullMethodName         = "/api.block.v1.Block/GetTokenPriceBatch"
+	Block_Swap_FullMethodName                       = "/api.block.v1.Block/Swap"
+	Block_Transfer_FullMethodName                   = "/api.block.v1.Block/Transfer"
+	Block_Approve_FullMethodName                    = "/api.block.v1.Block/Approve"
+	Block_SendTransaction_FullMethodName            = "/api.block.v1.Block/SendTransaction"
+	Block_CallBundle_FullMethodName                 = "/api.block.v1.Block/CallBundle"
+	Block_SendPrivateTransaction_FullMethodName     = "/api.block.v1.Block/SendPrivateTransaction"
+	Block_CreateAddress_FullMethodName              = "/api.block.v1.Block/CreateAddress"
+	Block_CreateAddressBatch_FullMethodName         = "/api.block.v1.Block/CreateAddressBatch"
+	Block_GetTransactionByHash_FullMethodName       = "/api.block.v1.Block/GetTransactionByHash"
+	Block_GetLiquidity_FullMethodName               = "/api.block.v1.Block/GetLiquidity"
+	Block_GetPendingNonce_FullMethodName            = "/api.block.v1.Block/GetPendingNonce"
+	Block_GetUserResource_FullMethodName            = "/api.block.v1.Block/GetUserResource"
+	Block_GetTransferDetail_FullMethodName          = "/api.block.v1.Block/GetTransferDetail"
 )
 
 // BlockClient is the client API for Block service.
@@ -53,6 +54,7 @@ type BlockClient interface {
 	// 代币模块
 	GetTokenBalance(ctx context.Context, in *GetTokenBalanceRequest, opts ...grpc.CallOption) (*GetTokenBalanceReply, error)
 	GetTokenBalanceBatch(ctx context.Context, in *GetTokenBalanceBatchRequest, opts ...grpc.CallOption) (*GetTokenBalanceBatchReply, error)
+	GetTokenBalanceBatchByItem(ctx context.Context, in *GetTokenBalanceBatchByItemRequest, opts ...grpc.CallOption) (*GetTokenBalanceBatchByItemReply, error)
 	GetTokenInfo(ctx context.Context, in *GetTokenInfoRequest, opts ...grpc.CallOption) (*GetTokenInfoReply, error)
 	GetTokenInfoBatch(ctx context.Context, in *GetTokenInfoBatchRequest, opts ...grpc.CallOption) (*GetTokenInfoBatchReply, error)
 	GetTokenPrice(ctx context.Context, in *GetTokenPriceRequest, opts ...grpc.CallOption) (*GetTokenPriceReply, error)
@@ -122,6 +124,16 @@ func (c *blockClient) GetTokenBalanceBatch(ctx context.Context, in *GetTokenBala
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTokenBalanceBatchReply)
 	err := c.cc.Invoke(ctx, Block_GetTokenBalanceBatch_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockClient) GetTokenBalanceBatchByItem(ctx context.Context, in *GetTokenBalanceBatchByItemRequest, opts ...grpc.CallOption) (*GetTokenBalanceBatchByItemReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTokenBalanceBatchByItemReply)
+	err := c.cc.Invoke(ctx, Block_GetTokenBalanceBatchByItem_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -309,6 +321,7 @@ type BlockServer interface {
 	// 代币模块
 	GetTokenBalance(context.Context, *GetTokenBalanceRequest) (*GetTokenBalanceReply, error)
 	GetTokenBalanceBatch(context.Context, *GetTokenBalanceBatchRequest) (*GetTokenBalanceBatchReply, error)
+	GetTokenBalanceBatchByItem(context.Context, *GetTokenBalanceBatchByItemRequest) (*GetTokenBalanceBatchByItemReply, error)
 	GetTokenInfo(context.Context, *GetTokenInfoRequest) (*GetTokenInfoReply, error)
 	GetTokenInfoBatch(context.Context, *GetTokenInfoBatchRequest) (*GetTokenInfoBatchReply, error)
 	GetTokenPrice(context.Context, *GetTokenPriceRequest) (*GetTokenPriceReply, error)
@@ -355,6 +368,9 @@ func (UnimplementedBlockServer) GetTokenBalance(context.Context, *GetTokenBalanc
 }
 func (UnimplementedBlockServer) GetTokenBalanceBatch(context.Context, *GetTokenBalanceBatchRequest) (*GetTokenBalanceBatchReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTokenBalanceBatch not implemented")
+}
+func (UnimplementedBlockServer) GetTokenBalanceBatchByItem(context.Context, *GetTokenBalanceBatchByItemRequest) (*GetTokenBalanceBatchByItemReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTokenBalanceBatchByItem not implemented")
 }
 func (UnimplementedBlockServer) GetTokenInfo(context.Context, *GetTokenInfoRequest) (*GetTokenInfoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTokenInfo not implemented")
@@ -496,6 +512,24 @@ func _Block_GetTokenBalanceBatch_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BlockServer).GetTokenBalanceBatch(ctx, req.(*GetTokenBalanceBatchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Block_GetTokenBalanceBatchByItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTokenBalanceBatchByItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).GetTokenBalanceBatchByItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_GetTokenBalanceBatchByItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).GetTokenBalanceBatchByItem(ctx, req.(*GetTokenBalanceBatchByItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -828,6 +862,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTokenBalanceBatch",
 			Handler:    _Block_GetTokenBalanceBatch_Handler,
+		},
+		{
+			MethodName: "GetTokenBalanceBatchByItem",
+			Handler:    _Block_GetTokenBalanceBatchByItem_Handler,
 		},
 		{
 			MethodName: "GetTokenInfo",
