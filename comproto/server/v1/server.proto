@@ -81,6 +81,7 @@ message DecodeSecretBatchReply {
 message SignTxRequest {
 	string storage_id = 1;
 	string raw_tx = 2;
+	uint32 chain_id = 3;
 }
 
 message SignTxReply {
@@ -90,6 +91,7 @@ message SignTxReply {
 message SignTxBatchRequest {
 	string storage_id = 1;
 	repeated string raw_txs = 2;
+	uint32 chain_id = 3;
 }
 
 message SignTxBatchReply {

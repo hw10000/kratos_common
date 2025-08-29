@@ -41,6 +41,7 @@ const (
 	Block_GetPendingNonce_FullMethodName            = "/api.block.v1.Block/GetPendingNonce"
 	Block_GetUserResource_FullMethodName            = "/api.block.v1.Block/GetUserResource"
 	Block_GetTransferDetail_FullMethodName          = "/api.block.v1.Block/GetTransferDetail"
+	Block_GetChainID_FullMethodName                 = "/api.block.v1.Block/GetChainID"
 )
 
 // BlockClient is the client API for Block service.
@@ -80,6 +81,7 @@ type BlockClient interface {
 	// 获取用户资源信息
 	GetUserResource(ctx context.Context, in *GetUserResourceRequest, opts ...grpc.CallOption) (*GetUserResourceReply, error)
 	GetTransferDetail(ctx context.Context, in *GetTransferDetailRequest, opts ...grpc.CallOption) (*GetTransferDetailReply, error)
+	GetChainID(ctx context.Context, in *GetChainIDRequest, opts ...grpc.CallOption) (*GetChainIDReply, error)
 }
 
 type blockClient struct {
@@ -310,6 +312,16 @@ func (c *blockClient) GetTransferDetail(ctx context.Context, in *GetTransferDeta
 	return out, nil
 }
 
+func (c *blockClient) GetChainID(ctx context.Context, in *GetChainIDRequest, opts ...grpc.CallOption) (*GetChainIDReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetChainIDReply)
+	err := c.cc.Invoke(ctx, Block_GetChainID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockServer is the server API for Block service.
 // All implementations must embed UnimplementedBlockServer
 // for forward compatibility.
@@ -347,6 +359,7 @@ type BlockServer interface {
 	// 获取用户资源信息
 	GetUserResource(context.Context, *GetUserResourceRequest) (*GetUserResourceReply, error)
 	GetTransferDetail(context.Context, *GetTransferDetailRequest) (*GetTransferDetailReply, error)
+	GetChainID(context.Context, *GetChainIDRequest) (*GetChainIDReply, error)
 	mustEmbedUnimplementedBlockServer()
 }
 
@@ -422,6 +435,9 @@ func (UnimplementedBlockServer) GetUserResource(context.Context, *GetUserResourc
 }
 func (UnimplementedBlockServer) GetTransferDetail(context.Context, *GetTransferDetailRequest) (*GetTransferDetailReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransferDetail not implemented")
+}
+func (UnimplementedBlockServer) GetChainID(context.Context, *GetChainIDRequest) (*GetChainIDReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChainID not implemented")
 }
 func (UnimplementedBlockServer) mustEmbedUnimplementedBlockServer() {}
 func (UnimplementedBlockServer) testEmbeddedByValue()               {}
@@ -840,6 +856,24 @@ func _Block_GetTransferDetail_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_GetChainID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetChainIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).GetChainID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_GetChainID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).GetChainID(ctx, req.(*GetChainIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Block_ServiceDesc is the grpc.ServiceDesc for Block service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -934,6 +968,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTransferDetail",
 			Handler:    _Block_GetTransferDetail_Handler,
+		},
+		{
+			MethodName: "GetChainID",
+			Handler:    _Block_GetChainID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

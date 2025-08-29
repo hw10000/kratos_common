@@ -52,6 +52,8 @@ service Block {
 
 
 	rpc GetTransferDetail(GetTransferDetailRequest) returns (GetTransferDetailReply);
+
+	rpc GetChainID(GetChainIDRequest) returns (GetChainIDReply);
 }
 
 message NetworkConfigItem {
@@ -381,4 +383,13 @@ message GetTokenBalanceBatchByItemRequest {
 }
 message GetTokenBalanceBatchByItemReply {
 	repeated GetTokenBalanceReply balance_result = 1; // 地址到余额信息的映射
+}
+
+message GetChainIDRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+}
+
+message GetChainIDReply {
+	uint32 chain_id = 1; // 链ID
 }
