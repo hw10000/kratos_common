@@ -27,6 +27,10 @@ service Edge {
   rpc GetOrderDetail(GetOrderDetailRequest) returns (GetOrderDetailReply) {}
   //验证恶意地址
   rpc AddressMalicious (AddressMaliciousRequest) returns (AddressMaliciousReply);
+  // 获取能量
+  rpc GetEnergy(GetEnergyRequest)returns(GetEnergyReply);
+  rpc PushEnergy(PushEnergyRequest)returns(PushEnergyReply);
+  rpc GetEnergyStatus(GetEnergyStatusRequest)returns(GetEnergyStatusReply);
 }
 
 
@@ -231,4 +235,43 @@ message GetOrderDetailReply {
   string toTokenAmount = 31;  // 获得币种数量(预估最小到账数量)
 
 
+}
+
+message GetEnergyRequest{
+  string address = 1; // 地址
+  string chain = 2; // 链名称
+  string network = 3; // 网络名称
+}
+
+message GetEnergyReply{
+  int64 energy_used = 1; // 已用能量
+  int64 energy_limit = 2; // 限制能量
+  int64 free_net_used = 3; // 免费已用带宽
+  int64 free_net_limit = 4; // 免费限制带宽
+  int64 staking_net_used = 5; // 质押trx已用带宽
+  int64 staking_net_limit = 6; // 质押trx总带宽
+}
+
+message PushEnergyRequest{
+  string out_trade_no = 1; // 订单
+  string address = 2; // 接收地址
+  int64 energy_amount =3; //所需能量
+  string chain = 4; // 链名称
+  string network = 5; // 网络名称
+  string to_address = 6; //转账目标地址
+}
+message PushEnergyReply{
+  int64 errno = 1; // 错误码
+  string serial = 2; // 流水号
+  string message = 3;// 错误信息
+}
+
+message GetEnergyStatusRequest{
+  string serial = 1; //流水号
+  string chain = 2; // 链名称
+  string network = 3; // 网络名称
+}
+
+message GetEnergyStatusReply{
+  int64 status = 1;//打能量状态
 }

@@ -28,6 +28,9 @@ const (
 	Edge_GetTransDataById_FullMethodName      = "/api.edge.v1.Edge/getTransDataById"
 	Edge_GetOrderDetail_FullMethodName        = "/api.edge.v1.Edge/GetOrderDetail"
 	Edge_AddressMalicious_FullMethodName      = "/api.edge.v1.Edge/AddressMalicious"
+	Edge_GetEnergy_FullMethodName             = "/api.edge.v1.Edge/GetEnergy"
+	Edge_PushEnergy_FullMethodName            = "/api.edge.v1.Edge/PushEnergy"
+	Edge_GetEnergyStatus_FullMethodName       = "/api.edge.v1.Edge/GetEnergyStatus"
 )
 
 // EdgeClient is the client API for Edge service.
@@ -51,6 +54,10 @@ type EdgeClient interface {
 	GetOrderDetail(ctx context.Context, in *GetOrderDetailRequest, opts ...grpc.CallOption) (*GetOrderDetailReply, error)
 	// 验证恶意地址
 	AddressMalicious(ctx context.Context, in *AddressMaliciousRequest, opts ...grpc.CallOption) (*AddressMaliciousReply, error)
+	// 获取能量
+	GetEnergy(ctx context.Context, in *GetEnergyRequest, opts ...grpc.CallOption) (*GetEnergyReply, error)
+	PushEnergy(ctx context.Context, in *PushEnergyRequest, opts ...grpc.CallOption) (*PushEnergyReply, error)
+	GetEnergyStatus(ctx context.Context, in *GetEnergyStatusRequest, opts ...grpc.CallOption) (*GetEnergyStatusReply, error)
 }
 
 type edgeClient struct {
@@ -151,6 +158,36 @@ func (c *edgeClient) AddressMalicious(ctx context.Context, in *AddressMaliciousR
 	return out, nil
 }
 
+func (c *edgeClient) GetEnergy(ctx context.Context, in *GetEnergyRequest, opts ...grpc.CallOption) (*GetEnergyReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEnergyReply)
+	err := c.cc.Invoke(ctx, Edge_GetEnergy_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *edgeClient) PushEnergy(ctx context.Context, in *PushEnergyRequest, opts ...grpc.CallOption) (*PushEnergyReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PushEnergyReply)
+	err := c.cc.Invoke(ctx, Edge_PushEnergy_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *edgeClient) GetEnergyStatus(ctx context.Context, in *GetEnergyStatusRequest, opts ...grpc.CallOption) (*GetEnergyStatusReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEnergyStatusReply)
+	err := c.cc.Invoke(ctx, Edge_GetEnergyStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EdgeServer is the server API for Edge service.
 // All implementations must embed UnimplementedEdgeServer
 // for forward compatibility.
@@ -172,6 +209,10 @@ type EdgeServer interface {
 	GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error)
 	// 验证恶意地址
 	AddressMalicious(context.Context, *AddressMaliciousRequest) (*AddressMaliciousReply, error)
+	// 获取能量
+	GetEnergy(context.Context, *GetEnergyRequest) (*GetEnergyReply, error)
+	PushEnergy(context.Context, *PushEnergyRequest) (*PushEnergyReply, error)
+	GetEnergyStatus(context.Context, *GetEnergyStatusRequest) (*GetEnergyStatusReply, error)
 	mustEmbedUnimplementedEdgeServer()
 }
 
@@ -208,6 +249,15 @@ func (UnimplementedEdgeServer) GetOrderDetail(context.Context, *GetOrderDetailRe
 }
 func (UnimplementedEdgeServer) AddressMalicious(context.Context, *AddressMaliciousRequest) (*AddressMaliciousReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddressMalicious not implemented")
+}
+func (UnimplementedEdgeServer) GetEnergy(context.Context, *GetEnergyRequest) (*GetEnergyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEnergy not implemented")
+}
+func (UnimplementedEdgeServer) PushEnergy(context.Context, *PushEnergyRequest) (*PushEnergyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PushEnergy not implemented")
+}
+func (UnimplementedEdgeServer) GetEnergyStatus(context.Context, *GetEnergyStatusRequest) (*GetEnergyStatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEnergyStatus not implemented")
 }
 func (UnimplementedEdgeServer) mustEmbedUnimplementedEdgeServer() {}
 func (UnimplementedEdgeServer) testEmbeddedByValue()              {}
@@ -392,6 +442,60 @@ func _Edge_AddressMalicious_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Edge_GetEnergy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEnergyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).GetEnergy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_GetEnergy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).GetEnergy(ctx, req.(*GetEnergyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Edge_PushEnergy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PushEnergyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).PushEnergy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_PushEnergy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).PushEnergy(ctx, req.(*PushEnergyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Edge_GetEnergyStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEnergyStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).GetEnergyStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Edge_GetEnergyStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).GetEnergyStatus(ctx, req.(*GetEnergyStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Edge_ServiceDesc is the grpc.ServiceDesc for Edge service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -434,6 +538,18 @@ var Edge_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddressMalicious",
 			Handler:    _Edge_AddressMalicious_Handler,
+		},
+		{
+			MethodName: "GetEnergy",
+			Handler:    _Edge_GetEnergy_Handler,
+		},
+		{
+			MethodName: "PushEnergy",
+			Handler:    _Edge_PushEnergy_Handler,
+		},
+		{
+			MethodName: "GetEnergyStatus",
+			Handler:    _Edge_GetEnergyStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
