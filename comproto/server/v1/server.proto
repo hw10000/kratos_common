@@ -104,6 +104,8 @@ message CreateAddressBatchRequest {
 	string chain = 1; // 链名称
 	string network = 2; // 网络名称
 	uint32 count = 3; // 数量
+	optional string wallet_id =4; //钱包id
+	optional string address_type =5;//创建类型
 }
 
 message CreateAddressBatchReply {
