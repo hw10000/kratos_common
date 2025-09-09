@@ -24,6 +24,8 @@ service Address {
 message CreateAddressRequest {
 	string chain = 1; // 链名称
 	string network = 2; // 网络名称
+	optional string wallet_id =3; //钱包id
+	optional string address_type =4;//创建类型
 }
 
 message CreateAddressReply {
