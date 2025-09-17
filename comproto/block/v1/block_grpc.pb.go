@@ -19,29 +19,30 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Block_GetExplorerURL_FullMethodName             = "/api.block.v1.Block/GetExplorerURL"
-	Block_ValidateAddress_FullMethodName            = "/api.block.v1.Block/ValidateAddress"
-	Block_GetTokenBalance_FullMethodName            = "/api.block.v1.Block/GetTokenBalance"
-	Block_GetTokenBalanceBatch_FullMethodName       = "/api.block.v1.Block/GetTokenBalanceBatch"
-	Block_GetTokenBalanceBatchByItem_FullMethodName = "/api.block.v1.Block/GetTokenBalanceBatchByItem"
-	Block_GetTokenInfo_FullMethodName               = "/api.block.v1.Block/GetTokenInfo"
-	Block_GetTokenInfoBatch_FullMethodName          = "/api.block.v1.Block/GetTokenInfoBatch"
-	Block_GetTokenPrice_FullMethodName              = "/api.block.v1.Block/GetTokenPrice"
-	Block_GetTokenPriceBatch_FullMethodName         = "/api.block.v1.Block/GetTokenPriceBatch"
-	Block_Swap_FullMethodName                       = "/api.block.v1.Block/Swap"
-	Block_Transfer_FullMethodName                   = "/api.block.v1.Block/Transfer"
-	Block_Approve_FullMethodName                    = "/api.block.v1.Block/Approve"
-	Block_SendTransaction_FullMethodName            = "/api.block.v1.Block/SendTransaction"
-	Block_CallBundle_FullMethodName                 = "/api.block.v1.Block/CallBundle"
-	Block_SendPrivateTransaction_FullMethodName     = "/api.block.v1.Block/SendPrivateTransaction"
-	Block_CreateAddress_FullMethodName              = "/api.block.v1.Block/CreateAddress"
-	Block_CreateAddressBatch_FullMethodName         = "/api.block.v1.Block/CreateAddressBatch"
-	Block_GetTransactionByHash_FullMethodName       = "/api.block.v1.Block/GetTransactionByHash"
-	Block_GetLiquidity_FullMethodName               = "/api.block.v1.Block/GetLiquidity"
-	Block_GetPendingNonce_FullMethodName            = "/api.block.v1.Block/GetPendingNonce"
-	Block_GetUserResource_FullMethodName            = "/api.block.v1.Block/GetUserResource"
-	Block_GetTransferDetail_FullMethodName          = "/api.block.v1.Block/GetTransferDetail"
-	Block_GetChainID_FullMethodName                 = "/api.block.v1.Block/GetChainID"
+	Block_GetExplorerURL_FullMethodName               = "/api.block.v1.Block/GetExplorerURL"
+	Block_ValidateAddress_FullMethodName              = "/api.block.v1.Block/ValidateAddress"
+	Block_GetTokenBalance_FullMethodName              = "/api.block.v1.Block/GetTokenBalance"
+	Block_GetTokenBalanceBatch_FullMethodName         = "/api.block.v1.Block/GetTokenBalanceBatch"
+	Block_GetTokenBalanceBatchByItem_FullMethodName   = "/api.block.v1.Block/GetTokenBalanceBatchByItem"
+	Block_GetTokenInfo_FullMethodName                 = "/api.block.v1.Block/GetTokenInfo"
+	Block_GetTokenInfoBatch_FullMethodName            = "/api.block.v1.Block/GetTokenInfoBatch"
+	Block_GetTokenPrice_FullMethodName                = "/api.block.v1.Block/GetTokenPrice"
+	Block_GetTokenPriceBatch_FullMethodName           = "/api.block.v1.Block/GetTokenPriceBatch"
+	Block_Swap_FullMethodName                         = "/api.block.v1.Block/Swap"
+	Block_Transfer_FullMethodName                     = "/api.block.v1.Block/Transfer"
+	Block_Approve_FullMethodName                      = "/api.block.v1.Block/Approve"
+	Block_SendTransaction_FullMethodName              = "/api.block.v1.Block/SendTransaction"
+	Block_CallBundle_FullMethodName                   = "/api.block.v1.Block/CallBundle"
+	Block_SendPrivateTransaction_FullMethodName       = "/api.block.v1.Block/SendPrivateTransaction"
+	Block_CreateAddress_FullMethodName                = "/api.block.v1.Block/CreateAddress"
+	Block_CreateAddressBatch_FullMethodName           = "/api.block.v1.Block/CreateAddressBatch"
+	Block_GetTransactionByHash_FullMethodName         = "/api.block.v1.Block/GetTransactionByHash"
+	Block_GetLiquidity_FullMethodName                 = "/api.block.v1.Block/GetLiquidity"
+	Block_GetPendingNonce_FullMethodName              = "/api.block.v1.Block/GetPendingNonce"
+	Block_GetUserResource_FullMethodName              = "/api.block.v1.Block/GetUserResource"
+	Block_GetTransferDetail_FullMethodName            = "/api.block.v1.Block/GetTransferDetail"
+	Block_GetChainID_FullMethodName                   = "/api.block.v1.Block/GetChainID"
+	Block_BuildUpgradeMultiSigWalletTx_FullMethodName = "/api.block.v1.Block/BuildUpgradeMultiSigWalletTx"
 )
 
 // BlockClient is the client API for Block service.
@@ -82,6 +83,8 @@ type BlockClient interface {
 	GetUserResource(ctx context.Context, in *GetUserResourceRequest, opts ...grpc.CallOption) (*GetUserResourceReply, error)
 	GetTransferDetail(ctx context.Context, in *GetTransferDetailRequest, opts ...grpc.CallOption) (*GetTransferDetailReply, error)
 	GetChainID(ctx context.Context, in *GetChainIDRequest, opts ...grpc.CallOption) (*GetChainIDReply, error)
+	// 构建升级多签钱包交易
+	BuildUpgradeMultiSigWalletTx(ctx context.Context, in *BuildUpgradeMultiSigWalletTxRequest, opts ...grpc.CallOption) (*BuildUpgradeMultiSigWalletTxReply, error)
 }
 
 type blockClient struct {
@@ -322,6 +325,16 @@ func (c *blockClient) GetChainID(ctx context.Context, in *GetChainIDRequest, opt
 	return out, nil
 }
 
+func (c *blockClient) BuildUpgradeMultiSigWalletTx(ctx context.Context, in *BuildUpgradeMultiSigWalletTxRequest, opts ...grpc.CallOption) (*BuildUpgradeMultiSigWalletTxReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BuildUpgradeMultiSigWalletTxReply)
+	err := c.cc.Invoke(ctx, Block_BuildUpgradeMultiSigWalletTx_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockServer is the server API for Block service.
 // All implementations must embed UnimplementedBlockServer
 // for forward compatibility.
@@ -360,6 +373,8 @@ type BlockServer interface {
 	GetUserResource(context.Context, *GetUserResourceRequest) (*GetUserResourceReply, error)
 	GetTransferDetail(context.Context, *GetTransferDetailRequest) (*GetTransferDetailReply, error)
 	GetChainID(context.Context, *GetChainIDRequest) (*GetChainIDReply, error)
+	// 构建升级多签钱包交易
+	BuildUpgradeMultiSigWalletTx(context.Context, *BuildUpgradeMultiSigWalletTxRequest) (*BuildUpgradeMultiSigWalletTxReply, error)
 	mustEmbedUnimplementedBlockServer()
 }
 
@@ -438,6 +453,9 @@ func (UnimplementedBlockServer) GetTransferDetail(context.Context, *GetTransferD
 }
 func (UnimplementedBlockServer) GetChainID(context.Context, *GetChainIDRequest) (*GetChainIDReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChainID not implemented")
+}
+func (UnimplementedBlockServer) BuildUpgradeMultiSigWalletTx(context.Context, *BuildUpgradeMultiSigWalletTxRequest) (*BuildUpgradeMultiSigWalletTxReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BuildUpgradeMultiSigWalletTx not implemented")
 }
 func (UnimplementedBlockServer) mustEmbedUnimplementedBlockServer() {}
 func (UnimplementedBlockServer) testEmbeddedByValue()               {}
@@ -874,6 +892,24 @@ func _Block_GetChainID_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_BuildUpgradeMultiSigWalletTx_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BuildUpgradeMultiSigWalletTxRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).BuildUpgradeMultiSigWalletTx(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_BuildUpgradeMultiSigWalletTx_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).BuildUpgradeMultiSigWalletTx(ctx, req.(*BuildUpgradeMultiSigWalletTxRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Block_ServiceDesc is the grpc.ServiceDesc for Block service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -972,6 +1008,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetChainID",
 			Handler:    _Block_GetChainID_Handler,
+		},
+		{
+			MethodName: "BuildUpgradeMultiSigWalletTx",
+			Handler:    _Block_BuildUpgradeMultiSigWalletTx_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

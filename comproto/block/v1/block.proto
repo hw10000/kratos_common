@@ -54,6 +54,10 @@ service Block {
 	rpc GetTransferDetail(GetTransferDetailRequest) returns (GetTransferDetailReply);
 
 	rpc GetChainID(GetChainIDRequest) returns (GetChainIDReply);
+
+
+	//构建升级多签钱包交易
+	rpc BuildUpgradeMultiSigWalletTx(BuildUpgradeMultiSigWalletTxRequest) returns (BuildUpgradeMultiSigWalletTxReply);
 }
 
 message NetworkConfigItem {
@@ -392,4 +396,48 @@ message GetChainIDRequest {
 
 message GetChainIDReply {
 	uint32 chain_id = 1; // 链ID
+}
+
+// 升级多签钱包交易
+//
+// 多签钱包工作原理：
+// 多签钱包通过设置多个所有者（控制者）和权重阈值来控制资产安全。
+// 每个所有者都有对应的权重值，只有当签名者的权重总和达到或超过设定的阈值时，交易才能被执行。
+//
+// 示例场景：
+//
+// 场景1 - 低安全性配置：
+// 阈值 = 1，设置3个所有者，权重分别为[1, 1, 1]
+// 结果：三人中的任何一个控制者都可以单独控制该账户
+// 风险：如果任何一个控制者受到攻击或私钥泄露，账户中的资产将会完全丢失
+//
+// 场景2 - 高安全性配置：
+// 阈值 = 3，设置3个所有者，权重分别为[1, 1, 1]
+// 结果：所有交易都需要所有三个控制者的签名才能执行
+// 风险：如果任何一个控制者的钱包丢失或无法访问，其他两个控制者就无法管理账户，资产将被永久锁定
+//
+// 场景3 - 平衡配置（推荐）：
+// 阈值 = 2，设置3个所有者，权重分别为[1, 1, 1]
+// 结果：需要3个控制者中的任意2个签名才能执行交易
+// 优势：既保证了安全性（防止单点故障），又保证了可用性（允许1个控制者离线或丢失）
+//
+// 场景4 - 不等权重配置：
+// 阈值 = 3，设置3个所有者，权重分别为[2, 1, 1]
+// 结果：主控制者（权重2）+任意一个副控制者（权重1）即可执行交易，或者两个副控制者共同签名
+// 适用：适合有主要管理者和辅助管理者的组织结构
+message BuildUpgradeMultiSigWalletTxRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	string current_owner = 3; // 当前需要升级的钱包地址
+	uint32 threshold = 4; // 总权重阈值
+	repeated MultiSigWalletItem owners = 5; // 所有者列表
+}
+
+message MultiSigWalletItem {
+	string address = 1; // 地址
+	uint32 weight = 2; // 权重
+}
+
+message BuildUpgradeMultiSigWalletTxReply {
+	string raw_transaction = 1; // 交易
 }
