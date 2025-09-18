@@ -3617,6 +3617,134 @@ func (x *BuildUpgradeMultiSigWalletTxReply) GetRawTransaction() string {
 	return ""
 }
 
+type GetTransactionWeightRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Chain          string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`                                         // 链名称
+	Network        string                 `protobuf:"bytes,2,opt,name=network,proto3" json:"network,omitempty"`                                     // 网络名称
+	RawTransaction string                 `protobuf:"bytes,3,opt,name=raw_transaction,json=rawTransaction,proto3" json:"raw_transaction,omitempty"` // 序列化后的交易
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetTransactionWeightRequest) Reset() {
+	*x = GetTransactionWeightRequest{}
+	mi := &file_block_v1_block_proto_msgTypes[59]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTransactionWeightRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTransactionWeightRequest) ProtoMessage() {}
+
+func (x *GetTransactionWeightRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_block_v1_block_proto_msgTypes[59]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTransactionWeightRequest.ProtoReflect.Descriptor instead.
+func (*GetTransactionWeightRequest) Descriptor() ([]byte, []int) {
+	return file_block_v1_block_proto_rawDescGZIP(), []int{59}
+}
+
+func (x *GetTransactionWeightRequest) GetChain() string {
+	if x != nil {
+		return x.Chain
+	}
+	return ""
+}
+
+func (x *GetTransactionWeightRequest) GetNetwork() string {
+	if x != nil {
+		return x.Network
+	}
+	return ""
+}
+
+func (x *GetTransactionWeightRequest) GetRawTransaction() string {
+	if x != nil {
+		return x.RawTransaction
+	}
+	return ""
+}
+
+type GetTransactionWeightReply struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	SignedAddresses  []string               `protobuf:"bytes,1,rep,name=signed_addresses,json=signedAddresses,proto3" json:"signed_addresses,omitempty"`    // 已签名的钱包地址列表
+	PendingAddresses []string               `protobuf:"bytes,2,rep,name=pending_addresses,json=pendingAddresses,proto3" json:"pending_addresses,omitempty"` // 待签名的钱包地址列表
+	CurrentWeight    uint32                 `protobuf:"varint,3,opt,name=current_weight,json=currentWeight,proto3" json:"current_weight,omitempty"`         // 当前权重
+	ThresholdWeight  uint32                 `protobuf:"varint,4,opt,name=threshold_weight,json=thresholdWeight,proto3" json:"threshold_weight,omitempty"`   // 阈值权重
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *GetTransactionWeightReply) Reset() {
+	*x = GetTransactionWeightReply{}
+	mi := &file_block_v1_block_proto_msgTypes[60]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTransactionWeightReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTransactionWeightReply) ProtoMessage() {}
+
+func (x *GetTransactionWeightReply) ProtoReflect() protoreflect.Message {
+	mi := &file_block_v1_block_proto_msgTypes[60]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTransactionWeightReply.ProtoReflect.Descriptor instead.
+func (*GetTransactionWeightReply) Descriptor() ([]byte, []int) {
+	return file_block_v1_block_proto_rawDescGZIP(), []int{60}
+}
+
+func (x *GetTransactionWeightReply) GetSignedAddresses() []string {
+	if x != nil {
+		return x.SignedAddresses
+	}
+	return nil
+}
+
+func (x *GetTransactionWeightReply) GetPendingAddresses() []string {
+	if x != nil {
+		return x.PendingAddresses
+	}
+	return nil
+}
+
+func (x *GetTransactionWeightReply) GetCurrentWeight() uint32 {
+	if x != nil {
+		return x.CurrentWeight
+	}
+	return 0
+}
+
+func (x *GetTransactionWeightReply) GetThresholdWeight() uint32 {
+	if x != nil {
+		return x.ThresholdWeight
+	}
+	return 0
+}
+
 var File_block_v1_block_proto protoreflect.FileDescriptor
 
 var file_block_v1_block_proto_rawDesc = string([]byte{
@@ -4131,7 +4259,27 @@ var file_block_v1_block_proto_rawDesc = string([]byte{
 	0x4d, 0x75, 0x6c, 0x74, 0x69, 0x53, 0x69, 0x67, 0x57, 0x61, 0x6c, 0x6c, 0x65, 0x74, 0x54, 0x78,
 	0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x27, 0x0a, 0x0f, 0x72, 0x61, 0x77, 0x5f, 0x74, 0x72, 0x61,
 	0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e,
-	0x72, 0x61, 0x77, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x2a, 0x94,
+	0x72, 0x61, 0x77, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x76,
+	0x0a, 0x1b, 0x47, 0x65, 0x74, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x57, 0x65, 0x69, 0x67, 0x68, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a,
+	0x05, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x63, 0x68,
+	0x61, 0x69, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x12, 0x27, 0x0a,
+	0x0f, 0x72, 0x61, 0x77, 0x5f, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x72, 0x61, 0x77, 0x54, 0x72, 0x61, 0x6e, 0x73,
+	0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0xc5, 0x01, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x54, 0x72,
+	0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x57, 0x65, 0x69, 0x67, 0x68, 0x74, 0x52,
+	0x65, 0x70, 0x6c, 0x79, 0x12, 0x29, 0x0a, 0x10, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x5f, 0x61,
+	0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0f,
+	0x73, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x65, 0x73, 0x12,
+	0x2b, 0x0a, 0x11, 0x70, 0x65, 0x6e, 0x64, 0x69, 0x6e, 0x67, 0x5f, 0x61, 0x64, 0x64, 0x72, 0x65,
+	0x73, 0x73, 0x65, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x09, 0x52, 0x10, 0x70, 0x65, 0x6e, 0x64,
+	0x69, 0x6e, 0x67, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x65, 0x73, 0x12, 0x25, 0x0a, 0x0e,
+	0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x5f, 0x77, 0x65, 0x69, 0x67, 0x68, 0x74, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x0d, 0x52, 0x0d, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x57, 0x65, 0x69,
+	0x67, 0x68, 0x74, 0x12, 0x29, 0x0a, 0x10, 0x74, 0x68, 0x72, 0x65, 0x73, 0x68, 0x6f, 0x6c, 0x64,
+	0x5f, 0x77, 0x65, 0x69, 0x67, 0x68, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x0f, 0x74,
+	0x68, 0x72, 0x65, 0x73, 0x68, 0x6f, 0x6c, 0x64, 0x57, 0x65, 0x69, 0x67, 0x68, 0x74, 0x2a, 0x94,
 	0x01, 0x0a, 0x11, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x74,
 	0x61, 0x74, 0x75, 0x73, 0x12, 0x1e, 0x0a, 0x1a, 0x54, 0x52, 0x41, 0x4e, 0x53, 0x41, 0x43, 0x54,
 	0x49, 0x4f, 0x4e, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f, 0x50, 0x45, 0x4e, 0x44, 0x49,
@@ -4141,7 +4289,7 @@ var file_block_v1_block_proto_rawDesc = string([]byte{
 	0x49, 0x4f, 0x4e, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f, 0x46, 0x41, 0x49, 0x4c, 0x45,
 	0x44, 0x10, 0x02, 0x12, 0x20, 0x0a, 0x1c, 0x54, 0x52, 0x41, 0x4e, 0x53, 0x41, 0x43, 0x54, 0x49,
 	0x4f, 0x4e, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f, 0x4e, 0x4f, 0x54, 0x5f, 0x46, 0x4f,
-	0x55, 0x4e, 0x44, 0x10, 0x03, 0x32, 0xcc, 0x11, 0x0a, 0x05, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x12,
+	0x55, 0x4e, 0x44, 0x10, 0x03, 0x32, 0xb8, 0x12, 0x0a, 0x05, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x12,
 	0x58, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x45, 0x78, 0x70, 0x6c, 0x6f, 0x72, 0x65, 0x72, 0x55, 0x52,
 	0x4c, 0x12, 0x23, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x2e, 0x76, 0x31,
 	0x2e, 0x47, 0x65, 0x74, 0x45, 0x78, 0x70, 0x6c, 0x6f, 0x72, 0x65, 0x72, 0x55, 0x52, 0x4c, 0x52,
@@ -4282,10 +4430,17 @@ var file_block_v1_block_proto_rawDesc = string([]byte{
 	0x65, 0x73, 0x74, 0x1a, 0x2f, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x2e,
 	0x76, 0x31, 0x2e, 0x42, 0x75, 0x69, 0x6c, 0x64, 0x55, 0x70, 0x67, 0x72, 0x61, 0x64, 0x65, 0x4d,
 	0x75, 0x6c, 0x74, 0x69, 0x53, 0x69, 0x67, 0x57, 0x61, 0x6c, 0x6c, 0x65, 0x74, 0x54, 0x78, 0x52,
-	0x65, 0x70, 0x6c, 0x79, 0x42, 0x27, 0x0a, 0x0c, 0x61, 0x70, 0x69, 0x2e, 0x62, 0x6c, 0x6f, 0x63,
-	0x6b, 0x2e, 0x76, 0x31, 0x50, 0x01, 0x5a, 0x15, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x2f, 0x61, 0x70,
-	0x69, 0x2f, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x70, 0x6c, 0x79, 0x12, 0x6a, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x54, 0x72, 0x61, 0x6e, 0x73,
+	0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x57, 0x65, 0x69, 0x67, 0x68, 0x74, 0x12, 0x29, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x54,
+	0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x57, 0x65, 0x69, 0x67, 0x68, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x62, 0x6c,
+	0x6f, 0x63, 0x6b, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61,
+	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x57, 0x65, 0x69, 0x67, 0x68, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x42, 0x27, 0x0a, 0x0c, 0x61, 0x70, 0x69, 0x2e, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x2e, 0x76, 0x31,
+	0x50, 0x01, 0x5a, 0x15, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x62, 0x6c,
+	0x6f, 0x63, 0x6b, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 })
 
 var (
@@ -4301,7 +4456,7 @@ func file_block_v1_block_proto_rawDescGZIP() []byte {
 }
 
 var file_block_v1_block_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_block_v1_block_proto_msgTypes = make([]protoimpl.MessageInfo, 63)
+var file_block_v1_block_proto_msgTypes = make([]protoimpl.MessageInfo, 65)
 var file_block_v1_block_proto_goTypes = []any{
 	(TransactionStatus)(0),                      // 0: api.block.v1.TransactionStatus
 	(*NetworkConfigItem)(nil),                   // 1: api.block.v1.NetworkConfigItem
@@ -4363,25 +4518,27 @@ var file_block_v1_block_proto_goTypes = []any{
 	(*BuildUpgradeMultiSigWalletTxRequest)(nil), // 57: api.block.v1.BuildUpgradeMultiSigWalletTxRequest
 	(*MultiSigWalletItem)(nil),                  // 58: api.block.v1.MultiSigWalletItem
 	(*BuildUpgradeMultiSigWalletTxReply)(nil),   // 59: api.block.v1.BuildUpgradeMultiSigWalletTxReply
-	nil, // 60: api.block.v1.GetTokenBalanceBatchReply.BalanceResultEntry
-	nil, // 61: api.block.v1.GetTokenInfoBatchReply.InfoResultEntry
-	nil, // 62: api.block.v1.GetTokenPriceBatchReply.PriceResultEntry
-	nil, // 63: api.block.v1.CallBundleReply.ErrorsEntry
+	(*GetTransactionWeightRequest)(nil),         // 60: api.block.v1.GetTransactionWeightRequest
+	(*GetTransactionWeightReply)(nil),           // 61: api.block.v1.GetTransactionWeightReply
+	nil,                                         // 62: api.block.v1.GetTokenBalanceBatchReply.BalanceResultEntry
+	nil,                                         // 63: api.block.v1.GetTokenInfoBatchReply.InfoResultEntry
+	nil,                                         // 64: api.block.v1.GetTokenPriceBatchReply.PriceResultEntry
+	nil,                                         // 65: api.block.v1.CallBundleReply.ErrorsEntry
 }
 var file_block_v1_block_proto_depIdxs = []int32{
 	1,  // 0: api.block.v1.NetworkItem.configs:type_name -> api.block.v1.NetworkConfigItem
 	2,  // 1: api.block.v1.MetadataItem.networks:type_name -> api.block.v1.NetworkItem
 	4,  // 2: api.block.v1.GetTokenBalanceBatchRequest.balance_items:type_name -> api.block.v1.GetTokenBalanceRequest
-	60, // 3: api.block.v1.GetTokenBalanceBatchReply.balance_result:type_name -> api.block.v1.GetTokenBalanceBatchReply.BalanceResultEntry
+	62, // 3: api.block.v1.GetTokenBalanceBatchReply.balance_result:type_name -> api.block.v1.GetTokenBalanceBatchReply.BalanceResultEntry
 	8,  // 4: api.block.v1.GetTokenInfoBatchRequest.info_items:type_name -> api.block.v1.GetTokenInfoRequest
-	61, // 5: api.block.v1.GetTokenInfoBatchReply.info_result:type_name -> api.block.v1.GetTokenInfoBatchReply.InfoResultEntry
+	63, // 5: api.block.v1.GetTokenInfoBatchReply.info_result:type_name -> api.block.v1.GetTokenInfoBatchReply.InfoResultEntry
 	22, // 6: api.block.v1.SubscribeTransactionReply.transactions:type_name -> api.block.v1.SubscribeTransactionItem
 	23, // 7: api.block.v1.GetTokenPriceBatchRequest.price_items:type_name -> api.block.v1.GetTokenPriceRequest
-	62, // 8: api.block.v1.GetTokenPriceBatchReply.price_result:type_name -> api.block.v1.GetTokenPriceBatchReply.PriceResultEntry
+	64, // 8: api.block.v1.GetTokenPriceBatchReply.price_result:type_name -> api.block.v1.GetTokenPriceBatchReply.PriceResultEntry
 	28, // 9: api.block.v1.SwapRequest.before_fee:type_name -> api.block.v1.SwapFeeItem
 	28, // 10: api.block.v1.SwapRequest.after_fee:type_name -> api.block.v1.SwapFeeItem
 	32, // 11: api.block.v1.TransferReply.tron_resource_detail:type_name -> api.block.v1.TRONResourceDetail
-	63, // 12: api.block.v1.CallBundleReply.errors:type_name -> api.block.v1.CallBundleReply.ErrorsEntry
+	65, // 12: api.block.v1.CallBundleReply.errors:type_name -> api.block.v1.CallBundleReply.ErrorsEntry
 	40, // 13: api.block.v1.CreateAddressBatchReply.addresses:type_name -> api.block.v1.CreateAddressReply
 	0,  // 14: api.block.v1.GetTransactionByHashReply.status:type_name -> api.block.v1.TransactionStatus
 	4,  // 15: api.block.v1.GetTokenBalanceBatchByItemRequest.balance_items:type_name -> api.block.v1.GetTokenBalanceRequest
@@ -4414,32 +4571,34 @@ var file_block_v1_block_proto_depIdxs = []int32{
 	51, // 42: api.block.v1.Block.GetTransferDetail:input_type -> api.block.v1.GetTransferDetailRequest
 	55, // 43: api.block.v1.Block.GetChainID:input_type -> api.block.v1.GetChainIDRequest
 	57, // 44: api.block.v1.Block.BuildUpgradeMultiSigWalletTx:input_type -> api.block.v1.BuildUpgradeMultiSigWalletTxRequest
-	17, // 45: api.block.v1.Block.GetExplorerURL:output_type -> api.block.v1.GetExplorerURLReply
-	19, // 46: api.block.v1.Block.ValidateAddress:output_type -> api.block.v1.ValidateAddressReply
-	5,  // 47: api.block.v1.Block.GetTokenBalance:output_type -> api.block.v1.GetTokenBalanceReply
-	7,  // 48: api.block.v1.Block.GetTokenBalanceBatch:output_type -> api.block.v1.GetTokenBalanceBatchReply
-	54, // 49: api.block.v1.Block.GetTokenBalanceBatchByItem:output_type -> api.block.v1.GetTokenBalanceBatchByItemReply
-	9,  // 50: api.block.v1.Block.GetTokenInfo:output_type -> api.block.v1.GetTokenInfoReply
-	11, // 51: api.block.v1.Block.GetTokenInfoBatch:output_type -> api.block.v1.GetTokenInfoBatchReply
-	24, // 52: api.block.v1.Block.GetTokenPrice:output_type -> api.block.v1.GetTokenPriceReply
-	26, // 53: api.block.v1.Block.GetTokenPriceBatch:output_type -> api.block.v1.GetTokenPriceBatchReply
-	29, // 54: api.block.v1.Block.Swap:output_type -> api.block.v1.SwapReply
-	31, // 55: api.block.v1.Block.Transfer:output_type -> api.block.v1.TransferReply
-	34, // 56: api.block.v1.Block.Approve:output_type -> api.block.v1.ApproveReply
-	13, // 57: api.block.v1.Block.SendTransaction:output_type -> api.block.v1.SendTransactionReply
-	36, // 58: api.block.v1.Block.CallBundle:output_type -> api.block.v1.CallBundleReply
-	38, // 59: api.block.v1.Block.SendPrivateTransaction:output_type -> api.block.v1.SendPrivateTransactionReply
-	40, // 60: api.block.v1.Block.CreateAddress:output_type -> api.block.v1.CreateAddressReply
-	42, // 61: api.block.v1.Block.CreateAddressBatch:output_type -> api.block.v1.CreateAddressBatchReply
-	44, // 62: api.block.v1.Block.GetTransactionByHash:output_type -> api.block.v1.GetTransactionByHashReply
-	46, // 63: api.block.v1.Block.GetLiquidity:output_type -> api.block.v1.GetLiquidityReply
-	48, // 64: api.block.v1.Block.GetPendingNonce:output_type -> api.block.v1.GetPendingNonceReply
-	50, // 65: api.block.v1.Block.GetUserResource:output_type -> api.block.v1.GetUserResourceReply
-	52, // 66: api.block.v1.Block.GetTransferDetail:output_type -> api.block.v1.GetTransferDetailReply
-	56, // 67: api.block.v1.Block.GetChainID:output_type -> api.block.v1.GetChainIDReply
-	59, // 68: api.block.v1.Block.BuildUpgradeMultiSigWalletTx:output_type -> api.block.v1.BuildUpgradeMultiSigWalletTxReply
-	45, // [45:69] is the sub-list for method output_type
-	21, // [21:45] is the sub-list for method input_type
+	60, // 45: api.block.v1.Block.GetTransactionWeight:input_type -> api.block.v1.GetTransactionWeightRequest
+	17, // 46: api.block.v1.Block.GetExplorerURL:output_type -> api.block.v1.GetExplorerURLReply
+	19, // 47: api.block.v1.Block.ValidateAddress:output_type -> api.block.v1.ValidateAddressReply
+	5,  // 48: api.block.v1.Block.GetTokenBalance:output_type -> api.block.v1.GetTokenBalanceReply
+	7,  // 49: api.block.v1.Block.GetTokenBalanceBatch:output_type -> api.block.v1.GetTokenBalanceBatchReply
+	54, // 50: api.block.v1.Block.GetTokenBalanceBatchByItem:output_type -> api.block.v1.GetTokenBalanceBatchByItemReply
+	9,  // 51: api.block.v1.Block.GetTokenInfo:output_type -> api.block.v1.GetTokenInfoReply
+	11, // 52: api.block.v1.Block.GetTokenInfoBatch:output_type -> api.block.v1.GetTokenInfoBatchReply
+	24, // 53: api.block.v1.Block.GetTokenPrice:output_type -> api.block.v1.GetTokenPriceReply
+	26, // 54: api.block.v1.Block.GetTokenPriceBatch:output_type -> api.block.v1.GetTokenPriceBatchReply
+	29, // 55: api.block.v1.Block.Swap:output_type -> api.block.v1.SwapReply
+	31, // 56: api.block.v1.Block.Transfer:output_type -> api.block.v1.TransferReply
+	34, // 57: api.block.v1.Block.Approve:output_type -> api.block.v1.ApproveReply
+	13, // 58: api.block.v1.Block.SendTransaction:output_type -> api.block.v1.SendTransactionReply
+	36, // 59: api.block.v1.Block.CallBundle:output_type -> api.block.v1.CallBundleReply
+	38, // 60: api.block.v1.Block.SendPrivateTransaction:output_type -> api.block.v1.SendPrivateTransactionReply
+	40, // 61: api.block.v1.Block.CreateAddress:output_type -> api.block.v1.CreateAddressReply
+	42, // 62: api.block.v1.Block.CreateAddressBatch:output_type -> api.block.v1.CreateAddressBatchReply
+	44, // 63: api.block.v1.Block.GetTransactionByHash:output_type -> api.block.v1.GetTransactionByHashReply
+	46, // 64: api.block.v1.Block.GetLiquidity:output_type -> api.block.v1.GetLiquidityReply
+	48, // 65: api.block.v1.Block.GetPendingNonce:output_type -> api.block.v1.GetPendingNonceReply
+	50, // 66: api.block.v1.Block.GetUserResource:output_type -> api.block.v1.GetUserResourceReply
+	52, // 67: api.block.v1.Block.GetTransferDetail:output_type -> api.block.v1.GetTransferDetailReply
+	56, // 68: api.block.v1.Block.GetChainID:output_type -> api.block.v1.GetChainIDReply
+	59, // 69: api.block.v1.Block.BuildUpgradeMultiSigWalletTx:output_type -> api.block.v1.BuildUpgradeMultiSigWalletTxReply
+	61, // 70: api.block.v1.Block.GetTransactionWeight:output_type -> api.block.v1.GetTransactionWeightReply
+	46, // [46:71] is the sub-list for method output_type
+	21, // [21:46] is the sub-list for method input_type
 	21, // [21:21] is the sub-list for extension type_name
 	21, // [21:21] is the sub-list for extension extendee
 	0,  // [0:21] is the sub-list for field type_name
@@ -4460,7 +4619,7 @@ func file_block_v1_block_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_block_v1_block_proto_rawDesc), len(file_block_v1_block_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   63,
+			NumMessages:   65,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

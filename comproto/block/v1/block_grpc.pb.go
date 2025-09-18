@@ -43,6 +43,7 @@ const (
 	Block_GetTransferDetail_FullMethodName            = "/api.block.v1.Block/GetTransferDetail"
 	Block_GetChainID_FullMethodName                   = "/api.block.v1.Block/GetChainID"
 	Block_BuildUpgradeMultiSigWalletTx_FullMethodName = "/api.block.v1.Block/BuildUpgradeMultiSigWalletTx"
+	Block_GetTransactionWeight_FullMethodName         = "/api.block.v1.Block/GetTransactionWeight"
 )
 
 // BlockClient is the client API for Block service.
@@ -85,6 +86,8 @@ type BlockClient interface {
 	GetChainID(ctx context.Context, in *GetChainIDRequest, opts ...grpc.CallOption) (*GetChainIDReply, error)
 	// 构建升级多签钱包交易
 	BuildUpgradeMultiSigWalletTx(ctx context.Context, in *BuildUpgradeMultiSigWalletTxRequest, opts ...grpc.CallOption) (*BuildUpgradeMultiSigWalletTxReply, error)
+	// 获取交易权重信息
+	GetTransactionWeight(ctx context.Context, in *GetTransactionWeightRequest, opts ...grpc.CallOption) (*GetTransactionWeightReply, error)
 }
 
 type blockClient struct {
@@ -335,6 +338,16 @@ func (c *blockClient) BuildUpgradeMultiSigWalletTx(ctx context.Context, in *Buil
 	return out, nil
 }
 
+func (c *blockClient) GetTransactionWeight(ctx context.Context, in *GetTransactionWeightRequest, opts ...grpc.CallOption) (*GetTransactionWeightReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTransactionWeightReply)
+	err := c.cc.Invoke(ctx, Block_GetTransactionWeight_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockServer is the server API for Block service.
 // All implementations must embed UnimplementedBlockServer
 // for forward compatibility.
@@ -375,6 +388,8 @@ type BlockServer interface {
 	GetChainID(context.Context, *GetChainIDRequest) (*GetChainIDReply, error)
 	// 构建升级多签钱包交易
 	BuildUpgradeMultiSigWalletTx(context.Context, *BuildUpgradeMultiSigWalletTxRequest) (*BuildUpgradeMultiSigWalletTxReply, error)
+	// 获取交易权重信息
+	GetTransactionWeight(context.Context, *GetTransactionWeightRequest) (*GetTransactionWeightReply, error)
 	mustEmbedUnimplementedBlockServer()
 }
 
@@ -456,6 +471,9 @@ func (UnimplementedBlockServer) GetChainID(context.Context, *GetChainIDRequest) 
 }
 func (UnimplementedBlockServer) BuildUpgradeMultiSigWalletTx(context.Context, *BuildUpgradeMultiSigWalletTxRequest) (*BuildUpgradeMultiSigWalletTxReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BuildUpgradeMultiSigWalletTx not implemented")
+}
+func (UnimplementedBlockServer) GetTransactionWeight(context.Context, *GetTransactionWeightRequest) (*GetTransactionWeightReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionWeight not implemented")
 }
 func (UnimplementedBlockServer) mustEmbedUnimplementedBlockServer() {}
 func (UnimplementedBlockServer) testEmbeddedByValue()               {}
@@ -910,6 +928,24 @@ func _Block_BuildUpgradeMultiSigWalletTx_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_GetTransactionWeight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTransactionWeightRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).GetTransactionWeight(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_GetTransactionWeight_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).GetTransactionWeight(ctx, req.(*GetTransactionWeightRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Block_ServiceDesc is the grpc.ServiceDesc for Block service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1012,6 +1048,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BuildUpgradeMultiSigWalletTx",
 			Handler:    _Block_BuildUpgradeMultiSigWalletTx_Handler,
+		},
+		{
+			MethodName: "GetTransactionWeight",
+			Handler:    _Block_GetTransactionWeight_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
