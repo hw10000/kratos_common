@@ -453,9 +453,17 @@ message GetTransactionWeightRequest {
 	string raw_transaction = 3; // 序列化后的交易
 }
 
+// SignerInfo 签名者信息
+message SignerInfo {
+	string address = 1; // 地址
+	uint32 weight = 2; // 权重
+}
+
+// GetTransactionWeightReply 交易权重信息
 message GetTransactionWeightReply {
-	repeated string signed_addresses = 1; // 已签名的钱包地址列表
-	repeated string pending_addresses = 2; // 待签名的钱包地址列表
-	uint32 current_weight = 3; // 当前权重
-	uint32 threshold_weight = 4; // 阈值权重
+	uint32 threshold_weight = 1; // 总权重门槛
+	repeated SignerInfo permissions = 2; // 全部可以签名的地址和权重列表
+	repeated SignerInfo approved_list = 3; // 当前已经签名的地址和权重列表
+	uint32 remaining_weight = 4; // 剩余所需的权重
+	repeated SignerInfo available_signers = 5; // 可选的签名地址+权重列表（排除已签名的）
 }
