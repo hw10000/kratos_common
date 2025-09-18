@@ -240,8 +240,7 @@ message TransferRequest {
 	string user_address = 5; // 用户地址
     string to_address = 6; // 目标地址
 	optional uint64 nonce = 7; // Nonce
-	// TRON 交易过期时间 默认1分钟 最大24h
-	optional uint64 additional_expired_time = 8; // 附加过期时间(ms单位,暂时TRON用)
+	bool is_multi_sig = 8; // 是否为多签
 }
 message TransferReply {
 	string raw_transaction = 1; // 交易
