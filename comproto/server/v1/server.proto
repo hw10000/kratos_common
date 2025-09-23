@@ -19,6 +19,7 @@ service Address {
 
 	rpc Withdrawal(WithdrawalRequest) returns (WithdrawalReply);
 	rpc GetOrderDetail(GetOrderDetailRequest) returns (GetOrderDetailReply);
+	rpc CreateMultiSignTransfer(CreateMultiSignTransferRequest) returns (CreateMultiSignTransferReply);
 }
 
 message CreateAddressRequest {
@@ -162,4 +163,17 @@ message GetOrderDetailRequest {
 
 message GetOrderDetailReply {
 	OrderDetail order_detail = 1;
+}
+
+message CreateMultiSignTransferRequest {
+	string chain = 1;
+	string network = 2;
+	string multi_sign_address = 3; //多签地址
+	string to_address = 4; //目标地址
+	double amount = 5; //金额
+	string token_address = 6; //代币地址
+}
+
+message CreateMultiSignTransferReply {
+	string url = 1; //用户 多签签名地址
 }

@@ -19,16 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Address_CreateAddress_FullMethodName      = "/api.server.v1.Address/CreateAddress"
-	Address_CreateAddressBatch_FullMethodName = "/api.server.v1.Address/CreateAddressBatch"
-	Address_StoreSecret_FullMethodName        = "/api.server.v1.Address/StoreSecret"
-	Address_DecodeSecret_FullMethodName       = "/api.server.v1.Address/DecodeSecret"
-	Address_StoreSecretBatch_FullMethodName   = "/api.server.v1.Address/StoreSecretBatch"
-	Address_DecodeSecretBatch_FullMethodName  = "/api.server.v1.Address/DecodeSecretBatch"
-	Address_SignTx_FullMethodName             = "/api.server.v1.Address/SignTx"
-	Address_SignTxBatch_FullMethodName        = "/api.server.v1.Address/SignTxBatch"
-	Address_Withdrawal_FullMethodName         = "/api.server.v1.Address/Withdrawal"
-	Address_GetOrderDetail_FullMethodName     = "/api.server.v1.Address/GetOrderDetail"
+	Address_CreateAddress_FullMethodName           = "/api.server.v1.Address/CreateAddress"
+	Address_CreateAddressBatch_FullMethodName      = "/api.server.v1.Address/CreateAddressBatch"
+	Address_StoreSecret_FullMethodName             = "/api.server.v1.Address/StoreSecret"
+	Address_DecodeSecret_FullMethodName            = "/api.server.v1.Address/DecodeSecret"
+	Address_StoreSecretBatch_FullMethodName        = "/api.server.v1.Address/StoreSecretBatch"
+	Address_DecodeSecretBatch_FullMethodName       = "/api.server.v1.Address/DecodeSecretBatch"
+	Address_SignTx_FullMethodName                  = "/api.server.v1.Address/SignTx"
+	Address_SignTxBatch_FullMethodName             = "/api.server.v1.Address/SignTxBatch"
+	Address_Withdrawal_FullMethodName              = "/api.server.v1.Address/Withdrawal"
+	Address_GetOrderDetail_FullMethodName          = "/api.server.v1.Address/GetOrderDetail"
+	Address_CreateMultiSignTransfer_FullMethodName = "/api.server.v1.Address/CreateMultiSignTransfer"
 )
 
 // AddressClient is the client API for Address service.
@@ -45,6 +46,7 @@ type AddressClient interface {
 	SignTxBatch(ctx context.Context, in *SignTxBatchRequest, opts ...grpc.CallOption) (*SignTxBatchReply, error)
 	Withdrawal(ctx context.Context, in *WithdrawalRequest, opts ...grpc.CallOption) (*WithdrawalReply, error)
 	GetOrderDetail(ctx context.Context, in *GetOrderDetailRequest, opts ...grpc.CallOption) (*GetOrderDetailReply, error)
+	CreateMultiSignTransfer(ctx context.Context, in *CreateMultiSignTransferRequest, opts ...grpc.CallOption) (*CreateMultiSignTransferReply, error)
 }
 
 type addressClient struct {
@@ -155,6 +157,16 @@ func (c *addressClient) GetOrderDetail(ctx context.Context, in *GetOrderDetailRe
 	return out, nil
 }
 
+func (c *addressClient) CreateMultiSignTransfer(ctx context.Context, in *CreateMultiSignTransferRequest, opts ...grpc.CallOption) (*CreateMultiSignTransferReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateMultiSignTransferReply)
+	err := c.cc.Invoke(ctx, Address_CreateMultiSignTransfer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AddressServer is the server API for Address service.
 // All implementations must embed UnimplementedAddressServer
 // for forward compatibility.
@@ -169,6 +181,7 @@ type AddressServer interface {
 	SignTxBatch(context.Context, *SignTxBatchRequest) (*SignTxBatchReply, error)
 	Withdrawal(context.Context, *WithdrawalRequest) (*WithdrawalReply, error)
 	GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error)
+	CreateMultiSignTransfer(context.Context, *CreateMultiSignTransferRequest) (*CreateMultiSignTransferReply, error)
 	mustEmbedUnimplementedAddressServer()
 }
 
@@ -208,6 +221,9 @@ func (UnimplementedAddressServer) Withdrawal(context.Context, *WithdrawalRequest
 }
 func (UnimplementedAddressServer) GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrderDetail not implemented")
+}
+func (UnimplementedAddressServer) CreateMultiSignTransfer(context.Context, *CreateMultiSignTransferRequest) (*CreateMultiSignTransferReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMultiSignTransfer not implemented")
 }
 func (UnimplementedAddressServer) mustEmbedUnimplementedAddressServer() {}
 func (UnimplementedAddressServer) testEmbeddedByValue()                 {}
@@ -410,6 +426,24 @@ func _Address_GetOrderDetail_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Address_CreateMultiSignTransfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMultiSignTransferRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AddressServer).CreateMultiSignTransfer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Address_CreateMultiSignTransfer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AddressServer).CreateMultiSignTransfer(ctx, req.(*CreateMultiSignTransferRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Address_ServiceDesc is the grpc.ServiceDesc for Address service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -456,6 +490,10 @@ var Address_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrderDetail",
 			Handler:    _Address_GetOrderDetail_Handler,
+		},
+		{
+			MethodName: "CreateMultiSignTransfer",
+			Handler:    _Address_CreateMultiSignTransfer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
