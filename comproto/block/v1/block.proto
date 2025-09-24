@@ -502,8 +502,13 @@ message MultiSignWalletTxItem {
 	int32 threshold = 9; //签名数量阈值
 	repeated SignItem sign_list = 10; //签名列表
 	int32 status = 11; //交易状态 0:pending 1:success -1:failed
+	string originator_address = 12; //发起地址
 }
 
 message GetMultiSignWalletTxListReply {
 	repeated MultiSignWalletTxItem tx_list = 1; //交易列表
+	//分页信息
+	int32 page = 2; // 页码
+	int32 page_size = 3; // 每页数量
+	int32 total = 4; // 总数量
 }
