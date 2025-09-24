@@ -503,7 +503,8 @@ message MultiSignWalletTxItem {
 	repeated SignItem sign_list = 10; //签名列表
 	int32 status = 11; //交易状态 0:pending 1:success -1:failed
 	string originator_address = 12; //发起地址
-	string current_weight = 13; //当前交易权重
+	int32 current_weight = 13; //当前交易权重
+	string expired_time = 14; //过期时间
 }
 
 message GetMultiSignWalletTxListReply {
