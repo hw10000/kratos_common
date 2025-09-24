@@ -44,6 +44,7 @@ const (
 	Block_GetChainID_FullMethodName                   = "/api.block.v1.Block/GetChainID"
 	Block_BuildUpgradeMultiSigWalletTx_FullMethodName = "/api.block.v1.Block/BuildUpgradeMultiSigWalletTx"
 	Block_GetTransactionWeight_FullMethodName         = "/api.block.v1.Block/GetTransactionWeight"
+	Block_GetMultiSignWalletTxList_FullMethodName     = "/api.block.v1.Block/GetMultiSignWalletTxList"
 )
 
 // BlockClient is the client API for Block service.
@@ -88,6 +89,8 @@ type BlockClient interface {
 	BuildUpgradeMultiSigWalletTx(ctx context.Context, in *BuildUpgradeMultiSigWalletTxRequest, opts ...grpc.CallOption) (*BuildUpgradeMultiSigWalletTxReply, error)
 	// 获取交易权重信息
 	GetTransactionWeight(ctx context.Context, in *GetTransactionWeightRequest, opts ...grpc.CallOption) (*GetTransactionWeightReply, error)
+	// 获取当前多签钱包交易列表
+	GetMultiSignWalletTxList(ctx context.Context, in *GetMultiSignWalletTxListRequest, opts ...grpc.CallOption) (*GetMultiSignWalletTxListReply, error)
 }
 
 type blockClient struct {
@@ -348,6 +351,16 @@ func (c *blockClient) GetTransactionWeight(ctx context.Context, in *GetTransacti
 	return out, nil
 }
 
+func (c *blockClient) GetMultiSignWalletTxList(ctx context.Context, in *GetMultiSignWalletTxListRequest, opts ...grpc.CallOption) (*GetMultiSignWalletTxListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMultiSignWalletTxListReply)
+	err := c.cc.Invoke(ctx, Block_GetMultiSignWalletTxList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlockServer is the server API for Block service.
 // All implementations must embed UnimplementedBlockServer
 // for forward compatibility.
@@ -390,6 +403,8 @@ type BlockServer interface {
 	BuildUpgradeMultiSigWalletTx(context.Context, *BuildUpgradeMultiSigWalletTxRequest) (*BuildUpgradeMultiSigWalletTxReply, error)
 	// 获取交易权重信息
 	GetTransactionWeight(context.Context, *GetTransactionWeightRequest) (*GetTransactionWeightReply, error)
+	// 获取当前多签钱包交易列表
+	GetMultiSignWalletTxList(context.Context, *GetMultiSignWalletTxListRequest) (*GetMultiSignWalletTxListReply, error)
 	mustEmbedUnimplementedBlockServer()
 }
 
@@ -474,6 +489,9 @@ func (UnimplementedBlockServer) BuildUpgradeMultiSigWalletTx(context.Context, *B
 }
 func (UnimplementedBlockServer) GetTransactionWeight(context.Context, *GetTransactionWeightRequest) (*GetTransactionWeightReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionWeight not implemented")
+}
+func (UnimplementedBlockServer) GetMultiSignWalletTxList(context.Context, *GetMultiSignWalletTxListRequest) (*GetMultiSignWalletTxListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMultiSignWalletTxList not implemented")
 }
 func (UnimplementedBlockServer) mustEmbedUnimplementedBlockServer() {}
 func (UnimplementedBlockServer) testEmbeddedByValue()               {}
@@ -946,6 +964,24 @@ func _Block_GetTransactionWeight_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Block_GetMultiSignWalletTxList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMultiSignWalletTxListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).GetMultiSignWalletTxList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_GetMultiSignWalletTxList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).GetMultiSignWalletTxList(ctx, req.(*GetMultiSignWalletTxListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Block_ServiceDesc is the grpc.ServiceDesc for Block service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1052,6 +1088,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTransactionWeight",
 			Handler:    _Block_GetTransactionWeight_Handler,
+		},
+		{
+			MethodName: "GetMultiSignWalletTxList",
+			Handler:    _Block_GetMultiSignWalletTxList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
