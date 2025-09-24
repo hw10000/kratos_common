@@ -217,6 +217,7 @@ message CreateMultiSignWalletRequest {
 	string current_owner = 3; // TRON为当前需要升级的钱包地址，EVM为创建多签钱包的owner地址
 	uint32 threshold = 4; // 总权重阈值
 	repeated MultiSigWalletItem owners = 5; // 所有者列表
+	string storage_id = 6; //存储ID current_owner 发送交易地址对应的storage_id
 }
 
 message MultiSigWalletItem {
