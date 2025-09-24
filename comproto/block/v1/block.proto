@@ -65,6 +65,9 @@ service Block {
 
 	//获取当前多签钱包交易列表
 	rpc GetMultiSignWalletTxList(GetMultiSignWalletTxListRequest) returns (GetMultiSignWalletTxListReply);
+
+	//检查地址是否为多签地址
+	rpc CheckMultiSignAddress(CheckMultiSignAddressRequest) returns (CheckMultiSignAddressReply);
 }
 
 message NetworkConfigItem {
@@ -513,4 +516,14 @@ message GetMultiSignWalletTxListReply {
 	int32 page = 2; // 页码
 	int32 page_size = 3; // 每页数量
 	int32 total = 4; // 总数量
+}
+
+message CheckMultiSignAddressRequest {
+	string chain = 1;
+	string network = 2;
+	string address = 3; //地址
+}
+
+message CheckMultiSignAddressReply {
+	bool is_multi_sign_address = 1; //是否为多签地址
 }
