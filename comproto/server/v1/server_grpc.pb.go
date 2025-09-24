@@ -30,6 +30,7 @@ const (
 	Address_Withdrawal_FullMethodName              = "/api.server.v1.Address/Withdrawal"
 	Address_GetOrderDetail_FullMethodName          = "/api.server.v1.Address/GetOrderDetail"
 	Address_CreateMultiSignTransfer_FullMethodName = "/api.server.v1.Address/CreateMultiSignTransfer"
+	Address_CreateMultiSignWallet_FullMethodName   = "/api.server.v1.Address/CreateMultiSignWallet"
 )
 
 // AddressClient is the client API for Address service.
@@ -46,7 +47,10 @@ type AddressClient interface {
 	SignTxBatch(ctx context.Context, in *SignTxBatchRequest, opts ...grpc.CallOption) (*SignTxBatchReply, error)
 	Withdrawal(ctx context.Context, in *WithdrawalRequest, opts ...grpc.CallOption) (*WithdrawalReply, error)
 	GetOrderDetail(ctx context.Context, in *GetOrderDetailRequest, opts ...grpc.CallOption) (*GetOrderDetailReply, error)
+	// 创建多签转账交易，返回用户签名页面地址
 	CreateMultiSignTransfer(ctx context.Context, in *CreateMultiSignTransferRequest, opts ...grpc.CallOption) (*CreateMultiSignTransferReply, error)
+	// 创建多签钱包，TRON为升级多签钱包，EVM为创建，返回多签地址
+	CreateMultiSignWallet(ctx context.Context, in *CreateMultiSignWalletRequest, opts ...grpc.CallOption) (*CreateMultiSignWalletReply, error)
 }
 
 type addressClient struct {
@@ -167,6 +171,16 @@ func (c *addressClient) CreateMultiSignTransfer(ctx context.Context, in *CreateM
 	return out, nil
 }
 
+func (c *addressClient) CreateMultiSignWallet(ctx context.Context, in *CreateMultiSignWalletRequest, opts ...grpc.CallOption) (*CreateMultiSignWalletReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateMultiSignWalletReply)
+	err := c.cc.Invoke(ctx, Address_CreateMultiSignWallet_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AddressServer is the server API for Address service.
 // All implementations must embed UnimplementedAddressServer
 // for forward compatibility.
@@ -181,7 +195,10 @@ type AddressServer interface {
 	SignTxBatch(context.Context, *SignTxBatchRequest) (*SignTxBatchReply, error)
 	Withdrawal(context.Context, *WithdrawalRequest) (*WithdrawalReply, error)
 	GetOrderDetail(context.Context, *GetOrderDetailRequest) (*GetOrderDetailReply, error)
+	// 创建多签转账交易，返回用户签名页面地址
 	CreateMultiSignTransfer(context.Context, *CreateMultiSignTransferRequest) (*CreateMultiSignTransferReply, error)
+	// 创建多签钱包，TRON为升级多签钱包，EVM为创建，返回多签地址
+	CreateMultiSignWallet(context.Context, *CreateMultiSignWalletRequest) (*CreateMultiSignWalletReply, error)
 	mustEmbedUnimplementedAddressServer()
 }
 
@@ -224,6 +241,9 @@ func (UnimplementedAddressServer) GetOrderDetail(context.Context, *GetOrderDetai
 }
 func (UnimplementedAddressServer) CreateMultiSignTransfer(context.Context, *CreateMultiSignTransferRequest) (*CreateMultiSignTransferReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMultiSignTransfer not implemented")
+}
+func (UnimplementedAddressServer) CreateMultiSignWallet(context.Context, *CreateMultiSignWalletRequest) (*CreateMultiSignWalletReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMultiSignWallet not implemented")
 }
 func (UnimplementedAddressServer) mustEmbedUnimplementedAddressServer() {}
 func (UnimplementedAddressServer) testEmbeddedByValue()                 {}
@@ -444,6 +464,24 @@ func _Address_CreateMultiSignTransfer_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Address_CreateMultiSignWallet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMultiSignWalletRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AddressServer).CreateMultiSignWallet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Address_CreateMultiSignWallet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AddressServer).CreateMultiSignWallet(ctx, req.(*CreateMultiSignWalletRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Address_ServiceDesc is the grpc.ServiceDesc for Address service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -494,6 +532,10 @@ var Address_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateMultiSignTransfer",
 			Handler:    _Address_CreateMultiSignTransfer_Handler,
+		},
+		{
+			MethodName: "CreateMultiSignWallet",
+			Handler:    _Address_CreateMultiSignWallet_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
