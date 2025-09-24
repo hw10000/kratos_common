@@ -173,7 +173,6 @@ message CreateMultiSignTransferRequest {
 	double amount = 5; //金额
 	string token_address = 6; //代币地址
 	string storage_id = 7; //存储ID
-	optional uint64 chain_id = 8; //链ID
 }
 
 message CreateMultiSignTransferReply {
