@@ -32,6 +32,7 @@ const (
 	Address_CreateMultiSignTransfer_FullMethodName  = "/api.server.v1.Address/CreateMultiSignTransfer"
 	Address_CreateMultiSignWallet_FullMethodName    = "/api.server.v1.Address/CreateMultiSignWallet"
 	Address_GetMultiSignWalletTxList_FullMethodName = "/api.server.v1.Address/GetMultiSignWalletTxList"
+	Address_CheckMultiSignAddress_FullMethodName    = "/api.server.v1.Address/CheckMultiSignAddress"
 )
 
 // AddressClient is the client API for Address service.
@@ -54,6 +55,8 @@ type AddressClient interface {
 	CreateMultiSignWallet(ctx context.Context, in *CreateMultiSignWalletRequest, opts ...grpc.CallOption) (*CreateMultiSignWalletReply, error)
 	// 获取当前多签钱包交易列表
 	GetMultiSignWalletTxList(ctx context.Context, in *GetMultiSignWalletTxListRequest, opts ...grpc.CallOption) (*GetMultiSignWalletTxListReply, error)
+	// 检查地址是否为多签地址
+	CheckMultiSignAddress(ctx context.Context, in *CheckMultiSignAddressRequest, opts ...grpc.CallOption) (*CheckMultiSignAddressReply, error)
 }
 
 type addressClient struct {
@@ -194,6 +197,16 @@ func (c *addressClient) GetMultiSignWalletTxList(ctx context.Context, in *GetMul
 	return out, nil
 }
 
+func (c *addressClient) CheckMultiSignAddress(ctx context.Context, in *CheckMultiSignAddressRequest, opts ...grpc.CallOption) (*CheckMultiSignAddressReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckMultiSignAddressReply)
+	err := c.cc.Invoke(ctx, Address_CheckMultiSignAddress_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AddressServer is the server API for Address service.
 // All implementations must embed UnimplementedAddressServer
 // for forward compatibility.
@@ -214,6 +227,8 @@ type AddressServer interface {
 	CreateMultiSignWallet(context.Context, *CreateMultiSignWalletRequest) (*CreateMultiSignWalletReply, error)
 	// 获取当前多签钱包交易列表
 	GetMultiSignWalletTxList(context.Context, *GetMultiSignWalletTxListRequest) (*GetMultiSignWalletTxListReply, error)
+	// 检查地址是否为多签地址
+	CheckMultiSignAddress(context.Context, *CheckMultiSignAddressRequest) (*CheckMultiSignAddressReply, error)
 	mustEmbedUnimplementedAddressServer()
 }
 
@@ -262,6 +277,9 @@ func (UnimplementedAddressServer) CreateMultiSignWallet(context.Context, *Create
 }
 func (UnimplementedAddressServer) GetMultiSignWalletTxList(context.Context, *GetMultiSignWalletTxListRequest) (*GetMultiSignWalletTxListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMultiSignWalletTxList not implemented")
+}
+func (UnimplementedAddressServer) CheckMultiSignAddress(context.Context, *CheckMultiSignAddressRequest) (*CheckMultiSignAddressReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckMultiSignAddress not implemented")
 }
 func (UnimplementedAddressServer) mustEmbedUnimplementedAddressServer() {}
 func (UnimplementedAddressServer) testEmbeddedByValue()                 {}
@@ -518,6 +536,24 @@ func _Address_GetMultiSignWalletTxList_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Address_CheckMultiSignAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckMultiSignAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AddressServer).CheckMultiSignAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Address_CheckMultiSignAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AddressServer).CheckMultiSignAddress(ctx, req.(*CheckMultiSignAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Address_ServiceDesc is the grpc.ServiceDesc for Address service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -576,6 +612,10 @@ var Address_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMultiSignWalletTxList",
 			Handler:    _Address_GetMultiSignWalletTxList_Handler,
+		},
+		{
+			MethodName: "CheckMultiSignAddress",
+			Handler:    _Address_CheckMultiSignAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
