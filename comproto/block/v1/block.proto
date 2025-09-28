@@ -452,6 +452,7 @@ message MultiSigWalletItem {
 message BuildUpgradeMultiSigWalletTxReply {
 	string raw_transaction = 1; // 交易
 	string wallet_address = 2; // 钱包地址
+	optional string sub_pvk = 3; // 子私钥Solana专用
 }
 
 message GetTransactionWeightRequest {
