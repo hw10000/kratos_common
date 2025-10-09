@@ -32,6 +32,7 @@ service Block {
 
 	//广播交易上链
 	rpc SendTransaction(SendTransactionRequest)returns(SendTransactionReply);
+	rpc SendTransactionWithBundle(SendTransactionWithBundleRequest)returns(SendTransactionWithBundleReply);
 	rpc CallBundle(CallBundleRequest) returns (CallBundleReply);
 	rpc SendPrivateTransaction(SendPrivateTransactionRequest)returns (SendPrivateTransactionReply);
 
@@ -136,6 +137,16 @@ message SendTransactionRequest {
 }
 message SendTransactionReply {
 	repeated string transaction_hash = 1; // 交易哈希 如果成功则有hash，且msg返回success
+}
+
+message SendTransactionWithBundleRequest {
+	string chain = 1; // 链名称
+	string network = 2; // 网络名称
+	repeated string signed_transaction = 3; // 交易，字符串
+}
+message SendTransactionWithBundleReply {
+	string bundle_hash = 1; //捆绑包Hash
+	repeated string transaction_hash = 2; // 交易哈希 如果成功则有hash，且msg返回success
 }
 
 message GetTransactionStatusRequest {

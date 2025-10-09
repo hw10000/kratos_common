@@ -32,6 +32,7 @@ const (
 	Block_Transfer_FullMethodName                     = "/api.block.v1.Block/Transfer"
 	Block_Approve_FullMethodName                      = "/api.block.v1.Block/Approve"
 	Block_SendTransaction_FullMethodName              = "/api.block.v1.Block/SendTransaction"
+	Block_SendTransactionWithBundle_FullMethodName    = "/api.block.v1.Block/SendTransactionWithBundle"
 	Block_CallBundle_FullMethodName                   = "/api.block.v1.Block/CallBundle"
 	Block_SendPrivateTransaction_FullMethodName       = "/api.block.v1.Block/SendPrivateTransaction"
 	Block_CreateAddress_FullMethodName                = "/api.block.v1.Block/CreateAddress"
@@ -72,6 +73,7 @@ type BlockClient interface {
 	Approve(ctx context.Context, in *ApproveRequest, opts ...grpc.CallOption) (*ApproveReply, error)
 	// 广播交易上链
 	SendTransaction(ctx context.Context, in *SendTransactionRequest, opts ...grpc.CallOption) (*SendTransactionReply, error)
+	SendTransactionWithBundle(ctx context.Context, in *SendTransactionWithBundleRequest, opts ...grpc.CallOption) (*SendTransactionWithBundleReply, error)
 	CallBundle(ctx context.Context, in *CallBundleRequest, opts ...grpc.CallOption) (*CallBundleReply, error)
 	SendPrivateTransaction(ctx context.Context, in *SendPrivateTransactionRequest, opts ...grpc.CallOption) (*SendPrivateTransactionReply, error)
 	CreateAddress(ctx context.Context, in *CreateAddressRequest, opts ...grpc.CallOption) (*CreateAddressReply, error)
@@ -228,6 +230,16 @@ func (c *blockClient) SendTransaction(ctx context.Context, in *SendTransactionRe
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SendTransactionReply)
 	err := c.cc.Invoke(ctx, Block_SendTransaction_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blockClient) SendTransactionWithBundle(ctx context.Context, in *SendTransactionWithBundleRequest, opts ...grpc.CallOption) (*SendTransactionWithBundleReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendTransactionWithBundleReply)
+	err := c.cc.Invoke(ctx, Block_SendTransactionWithBundle_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -398,6 +410,7 @@ type BlockServer interface {
 	Approve(context.Context, *ApproveRequest) (*ApproveReply, error)
 	// 广播交易上链
 	SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error)
+	SendTransactionWithBundle(context.Context, *SendTransactionWithBundleRequest) (*SendTransactionWithBundleReply, error)
 	CallBundle(context.Context, *CallBundleRequest) (*CallBundleReply, error)
 	SendPrivateTransaction(context.Context, *SendPrivateTransactionRequest) (*SendPrivateTransactionReply, error)
 	CreateAddress(context.Context, *CreateAddressRequest) (*CreateAddressReply, error)
@@ -468,6 +481,9 @@ func (UnimplementedBlockServer) Approve(context.Context, *ApproveRequest) (*Appr
 }
 func (UnimplementedBlockServer) SendTransaction(context.Context, *SendTransactionRequest) (*SendTransactionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendTransaction not implemented")
+}
+func (UnimplementedBlockServer) SendTransactionWithBundle(context.Context, *SendTransactionWithBundleRequest) (*SendTransactionWithBundleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTransactionWithBundle not implemented")
 }
 func (UnimplementedBlockServer) CallBundle(context.Context, *CallBundleRequest) (*CallBundleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CallBundle not implemented")
@@ -762,6 +778,24 @@ func _Block_SendTransaction_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BlockServer).SendTransaction(ctx, req.(*SendTransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Block_SendTransactionWithBundle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTransactionWithBundleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlockServer).SendTransactionWithBundle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Block_SendTransactionWithBundle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlockServer).SendTransactionWithBundle(ctx, req.(*SendTransactionWithBundleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1076,6 +1110,10 @@ var Block_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendTransaction",
 			Handler:    _Block_SendTransaction_Handler,
+		},
+		{
+			MethodName: "SendTransactionWithBundle",
+			Handler:    _Block_SendTransactionWithBundle_Handler,
 		},
 		{
 			MethodName: "CallBundle",
