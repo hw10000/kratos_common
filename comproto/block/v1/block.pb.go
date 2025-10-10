@@ -3939,7 +3939,7 @@ type GetMultiSignWalletTxListRequest struct {
 	Chain            string                 `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
 	Network          string                 `protobuf:"bytes,2,opt,name=network,proto3" json:"network,omitempty"`
 	MultiSignAddress string                 `protobuf:"bytes,3,opt,name=multi_sign_address,json=multiSignAddress,proto3" json:"multi_sign_address,omitempty"` //多签地址
-	Status           int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                                              // 查询条件 默认0:ALL 1:pending
+	Status           int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                                              // 查询条件 默认0:ALL 1:pending 2:当前multi_sign_address已经签署的pending列表
 	Page             int32                  `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`                                                  // 页码
 	PageSize         int32                  `protobuf:"varint,6,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`                          // 每页数量
 	unknownFields    protoimpl.UnknownFields
