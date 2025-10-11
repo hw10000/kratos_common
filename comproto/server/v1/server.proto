@@ -134,6 +134,7 @@ message WithdrawalRequest {
 	optional string out_order_no = 8; // 外部订单号
 	string user_address = 9;
   string merchant_id =10; //商户id
+  string is_back =11;//是否退回操作  1退回,2正常
 }
 
 message WithdrawalReply {
@@ -240,7 +241,7 @@ message GetMultiSignWalletTxListRequest {
 	string chain = 1;
 	string network = 2;
 	string multi_sign_address = 3; //多签地址
-	int32 status = 4; // 查询条件 默认0:ALL 1:pending 2:当前multi_sign_address已经签署的pending列表
+	int32 status = 4; // 查询条件 默认0:ALL 1:pending
 	int32 page = 5; // 页码
 	int32 page_size = 6; // 每页数量
 }
