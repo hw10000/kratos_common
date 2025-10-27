@@ -33,6 +33,7 @@ const (
 	Address_CreateMultiSignWallet_FullMethodName    = "/api.server.v1.Address/CreateMultiSignWallet"
 	Address_GetMultiSignWalletTxList_FullMethodName = "/api.server.v1.Address/GetMultiSignWalletTxList"
 	Address_CheckMultiSignAddress_FullMethodName    = "/api.server.v1.Address/CheckMultiSignAddress"
+	Address_CreateVirtualAddress_FullMethodName     = "/api.server.v1.Address/CreateVirtualAddress"
 )
 
 // AddressClient is the client API for Address service.
@@ -57,6 +58,8 @@ type AddressClient interface {
 	GetMultiSignWalletTxList(ctx context.Context, in *GetMultiSignWalletTxListRequest, opts ...grpc.CallOption) (*GetMultiSignWalletTxListReply, error)
 	// 检查地址是否为多签地址
 	CheckMultiSignAddress(ctx context.Context, in *CheckMultiSignAddressRequest, opts ...grpc.CallOption) (*CheckMultiSignAddressReply, error)
+	// 创建虚拟钱包
+	CreateVirtualAddress(ctx context.Context, in *CreateAddressRequest, opts ...grpc.CallOption) (*CreateAddressReply, error)
 }
 
 type addressClient struct {
@@ -207,6 +210,16 @@ func (c *addressClient) CheckMultiSignAddress(ctx context.Context, in *CheckMult
 	return out, nil
 }
 
+func (c *addressClient) CreateVirtualAddress(ctx context.Context, in *CreateAddressRequest, opts ...grpc.CallOption) (*CreateAddressReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAddressReply)
+	err := c.cc.Invoke(ctx, Address_CreateVirtualAddress_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AddressServer is the server API for Address service.
 // All implementations must embed UnimplementedAddressServer
 // for forward compatibility.
@@ -229,6 +242,8 @@ type AddressServer interface {
 	GetMultiSignWalletTxList(context.Context, *GetMultiSignWalletTxListRequest) (*GetMultiSignWalletTxListReply, error)
 	// 检查地址是否为多签地址
 	CheckMultiSignAddress(context.Context, *CheckMultiSignAddressRequest) (*CheckMultiSignAddressReply, error)
+	// 创建虚拟钱包
+	CreateVirtualAddress(context.Context, *CreateAddressRequest) (*CreateAddressReply, error)
 	mustEmbedUnimplementedAddressServer()
 }
 
@@ -280,6 +295,9 @@ func (UnimplementedAddressServer) GetMultiSignWalletTxList(context.Context, *Get
 }
 func (UnimplementedAddressServer) CheckMultiSignAddress(context.Context, *CheckMultiSignAddressRequest) (*CheckMultiSignAddressReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckMultiSignAddress not implemented")
+}
+func (UnimplementedAddressServer) CreateVirtualAddress(context.Context, *CreateAddressRequest) (*CreateAddressReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateVirtualAddress not implemented")
 }
 func (UnimplementedAddressServer) mustEmbedUnimplementedAddressServer() {}
 func (UnimplementedAddressServer) testEmbeddedByValue()                 {}
@@ -554,6 +572,24 @@ func _Address_CheckMultiSignAddress_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Address_CreateVirtualAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AddressServer).CreateVirtualAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Address_CreateVirtualAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AddressServer).CreateVirtualAddress(ctx, req.(*CreateAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Address_ServiceDesc is the grpc.ServiceDesc for Address service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -616,6 +652,10 @@ var Address_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckMultiSignAddress",
 			Handler:    _Address_CheckMultiSignAddress_Handler,
+		},
+		{
+			MethodName: "CreateVirtualAddress",
+			Handler:    _Address_CreateVirtualAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

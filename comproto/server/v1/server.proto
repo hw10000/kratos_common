@@ -30,6 +30,9 @@ service Address {
 
 	//检查地址是否为多签地址
 	rpc CheckMultiSignAddress(CheckMultiSignAddressRequest) returns (CheckMultiSignAddressReply);
+
+	//创建虚拟钱包
+	rpc CreateVirtualAddress(CreateAddressRequest) returns (CreateAddressReply);
 }
 
 message CreateAddressRequest {
