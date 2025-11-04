@@ -81,11 +81,24 @@ message AddressMaliciousRequest{
   string address = 1; // 地址
   string chain = 2; // 链名称
   string network = 3; // 网络名称
+  string coin = 4;
 }
 message AddressMaliciousReply{
   bool status = 1;
-  string message = 2;//等级
-  int64 score = 3;//评分
+  string message = 2;
+  int64 score =3;
+  repeated string detail_list = 4;
+  string risklevel = 5;
+  repeated RiskDetail risk_detail = 6;
+  string risk_report_url = 7;
+}
+message RiskDetail {
+  string label = 1; // 风险实体名称
+  string type = 2; // 风险类型
+  float volume = 3; // 交易金额(USD)
+  string address = 4; // 跳数
+  string exposure_type = 5; // 暴露类型 (direct/indirect)
+  float percent = 6; // 占总交易量的百分比
 }
 
 
