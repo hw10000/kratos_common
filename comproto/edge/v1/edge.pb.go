@@ -416,6 +416,7 @@ type AddressMaliciousRequest struct {
 	Address       string                 `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"` // 地址
 	Chain         string                 `protobuf:"bytes,2,opt,name=chain,proto3" json:"chain,omitempty"`     // 链名称
 	Network       string                 `protobuf:"bytes,3,opt,name=network,proto3" json:"network,omitempty"` // 网络名称
+	Coin          string                 `protobuf:"bytes,4,opt,name=coin,proto3" json:"coin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -471,11 +472,22 @@ func (x *AddressMaliciousRequest) GetNetwork() string {
 	return ""
 }
 
+func (x *AddressMaliciousRequest) GetCoin() string {
+	if x != nil {
+		return x.Coin
+	}
+	return ""
+}
+
 type AddressMaliciousReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Status        bool                   `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"` //等级
-	Score         int64                  `protobuf:"varint,3,opt,name=score,proto3" json:"score,omitempty"`    //评分
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Score         int64                  `protobuf:"varint,3,opt,name=score,proto3" json:"score,omitempty"`
+	DetailList    []string               `protobuf:"bytes,4,rep,name=detail_list,json=detailList,proto3" json:"detail_list,omitempty"`
+	Risklevel     string                 `protobuf:"bytes,5,opt,name=risklevel,proto3" json:"risklevel,omitempty"`
+	RiskDetail    []*RiskDetail          `protobuf:"bytes,6,rep,name=risk_detail,json=riskDetail,proto3" json:"risk_detail,omitempty"`
+	RiskReportUrl string                 `protobuf:"bytes,7,opt,name=risk_report_url,json=riskReportUrl,proto3" json:"risk_report_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -531,6 +543,118 @@ func (x *AddressMaliciousReply) GetScore() int64 {
 	return 0
 }
 
+func (x *AddressMaliciousReply) GetDetailList() []string {
+	if x != nil {
+		return x.DetailList
+	}
+	return nil
+}
+
+func (x *AddressMaliciousReply) GetRisklevel() string {
+	if x != nil {
+		return x.Risklevel
+	}
+	return ""
+}
+
+func (x *AddressMaliciousReply) GetRiskDetail() []*RiskDetail {
+	if x != nil {
+		return x.RiskDetail
+	}
+	return nil
+}
+
+func (x *AddressMaliciousReply) GetRiskReportUrl() string {
+	if x != nil {
+		return x.RiskReportUrl
+	}
+	return ""
+}
+
+type RiskDetail struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Label         string                 `protobuf:"bytes,1,opt,name=label,proto3" json:"label,omitempty"`                                   // 风险实体名称
+	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`                                     // 风险类型
+	Volume        float32                `protobuf:"fixed32,3,opt,name=volume,proto3" json:"volume,omitempty"`                               // 交易金额(USD)
+	Address       string                 `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`                               // 跳数
+	ExposureType  string                 `protobuf:"bytes,5,opt,name=exposure_type,json=exposureType,proto3" json:"exposure_type,omitempty"` // 暴露类型 (direct/indirect)
+	Percent       float32                `protobuf:"fixed32,6,opt,name=percent,proto3" json:"percent,omitempty"`                             // 占总交易量的百分比
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RiskDetail) Reset() {
+	*x = RiskDetail{}
+	mi := &file_edge_v1_edge_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RiskDetail) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RiskDetail) ProtoMessage() {}
+
+func (x *RiskDetail) ProtoReflect() protoreflect.Message {
+	mi := &file_edge_v1_edge_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RiskDetail.ProtoReflect.Descriptor instead.
+func (*RiskDetail) Descriptor() ([]byte, []int) {
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *RiskDetail) GetLabel() string {
+	if x != nil {
+		return x.Label
+	}
+	return ""
+}
+
+func (x *RiskDetail) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *RiskDetail) GetVolume() float32 {
+	if x != nil {
+		return x.Volume
+	}
+	return 0
+}
+
+func (x *RiskDetail) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *RiskDetail) GetExposureType() string {
+	if x != nil {
+		return x.ExposureType
+	}
+	return ""
+}
+
+func (x *RiskDetail) GetPercent() float32 {
+	if x != nil {
+		return x.Percent
+	}
+	return 0
+}
+
 // 请求消息
 type GetQuoteRequest struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
@@ -545,7 +669,7 @@ type GetQuoteRequest struct {
 
 func (x *GetQuoteRequest) Reset() {
 	*x = GetQuoteRequest{}
-	mi := &file_edge_v1_edge_proto_msgTypes[10]
+	mi := &file_edge_v1_edge_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -557,7 +681,7 @@ func (x *GetQuoteRequest) String() string {
 func (*GetQuoteRequest) ProtoMessage() {}
 
 func (x *GetQuoteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[10]
+	mi := &file_edge_v1_edge_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -570,7 +694,7 @@ func (x *GetQuoteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetQuoteRequest.ProtoReflect.Descriptor instead.
 func (*GetQuoteRequest) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{10}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetQuoteRequest) GetFromTokenAddress() string {
@@ -628,7 +752,7 @@ type GetQuoteReply struct {
 
 func (x *GetQuoteReply) Reset() {
 	*x = GetQuoteReply{}
-	mi := &file_edge_v1_edge_proto_msgTypes[11]
+	mi := &file_edge_v1_edge_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -640,7 +764,7 @@ func (x *GetQuoteReply) String() string {
 func (*GetQuoteReply) ProtoMessage() {}
 
 func (x *GetQuoteReply) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[11]
+	mi := &file_edge_v1_edge_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -653,7 +777,7 @@ func (x *GetQuoteReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetQuoteReply.ProtoReflect.Descriptor instead.
 func (*GetQuoteReply) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{11}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetQuoteReply) GetAmountOutMin() string {
@@ -754,7 +878,7 @@ type SwapRequest struct {
 
 func (x *SwapRequest) Reset() {
 	*x = SwapRequest{}
-	mi := &file_edge_v1_edge_proto_msgTypes[12]
+	mi := &file_edge_v1_edge_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -766,7 +890,7 @@ func (x *SwapRequest) String() string {
 func (*SwapRequest) ProtoMessage() {}
 
 func (x *SwapRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[12]
+	mi := &file_edge_v1_edge_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -779,7 +903,7 @@ func (x *SwapRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SwapRequest.ProtoReflect.Descriptor instead.
 func (*SwapRequest) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{12}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *SwapRequest) GetFromTokenAddress() string {
@@ -878,7 +1002,7 @@ type SwapReply struct {
 
 func (x *SwapReply) Reset() {
 	*x = SwapReply{}
-	mi := &file_edge_v1_edge_proto_msgTypes[13]
+	mi := &file_edge_v1_edge_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -890,7 +1014,7 @@ func (x *SwapReply) String() string {
 func (*SwapReply) ProtoMessage() {}
 
 func (x *SwapReply) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[13]
+	mi := &file_edge_v1_edge_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -903,7 +1027,7 @@ func (x *SwapReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SwapReply.ProtoReflect.Descriptor instead.
 func (*SwapReply) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{13}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *SwapReply) GetSwapHash() string {
@@ -937,7 +1061,7 @@ type OrderRequest struct {
 
 func (x *OrderRequest) Reset() {
 	*x = OrderRequest{}
-	mi := &file_edge_v1_edge_proto_msgTypes[14]
+	mi := &file_edge_v1_edge_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -949,7 +1073,7 @@ func (x *OrderRequest) String() string {
 func (*OrderRequest) ProtoMessage() {}
 
 func (x *OrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[14]
+	mi := &file_edge_v1_edge_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -962,7 +1086,7 @@ func (x *OrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderRequest.ProtoReflect.Descriptor instead.
 func (*OrderRequest) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{14}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *OrderRequest) GetOrderId() string {
@@ -1007,7 +1131,7 @@ type OrderReply struct {
 
 func (x *OrderReply) Reset() {
 	*x = OrderReply{}
-	mi := &file_edge_v1_edge_proto_msgTypes[15]
+	mi := &file_edge_v1_edge_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1019,7 +1143,7 @@ func (x *OrderReply) String() string {
 func (*OrderReply) ProtoMessage() {}
 
 func (x *OrderReply) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[15]
+	mi := &file_edge_v1_edge_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1032,7 +1156,7 @@ func (x *OrderReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderReply.ProtoReflect.Descriptor instead.
 func (*OrderReply) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{15}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *OrderReply) GetId() string {
@@ -1231,7 +1355,7 @@ type CreateSwapOrderRequest struct {
 
 func (x *CreateSwapOrderRequest) Reset() {
 	*x = CreateSwapOrderRequest{}
-	mi := &file_edge_v1_edge_proto_msgTypes[16]
+	mi := &file_edge_v1_edge_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1243,7 +1367,7 @@ func (x *CreateSwapOrderRequest) String() string {
 func (*CreateSwapOrderRequest) ProtoMessage() {}
 
 func (x *CreateSwapOrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[16]
+	mi := &file_edge_v1_edge_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1256,7 +1380,7 @@ func (x *CreateSwapOrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSwapOrderRequest.ProtoReflect.Descriptor instead.
 func (*CreateSwapOrderRequest) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{16}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *CreateSwapOrderRequest) GetFromTokenAddress() string {
@@ -1317,7 +1441,7 @@ type CreateSwapOrderReply struct {
 
 func (x *CreateSwapOrderReply) Reset() {
 	*x = CreateSwapOrderReply{}
-	mi := &file_edge_v1_edge_proto_msgTypes[17]
+	mi := &file_edge_v1_edge_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1329,7 +1453,7 @@ func (x *CreateSwapOrderReply) String() string {
 func (*CreateSwapOrderReply) ProtoMessage() {}
 
 func (x *CreateSwapOrderReply) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[17]
+	mi := &file_edge_v1_edge_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1342,7 +1466,7 @@ func (x *CreateSwapOrderReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSwapOrderReply.ProtoReflect.Descriptor instead.
 func (*CreateSwapOrderReply) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{17}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *CreateSwapOrderReply) GetChain() string {
@@ -1411,7 +1535,7 @@ type GetOrderDetailRequest struct {
 
 func (x *GetOrderDetailRequest) Reset() {
 	*x = GetOrderDetailRequest{}
-	mi := &file_edge_v1_edge_proto_msgTypes[18]
+	mi := &file_edge_v1_edge_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1423,7 +1547,7 @@ func (x *GetOrderDetailRequest) String() string {
 func (*GetOrderDetailRequest) ProtoMessage() {}
 
 func (x *GetOrderDetailRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[18]
+	mi := &file_edge_v1_edge_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1436,7 +1560,7 @@ func (x *GetOrderDetailRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrderDetailRequest.ProtoReflect.Descriptor instead.
 func (*GetOrderDetailRequest) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{18}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetOrderDetailRequest) GetOrderId() string {
@@ -1488,7 +1612,7 @@ type GetOrderDetailReply struct {
 
 func (x *GetOrderDetailReply) Reset() {
 	*x = GetOrderDetailReply{}
-	mi := &file_edge_v1_edge_proto_msgTypes[19]
+	mi := &file_edge_v1_edge_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1500,7 +1624,7 @@ func (x *GetOrderDetailReply) String() string {
 func (*GetOrderDetailReply) ProtoMessage() {}
 
 func (x *GetOrderDetailReply) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[19]
+	mi := &file_edge_v1_edge_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1513,7 +1637,7 @@ func (x *GetOrderDetailReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrderDetailReply.ProtoReflect.Descriptor instead.
 func (*GetOrderDetailReply) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{19}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *GetOrderDetailReply) GetOrderId() string {
@@ -1709,7 +1833,7 @@ type GetEnergyRequest struct {
 
 func (x *GetEnergyRequest) Reset() {
 	*x = GetEnergyRequest{}
-	mi := &file_edge_v1_edge_proto_msgTypes[20]
+	mi := &file_edge_v1_edge_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1721,7 +1845,7 @@ func (x *GetEnergyRequest) String() string {
 func (*GetEnergyRequest) ProtoMessage() {}
 
 func (x *GetEnergyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[20]
+	mi := &file_edge_v1_edge_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1734,7 +1858,7 @@ func (x *GetEnergyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEnergyRequest.ProtoReflect.Descriptor instead.
 func (*GetEnergyRequest) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{20}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GetEnergyRequest) GetAddress() string {
@@ -1772,7 +1896,7 @@ type GetEnergyReply struct {
 
 func (x *GetEnergyReply) Reset() {
 	*x = GetEnergyReply{}
-	mi := &file_edge_v1_edge_proto_msgTypes[21]
+	mi := &file_edge_v1_edge_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1784,7 +1908,7 @@ func (x *GetEnergyReply) String() string {
 func (*GetEnergyReply) ProtoMessage() {}
 
 func (x *GetEnergyReply) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[21]
+	mi := &file_edge_v1_edge_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1797,7 +1921,7 @@ func (x *GetEnergyReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEnergyReply.ProtoReflect.Descriptor instead.
 func (*GetEnergyReply) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{21}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *GetEnergyReply) GetEnergyUsed() int64 {
@@ -1856,7 +1980,7 @@ type PushEnergyRequest struct {
 
 func (x *PushEnergyRequest) Reset() {
 	*x = PushEnergyRequest{}
-	mi := &file_edge_v1_edge_proto_msgTypes[22]
+	mi := &file_edge_v1_edge_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1868,7 +1992,7 @@ func (x *PushEnergyRequest) String() string {
 func (*PushEnergyRequest) ProtoMessage() {}
 
 func (x *PushEnergyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[22]
+	mi := &file_edge_v1_edge_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1881,7 +2005,7 @@ func (x *PushEnergyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PushEnergyRequest.ProtoReflect.Descriptor instead.
 func (*PushEnergyRequest) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{22}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *PushEnergyRequest) GetOutTradeNo() string {
@@ -1937,7 +2061,7 @@ type PushEnergyReply struct {
 
 func (x *PushEnergyReply) Reset() {
 	*x = PushEnergyReply{}
-	mi := &file_edge_v1_edge_proto_msgTypes[23]
+	mi := &file_edge_v1_edge_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1949,7 +2073,7 @@ func (x *PushEnergyReply) String() string {
 func (*PushEnergyReply) ProtoMessage() {}
 
 func (x *PushEnergyReply) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[23]
+	mi := &file_edge_v1_edge_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1962,7 +2086,7 @@ func (x *PushEnergyReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PushEnergyReply.ProtoReflect.Descriptor instead.
 func (*PushEnergyReply) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{23}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *PushEnergyReply) GetErrno() int64 {
@@ -1997,7 +2121,7 @@ type GetEnergyStatusRequest struct {
 
 func (x *GetEnergyStatusRequest) Reset() {
 	*x = GetEnergyStatusRequest{}
-	mi := &file_edge_v1_edge_proto_msgTypes[24]
+	mi := &file_edge_v1_edge_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2009,7 +2133,7 @@ func (x *GetEnergyStatusRequest) String() string {
 func (*GetEnergyStatusRequest) ProtoMessage() {}
 
 func (x *GetEnergyStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[24]
+	mi := &file_edge_v1_edge_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2022,7 +2146,7 @@ func (x *GetEnergyStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEnergyStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetEnergyStatusRequest) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{24}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *GetEnergyStatusRequest) GetSerial() string {
@@ -2055,7 +2179,7 @@ type GetEnergyStatusReply struct {
 
 func (x *GetEnergyStatusReply) Reset() {
 	*x = GetEnergyStatusReply{}
-	mi := &file_edge_v1_edge_proto_msgTypes[25]
+	mi := &file_edge_v1_edge_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2067,7 +2191,7 @@ func (x *GetEnergyStatusReply) String() string {
 func (*GetEnergyStatusReply) ProtoMessage() {}
 
 func (x *GetEnergyStatusReply) ProtoReflect() protoreflect.Message {
-	mi := &file_edge_v1_edge_proto_msgTypes[25]
+	mi := &file_edge_v1_edge_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2080,7 +2204,7 @@ func (x *GetEnergyStatusReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEnergyStatusReply.ProtoReflect.Descriptor instead.
 func (*GetEnergyStatusReply) Descriptor() ([]byte, []int) {
-	return file_edge_v1_edge_proto_rawDescGZIP(), []int{25}
+	return file_edge_v1_edge_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *GetEnergyStatusReply) GetStatus() int64 {
@@ -2128,19 +2252,41 @@ var file_edge_v1_edge_proto_rawDesc = string([]byte{
 	0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64,
 	0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x1a, 0x0a, 0x08, 0x64, 0x65, 0x63, 0x69, 0x6d, 0x61, 0x6c,
 	0x73, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x08, 0x64, 0x65, 0x63, 0x69, 0x6d, 0x61, 0x6c,
-	0x73, 0x22, 0x63, 0x0a, 0x17, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x4d, 0x61, 0x6c, 0x69,
+	0x73, 0x22, 0x77, 0x0a, 0x17, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x4d, 0x61, 0x6c, 0x69,
 	0x63, 0x69, 0x6f, 0x75, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07,
 	0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61,
 	0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x12, 0x18, 0x0a, 0x07,
 	0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6e,
-	0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x22, 0x5f, 0x0a, 0x15, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73,
-	0x73, 0x4d, 0x61, 0x6c, 0x69, 0x63, 0x69, 0x6f, 0x75, 0x73, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12,
-	0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52,
-	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
-	0x65, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03,
-	0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0xdb, 0x01, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x51,
+	0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x69, 0x6e, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x63, 0x6f, 0x69, 0x6e, 0x22, 0x80, 0x02, 0x0a, 0x15, 0x41,
+	0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x4d, 0x61, 0x6c, 0x69, 0x63, 0x69, 0x6f, 0x75, 0x73, 0x52,
+	0x65, 0x70, 0x6c, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x18, 0x0a, 0x07,
+	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d,
+	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x12, 0x1f, 0x0a, 0x0b,
+	0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x5f, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x04, 0x20, 0x03, 0x28,
+	0x09, 0x52, 0x0a, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x1c, 0x0a,
+	0x09, 0x72, 0x69, 0x73, 0x6b, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x09, 0x72, 0x69, 0x73, 0x6b, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x12, 0x38, 0x0a, 0x0b, 0x72,
+	0x69, 0x73, 0x6b, 0x5f, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x65, 0x64, 0x67, 0x65, 0x2e, 0x76, 0x31, 0x2e, 0x52,
+	0x69, 0x73, 0x6b, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x52, 0x0a, 0x72, 0x69, 0x73, 0x6b, 0x44,
+	0x65, 0x74, 0x61, 0x69, 0x6c, 0x12, 0x26, 0x0a, 0x0f, 0x72, 0x69, 0x73, 0x6b, 0x5f, 0x72, 0x65,
+	0x70, 0x6f, 0x72, 0x74, 0x5f, 0x75, 0x72, 0x6c, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d,
+	0x72, 0x69, 0x73, 0x6b, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x55, 0x72, 0x6c, 0x22, 0xa7, 0x01,
+	0x0a, 0x0a, 0x52, 0x69, 0x73, 0x6b, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x12, 0x14, 0x0a, 0x05,
+	0x6c, 0x61, 0x62, 0x65, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x61, 0x62,
+	0x65, 0x6c, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x02, 0x52, 0x06, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x12, 0x18,
+	0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x23, 0x0a, 0x0d, 0x65, 0x78, 0x70, 0x6f,
+	0x73, 0x75, 0x72, 0x65, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0c, 0x65, 0x78, 0x70, 0x6f, 0x73, 0x75, 0x72, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12, 0x18, 0x0a,
+	0x07, 0x70, 0x65, 0x72, 0x63, 0x65, 0x6e, 0x74, 0x18, 0x06, 0x20, 0x01, 0x28, 0x02, 0x52, 0x07,
+	0x70, 0x65, 0x72, 0x63, 0x65, 0x6e, 0x74, 0x22, 0xdb, 0x01, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x51,
 	0x75, 0x6f, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2a, 0x0a, 0x10, 0x66,
 	0x72, 0x6f, 0x6d, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x66, 0x72, 0x6f, 0x6d, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
@@ -2509,7 +2655,7 @@ func file_edge_v1_edge_proto_rawDescGZIP() []byte {
 	return file_edge_v1_edge_proto_rawDescData
 }
 
-var file_edge_v1_edge_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_edge_v1_edge_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_edge_v1_edge_proto_goTypes = []any{
 	(*CheckBlacklistAddressRequest)(nil),  // 0: api.edge.v1.CheckBlacklistAddressRequest
 	(*CheckBlacklistAddressResponse)(nil), // 1: api.edge.v1.CheckBlacklistAddressResponse
@@ -2521,55 +2667,57 @@ var file_edge_v1_edge_proto_goTypes = []any{
 	(*Token)(nil),                         // 7: api.edge.v1.Token
 	(*AddressMaliciousRequest)(nil),       // 8: api.edge.v1.AddressMaliciousRequest
 	(*AddressMaliciousReply)(nil),         // 9: api.edge.v1.AddressMaliciousReply
-	(*GetQuoteRequest)(nil),               // 10: api.edge.v1.GetQuoteRequest
-	(*GetQuoteReply)(nil),                 // 11: api.edge.v1.GetQuoteReply
-	(*SwapRequest)(nil),                   // 12: api.edge.v1.SwapRequest
-	(*SwapReply)(nil),                     // 13: api.edge.v1.SwapReply
-	(*OrderRequest)(nil),                  // 14: api.edge.v1.OrderRequest
-	(*OrderReply)(nil),                    // 15: api.edge.v1.OrderReply
-	(*CreateSwapOrderRequest)(nil),        // 16: api.edge.v1.CreateSwapOrderRequest
-	(*CreateSwapOrderReply)(nil),          // 17: api.edge.v1.CreateSwapOrderReply
-	(*GetOrderDetailRequest)(nil),         // 18: api.edge.v1.GetOrderDetailRequest
-	(*GetOrderDetailReply)(nil),           // 19: api.edge.v1.GetOrderDetailReply
-	(*GetEnergyRequest)(nil),              // 20: api.edge.v1.GetEnergyRequest
-	(*GetEnergyReply)(nil),                // 21: api.edge.v1.GetEnergyReply
-	(*PushEnergyRequest)(nil),             // 22: api.edge.v1.PushEnergyRequest
-	(*PushEnergyReply)(nil),               // 23: api.edge.v1.PushEnergyReply
-	(*GetEnergyStatusRequest)(nil),        // 24: api.edge.v1.GetEnergyStatusRequest
-	(*GetEnergyStatusReply)(nil),          // 25: api.edge.v1.GetEnergyStatusReply
+	(*RiskDetail)(nil),                    // 10: api.edge.v1.RiskDetail
+	(*GetQuoteRequest)(nil),               // 11: api.edge.v1.GetQuoteRequest
+	(*GetQuoteReply)(nil),                 // 12: api.edge.v1.GetQuoteReply
+	(*SwapRequest)(nil),                   // 13: api.edge.v1.SwapRequest
+	(*SwapReply)(nil),                     // 14: api.edge.v1.SwapReply
+	(*OrderRequest)(nil),                  // 15: api.edge.v1.OrderRequest
+	(*OrderReply)(nil),                    // 16: api.edge.v1.OrderReply
+	(*CreateSwapOrderRequest)(nil),        // 17: api.edge.v1.CreateSwapOrderRequest
+	(*CreateSwapOrderReply)(nil),          // 18: api.edge.v1.CreateSwapOrderReply
+	(*GetOrderDetailRequest)(nil),         // 19: api.edge.v1.GetOrderDetailRequest
+	(*GetOrderDetailReply)(nil),           // 20: api.edge.v1.GetOrderDetailReply
+	(*GetEnergyRequest)(nil),              // 21: api.edge.v1.GetEnergyRequest
+	(*GetEnergyReply)(nil),                // 22: api.edge.v1.GetEnergyReply
+	(*PushEnergyRequest)(nil),             // 23: api.edge.v1.PushEnergyRequest
+	(*PushEnergyReply)(nil),               // 24: api.edge.v1.PushEnergyReply
+	(*GetEnergyStatusRequest)(nil),        // 25: api.edge.v1.GetEnergyStatusRequest
+	(*GetEnergyStatusReply)(nil),          // 26: api.edge.v1.GetEnergyStatusReply
 }
 var file_edge_v1_edge_proto_depIdxs = []int32{
 	4,  // 0: api.edge.v1.GetSupportedChainsReply.chains:type_name -> api.edge.v1.Chain
 	7,  // 1: api.edge.v1.GetTokenByChainReply.tokens:type_name -> api.edge.v1.Token
-	0,  // 2: api.edge.v1.Edge.CheckBlacklistAddress:input_type -> api.edge.v1.CheckBlacklistAddressRequest
-	2,  // 3: api.edge.v1.Edge.GetSupportedChains:input_type -> api.edge.v1.GetSupportedChainsRequest
-	5,  // 4: api.edge.v1.Edge.GetTokenByChain:input_type -> api.edge.v1.GetTokenByChainRequest
-	10, // 5: api.edge.v1.Edge.GetQuote:input_type -> api.edge.v1.GetQuoteRequest
-	16, // 6: api.edge.v1.Edge.CreateSwapOrder:input_type -> api.edge.v1.CreateSwapOrderRequest
-	12, // 7: api.edge.v1.Edge.Swap:input_type -> api.edge.v1.SwapRequest
-	14, // 8: api.edge.v1.Edge.getTransDataById:input_type -> api.edge.v1.OrderRequest
-	18, // 9: api.edge.v1.Edge.GetOrderDetail:input_type -> api.edge.v1.GetOrderDetailRequest
-	8,  // 10: api.edge.v1.Edge.AddressMalicious:input_type -> api.edge.v1.AddressMaliciousRequest
-	20, // 11: api.edge.v1.Edge.GetEnergy:input_type -> api.edge.v1.GetEnergyRequest
-	22, // 12: api.edge.v1.Edge.PushEnergy:input_type -> api.edge.v1.PushEnergyRequest
-	24, // 13: api.edge.v1.Edge.GetEnergyStatus:input_type -> api.edge.v1.GetEnergyStatusRequest
-	1,  // 14: api.edge.v1.Edge.CheckBlacklistAddress:output_type -> api.edge.v1.CheckBlacklistAddressResponse
-	3,  // 15: api.edge.v1.Edge.GetSupportedChains:output_type -> api.edge.v1.GetSupportedChainsReply
-	6,  // 16: api.edge.v1.Edge.GetTokenByChain:output_type -> api.edge.v1.GetTokenByChainReply
-	11, // 17: api.edge.v1.Edge.GetQuote:output_type -> api.edge.v1.GetQuoteReply
-	17, // 18: api.edge.v1.Edge.CreateSwapOrder:output_type -> api.edge.v1.CreateSwapOrderReply
-	13, // 19: api.edge.v1.Edge.Swap:output_type -> api.edge.v1.SwapReply
-	15, // 20: api.edge.v1.Edge.getTransDataById:output_type -> api.edge.v1.OrderReply
-	19, // 21: api.edge.v1.Edge.GetOrderDetail:output_type -> api.edge.v1.GetOrderDetailReply
-	9,  // 22: api.edge.v1.Edge.AddressMalicious:output_type -> api.edge.v1.AddressMaliciousReply
-	21, // 23: api.edge.v1.Edge.GetEnergy:output_type -> api.edge.v1.GetEnergyReply
-	23, // 24: api.edge.v1.Edge.PushEnergy:output_type -> api.edge.v1.PushEnergyReply
-	25, // 25: api.edge.v1.Edge.GetEnergyStatus:output_type -> api.edge.v1.GetEnergyStatusReply
-	14, // [14:26] is the sub-list for method output_type
-	2,  // [2:14] is the sub-list for method input_type
-	2,  // [2:2] is the sub-list for extension type_name
-	2,  // [2:2] is the sub-list for extension extendee
-	0,  // [0:2] is the sub-list for field type_name
+	10, // 2: api.edge.v1.AddressMaliciousReply.risk_detail:type_name -> api.edge.v1.RiskDetail
+	0,  // 3: api.edge.v1.Edge.CheckBlacklistAddress:input_type -> api.edge.v1.CheckBlacklistAddressRequest
+	2,  // 4: api.edge.v1.Edge.GetSupportedChains:input_type -> api.edge.v1.GetSupportedChainsRequest
+	5,  // 5: api.edge.v1.Edge.GetTokenByChain:input_type -> api.edge.v1.GetTokenByChainRequest
+	11, // 6: api.edge.v1.Edge.GetQuote:input_type -> api.edge.v1.GetQuoteRequest
+	17, // 7: api.edge.v1.Edge.CreateSwapOrder:input_type -> api.edge.v1.CreateSwapOrderRequest
+	13, // 8: api.edge.v1.Edge.Swap:input_type -> api.edge.v1.SwapRequest
+	15, // 9: api.edge.v1.Edge.getTransDataById:input_type -> api.edge.v1.OrderRequest
+	19, // 10: api.edge.v1.Edge.GetOrderDetail:input_type -> api.edge.v1.GetOrderDetailRequest
+	8,  // 11: api.edge.v1.Edge.AddressMalicious:input_type -> api.edge.v1.AddressMaliciousRequest
+	21, // 12: api.edge.v1.Edge.GetEnergy:input_type -> api.edge.v1.GetEnergyRequest
+	23, // 13: api.edge.v1.Edge.PushEnergy:input_type -> api.edge.v1.PushEnergyRequest
+	25, // 14: api.edge.v1.Edge.GetEnergyStatus:input_type -> api.edge.v1.GetEnergyStatusRequest
+	1,  // 15: api.edge.v1.Edge.CheckBlacklistAddress:output_type -> api.edge.v1.CheckBlacklistAddressResponse
+	3,  // 16: api.edge.v1.Edge.GetSupportedChains:output_type -> api.edge.v1.GetSupportedChainsReply
+	6,  // 17: api.edge.v1.Edge.GetTokenByChain:output_type -> api.edge.v1.GetTokenByChainReply
+	12, // 18: api.edge.v1.Edge.GetQuote:output_type -> api.edge.v1.GetQuoteReply
+	18, // 19: api.edge.v1.Edge.CreateSwapOrder:output_type -> api.edge.v1.CreateSwapOrderReply
+	14, // 20: api.edge.v1.Edge.Swap:output_type -> api.edge.v1.SwapReply
+	16, // 21: api.edge.v1.Edge.getTransDataById:output_type -> api.edge.v1.OrderReply
+	20, // 22: api.edge.v1.Edge.GetOrderDetail:output_type -> api.edge.v1.GetOrderDetailReply
+	9,  // 23: api.edge.v1.Edge.AddressMalicious:output_type -> api.edge.v1.AddressMaliciousReply
+	22, // 24: api.edge.v1.Edge.GetEnergy:output_type -> api.edge.v1.GetEnergyReply
+	24, // 25: api.edge.v1.Edge.PushEnergy:output_type -> api.edge.v1.PushEnergyReply
+	26, // 26: api.edge.v1.Edge.GetEnergyStatus:output_type -> api.edge.v1.GetEnergyStatusReply
+	15, // [15:27] is the sub-list for method output_type
+	3,  // [3:15] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_edge_v1_edge_proto_init() }
@@ -2583,7 +2731,7 @@ func file_edge_v1_edge_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_edge_v1_edge_proto_rawDesc), len(file_edge_v1_edge_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   26,
+			NumMessages:   27,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
