@@ -40,6 +40,7 @@ message CreateAddressRequest {
 	string network = 2; // 网络名称
 	optional string wallet_id =3; //钱包id
 	optional string address_type =4;//创建类型
+	optional string merchant_id =5;//商户id
 }
 
 message CreateAddressReply {
